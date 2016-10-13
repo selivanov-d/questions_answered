@@ -5,4 +5,4 @@
 Работает на:
 
 - Ruby 2.3.1
-- Ruby on Rails 4.2.6
+- Ruby on Rails 5.0.0.1
