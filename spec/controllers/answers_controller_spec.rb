@@ -19,14 +19,6 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
-  describe 'GET #show' do
-    before { get :show, params: { id: create(:answer) } }
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
-
   describe 'POST #create' do
     let(:question) { create(:question) }
 
@@ -35,9 +27,9 @@ RSpec.describe AnswersController, type: :controller do
         expect { post :create, params: { answer: attributes_for(:answer), question_id: question } }.to change(Answer, :count).by(1)
       end
 
-      it 'redirects to show view' do
+      it 'redirects to question show view' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
-        expect(response).to redirect_to answer_path(assigns(:answer))
+        expect(response).to redirect_to question
       end
     end
 
