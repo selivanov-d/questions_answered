@@ -1,0 +1,9 @@
+h1 Новый ответ
+p
+  strong Вопрос:
+  br
+  = @question.content
+
+= render 'form'
+
+= link_to 'К вопросу', question_path(@question)

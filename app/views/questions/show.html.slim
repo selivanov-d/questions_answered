@@ -1,0 +1,12 @@
+h1 Вопрос
+h4= @question.title
+p= @question.content
+
+- if @question.answers.any?
+  h3 Ответы
+  = render @question.answers
+
+= link_to 'Дать ответ', new_question_answer_path(@question)
+br
+= link_to 'К вопросам', questions_path
+

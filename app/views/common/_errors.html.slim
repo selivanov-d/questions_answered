@@ -1,0 +1,4 @@
+- resource.errors.messages.each_pair do |k, e|
+  - e.each do |message|
+    = "[:#{k}] #{message}"
+    br

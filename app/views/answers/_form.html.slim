@@ -1,0 +1,12 @@
+- if @answer.errors.any?
+  = render partial: 'common/errors', locals: { resource: @answer }
+
+= form_for [@question, @answer] do |f|
+  = f.hidden_field :question_id, value: @question.id
+
+  .form-group
+    = f.label :content
+    = f.text_area :content
+
+  .form-group
+    = f.submit 'Сохранить'
