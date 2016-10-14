@@ -1,0 +1,14 @@
+- if @question.errors.any?
+  = render partial: 'common/errors', locals: { resource: @question }
+
+= form_for @question do |f|
+  .form-group
+    = f.label :title
+    = f.text_field :title
+
+  .form-group
+    = f.label :content
+    = f.text_area :content
+
+  .form-group
+    = f.submit 'Сохранить'

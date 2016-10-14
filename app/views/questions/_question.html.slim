@@ -1,0 +1,9 @@
+.question
+  .question_title
+    = link_to question.title, question
+  .question_content= question.content
+  .question_actions.question-actions
+    = link_to 'Дать ответ', new_question_answer_path(question), class: 'question-actions_give-answer'
+
+  hr
+
