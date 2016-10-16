@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
+    sign_in_user
+
     before { get :new }
 
     it 'assigns new Question to @question' do
@@ -16,7 +18,7 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'GET #show' do
     let(:question) { create(:question) }
 
-    before { get :show, id: question }
+    before { get :show, params: { id: question } }
 
     it 'assigns requested question to @question' do
       expect(assigns(:question)).to eq question
@@ -46,6 +48,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
+
     context 'with valid attributes' do
       it 'saves new question' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
