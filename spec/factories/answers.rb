@@ -1,6 +1,10 @@
 FactoryGirl.define do
+  sequence :answer_content do
+    Faker::Lorem.sentence(6)
+  end
+
   factory :answer do
-    content Faker::Lorem.sentence(6)
+    content :answer_content
     question
   end
 

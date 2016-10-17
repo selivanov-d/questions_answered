@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :load_question, only: [:show]
+  before_action :load_question, only: [:show, :destroy]
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
@@ -21,6 +21,11 @@ class QuestionsController < ApplicationController
   end
 
   def show
+  end
+
+  def destroy
+    @question.destroy
+    redirect_to questions_path, notice: 'Ваш вопрос удалён'
   end
 
   private

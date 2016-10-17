@@ -8,4 +8,10 @@ FactoryGirl.define do
     password '123456789'
     password_confirmation '123456789'
   end
+
+  factory :defined_user, class: 'User' do
+    email 'demo_user@domain.com'
+    password '123456789'
+    password_confirmation '123456789'
+  end
 end

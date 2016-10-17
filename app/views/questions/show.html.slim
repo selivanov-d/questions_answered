@@ -6,7 +6,10 @@ p= @question.content
   h3 Ответы
   = render @question.answers
 
-= link_to 'Дать ответ', new_question_answer_path(@question)
+- if user_signed_in?
+  = link_to 'Дать ответ', new_question_answer_path(@question), class: 'js-give-answer'
+  = link_to 'Удалить вопрос', question_path(@question), method: 'delete', data: { confirm: 'Вы уверены?' }
+
 br
 = link_to 'К вопросам', questions_path
 

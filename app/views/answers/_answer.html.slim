@@ -1,3 +1,7 @@
-p= answer.content
+.js-answer
+  p= answer.content
 
-hr
+  - if user_signed_in?
+    = link_to 'Удалить ответ', answer_path(answer), date: { confirm: 'Вы уверены?' }
+
+  hr
