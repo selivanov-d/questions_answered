@@ -17,9 +17,6 @@ class AnswersController < ApplicationController
     end
   end
 
-  def show
-  end
-
   def destroy
     if @answer.user == current_user
       @answer.destroy
