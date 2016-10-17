@@ -2,6 +2,5 @@ class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
 
-  validates :content, presence: true
-  validates :content, length: { minimum: 10 }
+  validates :content, presence: true, length: { minimum: 10 }
 end
