@@ -31,5 +31,7 @@ module QuestionAnswered
 
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
+
+    config.active_record.belongs_to_required_by_default = true
   end
 end
