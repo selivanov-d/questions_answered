@@ -11,6 +11,7 @@ FactoryGirl.define do
   factory :question do
     title :question_title
     content :question_content
+    association :user, factory: :user
 
     factory :question_with_answers do
       transient do

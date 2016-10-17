@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
-  before_action :load_answer, only: [:show]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :load_answer, only: [:show, :destroy]
   before_action :load_question, only: [:new, :create]
 
   def new
@@ -17,6 +18,15 @@ class AnswersController < ApplicationController
   end
 
   def show
+  end
+
+  def destroy
+    if @answer.user == current_user
+      @answer.destroy
+      redirect_to @answer.question, notice: 'Ваш ответ удалён'
+    else
+      redirect_to @answer.question, notice: 'Удалить можно только свой ответ'
+    end
   end
 
   private

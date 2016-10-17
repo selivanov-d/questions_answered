@@ -8,7 +8,9 @@ p= @question.content
 
 - if user_signed_in?
   = link_to 'Дать ответ', new_question_answer_path(@question), class: 'js-give-answer'
-  = link_to 'Удалить вопрос', question_path(@question), method: 'delete', data: { confirm: 'Вы уверены?' }
+
+  if @question.user == current_user
+    = link_to 'Удалить вопрос', question_path(@question), method: 'delete', data: { confirm: 'Вы уверены?' }
 
 br
 = link_to 'К вопросам', questions_path

@@ -1,7 +1,7 @@
 .js-answer
   p= answer.content
 
-  - if user_signed_in?
-    = link_to 'Удалить ответ', answer_path(answer), date: { confirm: 'Вы уверены?' }
+  - if user_signed_in? && answer.user == current_user
+    = link_to 'Удалить ответ', answer_path(answer), method: 'delete', date: { confirm: 'Вы уверены?' }
 
   hr
