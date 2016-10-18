@@ -1,17 +1,8 @@
 FactoryGirl.define do
-  sequence :question_title do
-    Faker::Lorem.sentence(3)
-  end
-
-  sequence :question_content do
-    Faker::Lorem.sentence(6)
-  end
-
-  # REVIEW: почему create_list создаёт одинаковые данные для моделей? Имею ввиду, что в списке вопросов все названия и тексты одинковые независимо от того, сколько моделей я создаю.
   factory :question do
-    title :question_title
-    content :question_content
-    association :user, factory: :user
+    title { Faker::Lorem.sentence(3) }
+    content { Faker::Lorem.sentence(6) }
+    user
 
     factory :question_with_answers do
       transient do

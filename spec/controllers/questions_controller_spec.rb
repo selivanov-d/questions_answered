@@ -36,6 +36,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #index' do
+    sign_in_user
+
     let(:questions) { create_list(:question, 2) }
 
     before do
@@ -43,8 +45,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it 'populates an array of all questions' do
-      # REVIEW: почему значения assigns(:questions) и questions в строке ниже равны?
-      # get :index вызывает questions#index. Получается, при выполнении Question.all объекты заполняются данными из фабрик?
       expect(assigns(:questions)).to match_array(questions)
     end
 

@@ -9,6 +9,7 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.new(answer_params)
+    current_user.answers << @answer
 
     if @answer.save
       redirect_to @question, notice: 'Ваш ответ сохранён'

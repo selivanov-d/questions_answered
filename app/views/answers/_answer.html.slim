@@ -2,6 +2,6 @@
   p= answer.content
 
   - if user_signed_in? && answer.user == current_user
-    = link_to 'Удалить ответ', answer_path(answer), method: 'delete', date: { confirm: 'Вы уверены?' }
+    = link_to 'Удалить ответ', answer_path(answer), method: 'delete', data: { confirm: 'Вы уверены?' }
 
   hr

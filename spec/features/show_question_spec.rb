@@ -1,5 +1,13 @@
 require 'rails_helper'
 
+def view_question_and_count_answers
+  visit question_path(question)
+
+  expect(page).to have_content(question.title)
+  expect(page).to have_content(question.content)
+  expect(page).to have_selector('.js-answer', count: 5)
+end
+
 feature 'Show question', %q{
   In order to view question and answers to it
   As an authenticated user
@@ -12,20 +20,14 @@ feature 'Show question', %q{
   scenario 'Authenticated user views question' do
     sign_in(user)
 
-    visit question_path(question)
-
-    expect(page).to have_content(question.title)
-    expect(page).to have_content(question.content)
-    expect(page).to have_selector('.js-answer', count: 5)
+    view_question_and_count_answers
     expect(page).to have_selector('.js-give-answer', count: 1)
   end
 
   scenario 'Non-authenticated user views question' do
     visit question_path(question)
 
-    expect(page).to have_content(question.title)
-    expect(page).to have_content(question.content)
-    expect(page).to have_selector('.js-answer', count: 5)
+    view_question_and_count_answers
     expect(page).to have_selector('.js-give-answer', count: 0)
   end
 end

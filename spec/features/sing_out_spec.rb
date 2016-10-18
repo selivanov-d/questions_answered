@@ -1,5 +1,12 @@
 require 'rails_helper'
 
+def destroy_session_and_check_result
+  page.driver.submit :delete, destroy_user_session_path, {}
+
+  expect(page).to have_content 'Signed out successfully.'
+  expect(current_path).to eq root_path
+end
+
 feature 'User sign out', %q{
   In order to be able to end session
   As an user
@@ -8,17 +15,13 @@ feature 'User sign out', %q{
 
   given(:user) { create(:user) }
 
-  scenario 'Registered user tries to sign out' do
-    page.driver.submit :delete, destroy_user_session_path, {}
+  scenario 'Registered user signs out' do
+    sign_in(user)
 
-    expect(page).to have_content 'Signed out successfully.'
-    expect(current_path).to eq root_path
+    destroy_session_and_check_result
   end
 
   scenario 'Non-registered user tries to sign out' do
-    page.driver.submit :delete, destroy_user_session_path, {}
-
-    expect(page).to have_content 'Signed out successfully.'
-    expect(current_path).to eq root_path
+    destroy_session_and_check_result
   end
 end
