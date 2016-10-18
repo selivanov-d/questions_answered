@@ -1,11 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_answer, only: [:destroy]
-  before_action :load_question, only: [:new, :create]
-
-  def new
-    @answer = Answer.new
-  end
+  before_action :load_question, only: [:create]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -14,7 +10,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: 'Ваш ответ сохранён'
     else
-      render :new
+      render 'questions/show'
     end
   end
 

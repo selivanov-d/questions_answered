@@ -8,10 +8,10 @@ def view_question_and_count_answers
   expect(page).to have_selector('.js-answer', count: 5)
 end
 
-feature 'Show question', %q{
+feature 'Show question and give answer', %q{
   In order to view question and answers to it
   As an authenticated user
-  I want to be able to view question
+  I want to be able to view question and form for an answer
 } do
 
   given(:user) { create(:user) }
@@ -21,13 +21,13 @@ feature 'Show question', %q{
     sign_in(user)
 
     view_question_and_count_answers
-    expect(page).to have_selector('.js-give-answer', count: 1)
+    expect(page).to have_button('Дать ответ')
   end
 
   scenario 'Non-authenticated user views question' do
     visit question_path(question)
 
     view_question_and_count_answers
-    expect(page).to have_selector('.js-give-answer', count: 0)
+    expect(page).to_not have_button('Дать ответ')
   end
 end

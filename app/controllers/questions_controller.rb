@@ -21,6 +21,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answer = Answer.new
   end
 
   def destroy

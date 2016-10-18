@@ -4,7 +4,7 @@
   .question_content= question.content
   .question_actions.question-actions
     - if user_signed_in?
-      = link_to 'Дать ответ', new_question_answer_path(question), class: 'question-actions_give-answer js-give-answer'
+      = link_to 'Дать ответ', question_path(question), class: 'question-actions_give-answer js-give-answer'
 
   hr
 

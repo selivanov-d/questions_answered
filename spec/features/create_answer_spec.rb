@@ -12,10 +12,10 @@ feature 'Create answer', %q{
   scenario 'Authenticated user creates answer' do
     sign_in(user)
 
-    visit new_question_answer_path(question)
+    visit question_path(question)
 
     fill_in 'Content', with: 'Test question content'
-    click_on 'Сохранить'
+    click_on 'Дать ответ'
 
     expect(current_path).to eq question_path(question)
     expect(page).to have_content('Ваш ответ сохранён')
@@ -23,9 +23,8 @@ feature 'Create answer', %q{
   end
 
   scenario 'Non-authenticated user tries to give answer' do
-    visit new_question_answer_path(question)
+    visit question_path(question)
 
-    expect(current_path).to eq new_user_session_path
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to_not have_button('Дать ответ')
   end
 end
