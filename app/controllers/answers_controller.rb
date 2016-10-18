@@ -17,10 +17,12 @@ class AnswersController < ApplicationController
   def destroy
     if @answer.user_id == current_user.id
       @answer.destroy
-      redirect_to @answer.question, notice: 'Ваш ответ удалён'
+      notice = 'Ваш ответ удалён'
     else
-      redirect_to @answer.question, notice: 'Удалить можно только свой ответ'
+      notice = 'Удалить можно только свой ответ'
     end
+
+    redirect_to @answer.question, notice: notice
   end
 
   private
