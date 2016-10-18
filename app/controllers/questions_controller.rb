@@ -29,7 +29,7 @@ class QuestionsController < ApplicationController
       @question.destroy
       redirect_to questions_path, notice: 'Ваш вопрос удалён'
     else
-      redirect_to question_path(@question), notice: 'Удалить можно только свой вопрос'
+      redirect_to @question, notice: 'Удалить можно только свой вопрос'
     end
   end
 
