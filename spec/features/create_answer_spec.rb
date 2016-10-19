@@ -6,25 +6,43 @@ feature 'Create answer', %q{
   I want to be able to give new answer
 } do
 
-  given(:user) { create(:user) }
   given(:question) { create(:question) }
 
-  scenario 'Authenticated user creates answer' do
-    sign_in(user)
+  context 'Authenticated user' do
+    given(:user) { create(:user) }
 
-    visit question_path(question)
+    scenario 'creates answer with valid data' do
+      sign_in(user)
 
-    fill_in 'Content', with: 'Test question content'
-    click_on 'Дать ответ'
+      visit question_path(question)
 
-    expect(current_path).to eq question_path(question)
-    expect(page).to have_content('Ваш ответ сохранён')
-    expect(page).to have_content('Test question content')
+      fill_in 'Content', with: 'Test question content'
+      click_on 'Дать ответ'
+
+      expect(current_path).to eq question_path(question)
+      expect(page).to have_content('Ваш ответ сохранён')
+      expect(page).to have_content('Test question content')
+    end
+
+    scenario 'creates answer with invalid data' do
+      sign_in(user)
+
+      visit question_path(question)
+
+      fill_in 'Content', with: ''
+      click_on 'Дать ответ'
+
+      expect(current_path).to eq question_answers_path(question)
+      expect(page).to have_content('can\'t be blank')
+      expect(page).to have_content('is too short (minimum is 10 characters)')
+    end
   end
 
-  scenario 'Non-authenticated user tries to give answer' do
-    visit question_path(question)
+  context 'Non-authenticated user' do
+    scenario 'tries to create answer' do
+      visit question_path(question)
 
-    expect(page).to_not have_button('Дать ответ')
+      expect(page).to_not have_button('Дать ответ')
+    end
   end
 end

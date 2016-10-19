@@ -4,7 +4,8 @@ p= @question.content
 
 - if @question.answers.any?
   h3 Ответы
-  = render @question.answers
+  - @question.answers.each do |answer|
+    = render partial: 'answers/answer', locals: { answer: answer } unless answer.new_record?
 
 - if user_signed_in?
   - if @question.user_id == current_user.id
