@@ -12,13 +12,14 @@ feature 'Delete answer', %q{
   scenario 'Authenticated user deletes his own answer' do
     sign_in(user)
 
-    create(:answer, user: user, question: question)
+    answer = create(:answer, user: user, question: question)
 
     visit question_path(question)
     click_on 'Удалить ответ'
 
     expect(current_path).to eq question_path(question)
     expect(page).to have_content('Ваш ответ удалён')
+    expect(page).to_not have_content(answer.content)
   end
 
   scenario 'Authenticated user tries to delete not his own answer' do
