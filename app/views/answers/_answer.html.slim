@@ -1,7 +1,7 @@
 .answer
   p= answer.content
 
-  - if user_signed_in? && answer.user == current_user
+  - if user_signed_in? && current_user.author_of?(answer)
     = link_to 'Удалить ответ', answer_path(answer), method: 'delete', data: { confirm: 'Вы уверены?' }
 
   hr

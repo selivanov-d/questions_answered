@@ -15,7 +15,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if @answer.user_id == current_user.id
+    if current_user.author_of?(@answer)
       @answer.destroy
       notice = 'Ваш ответ удалён'
     else
