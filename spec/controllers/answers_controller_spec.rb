@@ -39,13 +39,32 @@ RSpec.describe AnswersController, type: :controller do
     let(:question) { create(:question, user: @user) }
     let!(:answer) { create(:answer, user: @user, question: question) }
 
-    it 'deletes an answer' do
-      expect { delete :destroy, params: { id: answer } }.to change(@user.answers, :count).by(-1)
+    context 'questions\'s author' do
+      it 'deletes an answer' do
+        expect { delete :destroy, params: { id: answer } }.to change(@user.answers, :count).by(-1)
+      end
+
+      it 'renders question show view' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to question_path(question)
+      end
     end
 
-    it 'renders answers index view' do
-      delete :destroy, params: { id: answer }
-      expect(response).to redirect_to question_path(question)
+    context 'not questions\'s author' do
+      before do
+        user2 = create(:user)
+        sign_out(@user)
+        sign_in(user2)
+      end
+
+      it 'does not deletes an answer' do
+        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+      end
+
+      it 'renders question show view' do
+        delete :destroy, params: { id: answer }
+        expect(response).to redirect_to question_path(question)
+      end
     end
   end
 end
