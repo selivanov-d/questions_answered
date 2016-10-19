@@ -1,5 +1,14 @@
 require 'rails_helper'
 
+def check_all_questions_present
+  visit questions_path(questions: questions)
+
+  questions.each do |question|
+    expect(page).to have_content(question.title)
+    expect(page).to have_content(question.content)
+  end
+end
+
 feature 'Index questions', %q{
   In order to select a question to give an answer
   As an authenticated user
@@ -12,16 +21,14 @@ feature 'Index questions', %q{
   scenario 'Authenticated user views list of questions' do
     sign_in(user)
 
-    visit questions_path(questions: questions)
+    check_all_questions_present
 
-    expect(page).to have_selector('.js-question', count: 5)
-    expect(page).to have_selector('a.js-give-answer', count: 5)
+    expect(page).to have_link('Дать ответ', count: 5)
   end
 
   scenario 'Non-authenticated user views list of questions' do
-    visit questions_path(questions: questions)
+    check_all_questions_present
 
-    expect(page).to have_selector('.js-question', count: 5)
-    expect(page).to have_selector('a.js-give-answer', count: 0)
+    expect(page).to_not have_link('Дать ответ')
   end
 end
