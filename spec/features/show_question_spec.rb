@@ -1,11 +1,14 @@
 require 'rails_helper'
 
-def view_question_and_count_answers
+def check_question_and_answers
   visit question_path(question)
 
   expect(page).to have_content(question.title)
   expect(page).to have_content(question.content)
-  expect(page).to have_selector('.js-answer', count: 5)
+
+  question.answers.each do |answer|
+    expect(page).to have_content(answer.content)
+  end
 end
 
 feature 'Show question and give answer', %q{
@@ -20,14 +23,12 @@ feature 'Show question and give answer', %q{
   scenario 'Authenticated user views question' do
     sign_in(user)
 
-    view_question_and_count_answers
+    check_question_and_answers
     expect(page).to have_button('Дать ответ')
   end
 
   scenario 'Non-authenticated user views question' do
-    visit question_path(question)
-
-    view_question_and_count_answers
+    check_question_and_answers
     expect(page).to_not have_button('Дать ответ')
   end
 end
