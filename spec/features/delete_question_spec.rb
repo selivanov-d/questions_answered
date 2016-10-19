@@ -16,7 +16,9 @@ feature 'Delete question', %q{
     click_on 'Удалить вопрос'
 
     expect(current_path).to eq questions_path
-    expect(page).to have_content 'Ваш вопрос удалён'
+    expect(page).to have_content('Ваш вопрос удалён')
+    expect(page).to_not have_content(question.title)
+    expect(page).to_not have_content(question.content)
   end
 
   scenario 'Authenticated user tries to delete not his own question' do
