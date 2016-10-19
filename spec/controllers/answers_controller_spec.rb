@@ -33,10 +33,10 @@ RSpec.describe AnswersController, type: :controller do
     sign_in_user
 
     let(:question) { create(:question, user: @user) }
-    let(:answer) { create(:answer, user: @user, question: question) }
+    let!(:answer) { create(:answer, user: @user, question: question) }
 
     it 'deletes an answer' do
-      expect { delete :destroy, params: { id: answer } }.to_not change(@user.answers, :count)
+      expect { delete :destroy, params: { id: answer } }.to change(@user.answers, :count).by(-1)
     end
 
     it 'renders answers index view' do
