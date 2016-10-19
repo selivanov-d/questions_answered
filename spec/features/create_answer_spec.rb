@@ -33,8 +33,8 @@ feature 'Create answer', %q{
       click_on 'Дать ответ'
 
       expect(current_path).to eq question_answers_path(question)
-      expect(page).to have_content('can\'t be blank')
-      expect(page).to have_content('is too short (minimum is 10 characters)')
+      expect(page).to have_content('[:content] can\'t be blank')
+      expect(page).to have_content('[:content] is too short (minimum is 10 characters)')
     end
   end
 
