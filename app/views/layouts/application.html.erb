@@ -2,11 +2,33 @@
 <html>
 <head>
   <title>QuestionAnswered</title>
-  <%= stylesheet_link_tag    'application', media: 'all' %>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+
+<header class="header">
+  <div class="header_wrapper">
+    <nav class="main-menu">
+      <ul class="main-menu_wrapper">
+        <% if current_user %>
+            <li class="main-menu_item -logout">
+              <%= link_to 'Выйти', destroy_user_session_path, method: :delete %><br/>
+            </li>
+        <% else %>
+            <li class="main-menu_item -login"><%= link_to 'Войти', user_session_path %></li>
+        <% end %>
+
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
 
 <%= yield %>
 

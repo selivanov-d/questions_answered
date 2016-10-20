@@ -2,4 +2,5 @@ h1 Список вопросов
 
 = render @questions
 
-= link_to 'Задать вопрос', new_question_path
+- if user_signed_in?
+  = link_to 'Задать вопрос', new_question_path

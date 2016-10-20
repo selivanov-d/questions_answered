@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
+    sign_in_user
+
     before { get :new }
 
     it 'assigns new Question to @question' do
@@ -14,12 +16,22 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:question) { create(:question) }
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:answers) { create_list(:answer, 5, question: question, user: user) }
 
-    before { get :show, id: question }
+    before { get :show, params: { id: question } }
+
+    it 'assigns new Answer to @answer' do
+      expect(assigns(:answer)).to be_a_new(Answer)
+    end
 
     it 'assigns requested question to @question' do
       expect(assigns(:question)).to eq question
+    end
+
+    it 'populates an array of all answers for current question' do
+      expect(assigns(:question).answers).to match_array(answers)
     end
 
     it 'renders show view' do
@@ -28,6 +40,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #index' do
+    sign_in_user
+
     let(:questions) { create_list(:question, 2) }
 
     before do
@@ -35,8 +49,6 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it 'populates an array of all questions' do
-      # REVIEW: почему значения assigns(:questions) и questions в строке ниже равны?
-      # get :index вызывает questions#index. Получается, при выполнении Question.all объекты заполняются данными из фабрик?
       expect(assigns(:questions)).to match_array(questions)
     end
 
@@ -46,9 +58,11 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
+
     context 'with valid attributes' do
       it 'saves new question' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { post :create, params: { question: attributes_for(:question) } }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -65,6 +79,40 @@ RSpec.describe QuestionsController, type: :controller do
       it 're-renders new view' do
         post :create, params: { question: attributes_for(:invalid_question) }
         expect(response).to render_template :new
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    sign_in_user
+
+    let!(:question) { create(:question, user: @user) }
+
+    context 'question\'s author' do
+      it 'deletes a question' do
+        expect { delete :destroy, params: { id: question } }.to change(@user.questions, :count).by(-1)
+      end
+
+      it 'renders questions index view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'not question\'s author' do
+      before do
+        user2 = create(:user)
+        sign_out(@user)
+        sign_in(user2)
+      end
+
+      it 'does not deletes a question' do
+        expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
+      end
+
+      it 'renders questions show view' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to question_path(question)
       end
     end
   end

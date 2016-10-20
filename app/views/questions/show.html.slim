@@ -4,9 +4,15 @@ p= @question.content
 
 - if @question.answers.any?
   h3 Ответы
-  = render @question.answers
+  - @question.answers.each do |answer|
+    = render partial: 'answers/answer', locals: { answer: answer } unless answer.new_record?
 
-= link_to 'Дать ответ', new_question_answer_path(@question)
+- if user_signed_in?
+  - if current_user.author_of?(@question)
+    = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }
+
+  = render 'answers/form'
+
 br
 = link_to 'К вопросам', questions_path
 
