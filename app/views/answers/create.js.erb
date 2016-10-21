@@ -2,5 +2,5 @@
   $('.answers').append('<h3>Ответы</h3>');
 <% end %>
 
-$('.answers').append('<%= j render partial: 'answers/answer', locals: { answer: @answer } %>');
+$('.answers').append('<%= j render @answer %>');
 $('#answer_content').val('');
