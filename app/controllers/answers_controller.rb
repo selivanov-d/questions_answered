@@ -7,10 +7,8 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     current_user.answers << @answer
 
-    if @answer.save
-      redirect_to @question, notice: 'Ваш ответ сохранён'
-    else
-      render 'questions/show'
+    unless @answer.save
+      head :no_content
     end
   end
 

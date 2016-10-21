@@ -1,7 +1,7 @@
 - if @answer.errors.any?
   = render partial: 'common/errors', locals: { resource: @answer }
 
-= form_for [@question, @answer] do |f|
+= form_for [@question, @answer], remote: true do |f|
   .form-group
     = f.label :content
     = f.text_area :content

@@ -1,0 +1,6 @@
+<% if @question.answers.count == 1 %>
+  $('.answers').append('<h3>Ответы</h3>');
+<% end %>
+
+$('.answers').append('<%= j render partial: 'answers/answer', locals: { answer: @answer } %>');
+$('#answer_content').val('');
