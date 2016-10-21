@@ -11,7 +11,7 @@ feature 'Create answer', %q{
   context 'Authenticated user' do
     given(:user) { create(:user) }
 
-    scenario 'creates answer with valid data' do
+    scenario 'creates answer with valid data', js: true do
       sign_in(user)
 
       visit question_path(question)
@@ -20,26 +20,30 @@ feature 'Create answer', %q{
       click_on 'Дать ответ'
 
       expect(current_path).to eq question_path(question)
-      expect(page).to have_content('Ваш ответ сохранён')
-      expect(page).to have_content('Test question content')
+
+      within '.answers' do
+        expect(page).to have_content('Test question content')
+      end
     end
 
-    scenario 'creates answer with invalid data' do
+    scenario 'creates answer with invalid data', js: true do
       sign_in(user)
 
       visit question_path(question)
 
-      fill_in 'Content', with: ''
+      fill_in 'Content', with: 'no_text'
       click_on 'Дать ответ'
 
-      expect(current_path).to eq question_answers_path(question)
-      expect(page).to have_content('[:content] can\'t be blank')
-      expect(page).to have_content('[:content] is too short (minimum is 10 characters)')
+      expect(current_path).to eq question_path(question)
+
+      within '.answers' do
+        expect(page).to_not have_content('no_text')
+      end
     end
   end
 
   context 'Non-authenticated user' do
-    scenario 'tries to create answer' do
+    scenario 'tries to create answer', js: true do
       visit question_path(question)
 
       expect(page).to_not have_button('Дать ответ')

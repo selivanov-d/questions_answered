@@ -2,10 +2,10 @@ h1 Вопрос
 h4= @question.title
 p= @question.content
 
-- if @question.answers.any?
-  h3 Ответы
-  - @question.answers.each do |answer|
-    = render partial: 'answers/answer', locals: { answer: answer } unless answer.new_record?
+.answers
+  - if @question.answers.any?
+    h3 Ответы
+    = render @question.answers
 
 - if user_signed_in?
   - if current_user.author_of?(@question)
