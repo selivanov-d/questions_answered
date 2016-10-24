@@ -1,7 +1,18 @@
 .answer[data-answer-id="#{answer.id}"]
-  p= answer.content
+  .js-answer-content.answer_content.-active
+    = answer.content
 
   - if user_signed_in? && current_user.author_of?(answer)
+    .js-answer-edit-form.answer_edit-form
+      = form_for [answer], html: { class: 'js-existing-answer-edit-form' }, remote: true do |f|
+        .form-group
+          = f.label :content
+          = f.text_area :content, class: 'js-existing-answer-content'
+
+        .form-group
+          = f.submit 'Сохранить ответ'
+
     = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer'
+    = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer'
 
   hr

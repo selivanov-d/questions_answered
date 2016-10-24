@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:destroy]
+  before_action :load_answer, only: [:destroy, :update]
   before_action :load_question, only: [:create]
 
   def create
@@ -19,6 +19,18 @@ class AnswersController < ApplicationController
       # не получилось заставить ActiveSupport::JSON.encode() с кириллицей без string.force_encoding('UTF-8')
     else
       render json: { message: 'Удалить можно только свой ответ'.force_encoding('UTF-8') }, status: :forbidden
+    end
+  end
+
+  def update
+    if current_user.author_of?(@answer)
+      if @answer.update(answer_params)
+        render json: { status: 'success', data: 'Ваш ответ успешно изменён'.force_encoding('UTF-8') }, status: :ok
+      else
+        render json: { status: 'error', data: @answer.errors }, status: :ok
+      end
+    else
+      render json: { message: 'Отредактировать можно только свой ответ'.force_encoding('UTF-8') }, status: :forbidden
     end
   end
 

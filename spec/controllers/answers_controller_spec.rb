@@ -71,4 +71,79 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+
+  describe 'PATCH #update' do
+    sign_in_user
+
+    let!(:question) { create(:question, user: @user) }
+    let!(:answer) { create(:answer, user: @user, question: question) }
+
+    context 'answer\'s author' do
+      context 'with valid attribures' do
+        before do
+          patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :js
+        end
+
+        it 'assigns requested answer to @answer' do
+          expect(assigns(:answer)).to eq(answer)
+        end
+
+        it 'changes answer\'s attributes' do
+          answer.reload
+          expect(answer.content).to eq 'New answer body'
+        end
+
+        it 'receives JSON response with 200 HTTP-header' do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to have_content('success')
+          expect(response.body).to have_content('Ваш ответ успешно изменён')
+        end
+      end
+
+      context 'with invalid attribures' do
+        before do
+          patch :update, params: { id: answer, question_id: question, answer: { content: '' } }, format: :js
+        end
+
+        it 'assigns requested answer to @answer' do
+          expect(assigns(:answer)).to eq(answer)
+        end
+
+        it 'does not updates an answer' do
+          answer.reload
+          expect(answer.content).to_not eq ''
+        end
+
+        it 'receives JSON response with 200 HTTP-header' do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to have_content('error')
+        end
+      end
+    end
+
+    context 'not questions\'s author' do
+      before do
+        user2 = create(:user)
+        sign_out(@user)
+        sign_in(user2)
+
+        patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :js
+      end
+
+      it 'assigns requested answer to @answer' do
+        expect(assigns(:answer)).to eq(answer)
+      end
+
+      it 'does not updates an answer' do
+        answer.reload
+        expect(answer.content).to_not eq 'New answer body'
+      end
+
+      it 'receives JSON response with 403 HTTP-header' do
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_content('Отредактировать можно только свой ответ')
+      end
+    end
+  end
 end
