@@ -1,18 +1,35 @@
-h1 Вопрос
-h4= @question.title
-p= @question.content
+.question[data-question-id='#{@question.id}']
+  h1 Вопрос
+  h4.js-question-title= @question.title
+  .js-question-content
+    p= @question.content
 
-.answers
-  - if @question.answers.any?
-    h3 Ответы
-    = render @question.answers
+  .answers
+    - if @question.answers.any?
+      h3 Ответы
+      = render @question.answers
 
-- if user_signed_in?
-  - if current_user.author_of?(@question)
-    = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }
+  - if user_signed_in?
+    - if current_user.author_of?(@question)
+      = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }
 
-  = render 'answers/form'
+    = render 'answers/form'
 
-br
-= link_to 'К вопросам', questions_path
+  br
 
+  = link_to 'К вопросам', questions_path
+  - if user_signed_in? && current_user.author_of?(@question)
+    = link_to 'Редактировать вопрос', questions_path, class: 'js-edit-question question_edit-trigger -active'
+
+    .js-existing-question-content.question_content
+      = form_for [@question], html: { class: 'js-existing-question-edit-form' }, remote: true do |f|
+        .form-group
+          = f.label :title
+          = f.text_field :title
+
+        .form-group
+          = f.label :content
+          = f.text_area :content
+
+        .form-group
+          = f.submit 'Сохранить'

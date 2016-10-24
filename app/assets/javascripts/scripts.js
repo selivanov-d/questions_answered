@@ -1,5 +1,6 @@
-function edit_question() {
+function edit_answer() {
     event.preventDefault();
+
     $('.js-answer-content, .js-answer-edit-form, .js-edit-answer').toggleClass('-active');
 
     $('.js-existing-answer-edit-form').off('ajax:success').on('ajax:success', function (event, response) {
@@ -8,6 +9,32 @@ function edit_question() {
                 $('.js-notice').text(response.data);
                 $('.js-answer-content').html($('.js-answer-edit-form').find('.js-existing-answer-content').val());
                 $('.js-answer-content, .js-answer-edit-form, .js-edit-answer').toggleClass('-active');
+                break;
+            case 'error':
+                var errors_array = get_errors_array(response.data);
+                $('.js-alert').html(errors_to_list(errors_array));
+                break;
+        }
+    });
+}
+
+function edit_question() {
+    event.preventDefault();
+
+    $('.js-existing-question-content, .js-edit-question').toggleClass('-active');
+
+    $('.js-existing-question-edit-form').off('ajax:success').on('ajax:success', function (event, response) {
+        switch (response.status) {
+            case 'success':
+                var new_question_title = $('.js-existing-question-edit-form').find('#question_title').val();
+                var new_question_content = $('.js-existing-question-edit-form').find('#question_content').val();
+
+                $('.js-notice').text(response.data);
+
+                $('.js-question-title').text(new_question_title);
+                $('.js-question-content').html(new_question_content);
+
+                $('.js-existing-question-content, .js-existing-question-edit-form, .js-edit-question').toggleClass('-active');
                 break;
             case 'error':
                 var errors_array = get_errors_array(response.data);
@@ -71,5 +98,7 @@ $(document).on('ready', function () {
         );
     });
 
-    $('.js-edit-answer').on('click', edit_question);
+    $('.js-edit-answer').on('click', edit_answer);
+
+    $('.js-edit-question').on('click', edit_question)
 });

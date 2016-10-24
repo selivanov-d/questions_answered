@@ -122,7 +122,7 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'not questions\'s author' do
+    context 'not answer\'s author' do
       before do
         user2 = create(:user)
         sign_out(@user)

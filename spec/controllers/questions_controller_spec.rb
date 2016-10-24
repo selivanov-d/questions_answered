@@ -116,4 +116,80 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    sign_in_user
+
+    let!(:question) { create(:question, user: @user) }
+
+    context 'question\'s author' do
+      context 'with valid attributes' do
+        before do
+          patch :update, params: { id: question, question: { title: 'New question title', content: 'New question content' } }, format: :js
+        end
+
+        it 'assigns requested question to @question' do
+          expect(assigns(:question)).to eq(question)
+        end
+
+        it 'changes question\'s attributes' do
+          question.reload
+          expect(question.title).to eq 'New question title'
+          expect(question.content).to eq 'New question content'
+        end
+
+        it 'receives JSON response with 200 HTTP-header' do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to have_content('success')
+          expect(response.body).to have_content('Ваш вопрос успешно изменён')
+        end
+      end
+
+      context 'with invalid attribures' do
+        before do
+          patch :update, params: { id: question, question: { title: '', content: '' } }, format: :js
+        end
+
+        it 'assigns requested question to @question' do
+          expect(assigns(:question)).to eq(question)
+        end
+
+        it 'does not updates a question' do
+          question.reload
+          expect(question.title).to_not eq ''
+          expect(question.content).to_not eq ''
+        end
+
+        it 'receives JSON response with 200 HTTP-header' do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to have_content('error')
+        end
+      end
+    end
+
+    context 'not questions\'s author' do
+      before do
+        user2 = create(:user)
+        sign_out(@user)
+        sign_in(user2)
+
+        patch :update, params: { id: question, question: { title: 'New question title', content: 'New question content' } }, format: :js
+      end
+
+      it 'assigns requested question to @question' do
+        expect(assigns(:question)).to eq(question)
+      end
+
+      it 'does not updates a question' do
+        question.reload
+        expect(question.content).to_not eq 'New question title'
+        expect(question.content).to_not eq 'New question content'
+      end
+
+      it 'receives JSON response with 403 HTTP-header' do
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_content('Отредактировать можно только свой вопрос')
+      end
+    end
+  end
 end
