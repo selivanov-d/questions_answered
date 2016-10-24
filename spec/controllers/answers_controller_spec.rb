@@ -42,12 +42,14 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'questions\'s author' do
       it 'deletes an answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(@user.answers, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(@user.answers, :count).by(-1)
       end
 
-      it 'renders question show view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'receives JSON response with 200 HTTP-header' do
+        delete :destroy, params: { id: answer }, format: :js
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to have_content('Ваш ответ удалён')
       end
     end
 
@@ -59,12 +61,13 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'does not deletes an answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'renders question show view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'receives JSON response with 403 HTTP-header' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_content('Удалить можно только свой ответ')
       end
     end
   end

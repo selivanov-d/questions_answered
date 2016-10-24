@@ -15,12 +15,11 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      notice = 'Ваш ответ удалён'
+      render json: { message: 'Ваш ответ удалён'.force_encoding('UTF-8') }, status: :ok
+      # не получилось заставить ActiveSupport::JSON.encode() с кириллицей без string.force_encoding('UTF-8')
     else
-      notice = 'Удалить можно только свой ответ'
+      render json: { message: 'Удалить можно только свой ответ'.force_encoding('UTF-8') }, status: :forbidden
     end
-
-    redirect_to @answer.question, notice: notice
   end
 
   private
