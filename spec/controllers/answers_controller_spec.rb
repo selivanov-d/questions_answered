@@ -101,7 +101,7 @@ RSpec.describe AnswersController, type: :controller do
         end
       end
 
-      context 'with invalid attribures' do
+      context 'with invalid attributes' do
         before do
           patch :update, params: { id: answer, question_id: question, answer: { content: '' } }, format: :js
         end
