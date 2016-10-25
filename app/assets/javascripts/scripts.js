@@ -1,7 +1,7 @@
 function edit_answer() {
     event.preventDefault();
 
-    $('.js-answer-content, .js-answer-edit-form, .js-edit-answer').toggleClass('-active');
+    $(this).closest('.answer').find('.js-answer-content, .js-answer-edit-form, .js-edit-answer').toggleClass('-active');
 
     $('.js-existing-answer-edit-form').off('ajax:success').on('ajax:success', function (event, response) {
         switch (response.status) {
@@ -9,6 +9,9 @@ function edit_answer() {
                 $('.js-notice').text(response.data);
                 $('.js-answer-content').html($('.js-answer-edit-form').find('.js-existing-answer-content').val());
                 $('.js-answer-content, .js-answer-edit-form, .js-edit-answer').toggleClass('-active');
+
+                $('.answers').prepend($(this).closest('.answer').detach());
+
                 break;
             case 'error':
                 var errors_array = get_errors_array(response.data);
@@ -70,6 +73,10 @@ function errors_to_list(errors_array) {
     return errors_html;
 }
 
+function mark_as_best() {
+
+}
+
 $(document).on('ready', function () {
     $('.js-delete-answer').on('click', function (e) {
         e.preventDefault();
@@ -100,5 +107,16 @@ $(document).on('ready', function () {
 
     $('.js-edit-answer').on('click', edit_answer);
 
-    $('.js-edit-question').on('click', edit_question)
+    $('.js-edit-question').on('click', edit_question);
+
+    $('.js-mark-answer-as-best').on('ajax:success', function(event, response) {
+        switch(response.status) {
+            case 'success':
+                $('.js-notice').text(response.message);
+                $(this).closest('.answer').addClass('-best').siblings('.answer').removeClass('-best');
+                break;
+            case 'error':
+                break;
+        }
+    });
 });

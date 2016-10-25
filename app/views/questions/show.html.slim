@@ -7,7 +7,7 @@
   .answers
     - if @question.answers.any?
       h3 Ответы
-      = render @question.answers
+      = render @question.answers.best_first
 
   - if user_signed_in?
     - if current_user.author_of?(@question)

@@ -5,6 +5,16 @@
     &.-active
       display: block
 
+  &_best-label
+    display: none
+
+    @at-root .answer.-best &
+      display: block
+
+  &_mark-as-best-trigger
+    @at-root .answer.-best &
+      display: none
+
 .question
   &_content, &_edit-trigger
     display: none

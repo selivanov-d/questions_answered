@@ -1,4 +1,5 @@
-.answer[data-answer-id="#{answer.id}"]
+.answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
+  .answer_best-label Лучший ответ
   .js-answer-content.answer_content.-active
     = answer.content
 
@@ -14,5 +15,8 @@
 
     = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer'
     = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer'
+
+  - if user_signed_in? && current_user.author_of?(@question)
+    = link_to 'Отметить как лучший', mark_as_best_answer_path(answer), class: 'js-mark-answer-as-best answer_mark-as-best-trigger', method: 'post', remote: true
 
   hr

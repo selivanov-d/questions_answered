@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:destroy, :update]
+  before_action :load_answer, only: [:destroy, :update, :mark_as_best]
   before_action :load_question, only: [:create]
 
   def create
@@ -31,6 +31,20 @@ class AnswersController < ApplicationController
       end
     else
       render json: { message: 'Отредактировать можно только свой ответ'.force_encoding('UTF-8') }, status: :forbidden
+    end
+  end
+
+  def mark_as_best
+    if current_user.author_of?(@answer)
+      @answer.mark_as_best
+
+      if @answer.save
+        render json: { status: 'success', data: 'Ответ отмечен как лучший'.force_encoding('UTF-8') }, status: :ok
+      else
+        render json: { status: 'error', data: @answer.errors }, status: :ok
+      end
+    else
+      render json: { message: 'Отметить ответ лучшим можно у своего вопроса'.force_encoding('UTF-8') }, status: :forbidden
     end
   end
 
