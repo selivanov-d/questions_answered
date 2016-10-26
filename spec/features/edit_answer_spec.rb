@@ -49,16 +49,16 @@ feature 'Edit answer', %q{
 
   context 'Authenticated non-author' do
     before :each do
-      sign_in(user)
+      @answer = create(:answer, question: question, user: user)
 
       user2 = create(:user)
-      @answer2 = create(:answer, question: question, user: user2)
+      sign_in(user2)
 
       visit question_path(question)
     end
 
     scenario 'tries to edit answer', js: true do
-      within ".answer[data-answer-id='#{@answer2.id}']" do
+      within ".answer[data-answer-id='#{@answer.id}']" do
         expect(page).to_not have_link('Редактировать ответ')
       end
     end
