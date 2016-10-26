@@ -9,7 +9,7 @@ feature 'Edit question', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
-  context 'Authenticated user' do
+  context 'Authenticated author' do
     before :each do
       sign_in(user)
 
@@ -56,6 +56,21 @@ feature 'Edit question', %q{
       expect(page).to have_content('[:title] is too long (maximum is 255 characters)')
       expect(page).to have_content('[:content] can\'t be blank')
       expect(page).to have_content('[:content] is too short (minimum is 10 characters)')
+    end
+  end
+
+  context 'Authenticated non-author' do
+    before :each do
+      user2 = create(:user)
+      sign_in(user2)
+
+      visit question_path(question)
+    end
+
+    scenario 'tries to edit question', js: true do
+      within ".question[data-question-id='#{question.id}']" do
+        expect(page).to_not have_link('Редактировать вопрос')
+      end
     end
   end
 
