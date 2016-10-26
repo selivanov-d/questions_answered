@@ -7,15 +7,15 @@ feature 'Edit answer', %q{
 } do
 
   given(:user) { create(:user) }
+  given(:question) { create(:question, user: user) }
 
   context 'Authenticated user' do
-    background do
+    before :each do
       sign_in(user)
 
-      @question = create(:question)
-      @answer = create(:answer, question: @question, user: user)
+      @answer = create(:answer, question: question, user: user)
 
-      visit question_path(@question)
+      visit question_path(question)
     end
 
     scenario 'edits answer with valid data', js: true do
@@ -27,7 +27,7 @@ feature 'Edit answer', %q{
         click_on 'Сохранить'
       end
 
-      expect(current_path).to eq question_path(@question)
+      expect(current_path).to eq question_path(question)
       expect(page).to have_content('Ваш ответ успешно изменён')
       expect(page).to have_content('Valid answer content')
     end
@@ -41,7 +41,7 @@ feature 'Edit answer', %q{
         click_on 'Сохранить'
       end
 
-      expect(current_path).to eq question_path(@question)
+      expect(current_path).to eq question_path(question)
       expect(page).to have_content('[:content] can\'t be blank')
       expect(page).to have_content('[:content] is too short (minimum is 10 characters)')
     end
@@ -49,12 +49,11 @@ feature 'Edit answer', %q{
 
   context 'Non-authenticated user' do
     scenario 'tries to edit answer' do
-      @question = create(:question)
-      @answer = create(:answer, question: @question)
+      @answer = create(:answer, question: question, user: user)
 
-      visit question_path(@question)
+      visit question_path(question)
 
-      expect(current_path).to eq question_path(@question)
+      expect(current_path).to eq question_path(question)
       expect(page).to_not have_content 'Редактировать ответ'
     end
   end

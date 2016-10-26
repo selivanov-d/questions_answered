@@ -1,6 +1,14 @@
-h1 Список вопросов
+- @page_title = 'Список вопросов'
 
-= render @questions
+.questions-index
+  - if @questions.any?
+    table.questions-index-table
+      thead
+        tr
+          th[colspan=2]
+      tbody
+        = render @questions
 
-- if user_signed_in?
-  = link_to 'Задать вопрос', new_question_path
+  .questions-index_actions
+    - if user_signed_in?
+      = link_to 'Задать вопрос', new_question_path, class: 'questions-index_new-button'

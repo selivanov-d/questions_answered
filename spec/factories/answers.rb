@@ -14,5 +14,6 @@ FactoryGirl.define do
     content nil
     association :question, factory: :invalid_question
     user
+    best false
   end
 end

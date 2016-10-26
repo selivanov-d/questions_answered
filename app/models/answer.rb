@@ -11,10 +11,7 @@ class Answer < ActiveRecord::Base
   def mark_as_best
     current_best = Answer.best_for(question_id).first
 
-    if current_best.present?
-      current_best.best = false
-      current_best.save
-    end
+    current_best.update_attributes(best: false) if current_best.present?
 
     self.best = true
   end

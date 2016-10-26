@@ -10,9 +10,11 @@ feature 'Delete answer', %q{
   given(:question) { create(:question, user: user) }
 
   context 'Authenticated user' do
-    scenario 'deletes his own answer', js: true do
+    before :each do
       sign_in(user)
+    end
 
+    scenario 'deletes his own answer', js: true do
       answer = create(:answer, user: user, question: question)
 
       visit question_path(question)
@@ -27,8 +29,6 @@ feature 'Delete answer', %q{
     end
 
     scenario 'tries to delete not his own answer', js: true do
-      sign_in(user)
-
       user2 = create(:user)
       create(:answer, user: user2, question: question)
 

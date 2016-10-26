@@ -24,11 +24,11 @@ feature 'Show question and give answer', %q{
     sign_in(user)
 
     check_question_and_answers
-    expect(page).to have_button('Дать ответ')
+    expect(page).to have_button('Сохранить ответ')
   end
 
   scenario 'Non-authenticated user views question' do
     check_question_and_answers
-    expect(page).to_not have_button('Дать ответ')
+    expect(page).to_not have_button('Сохранить ответ')
   end
 end

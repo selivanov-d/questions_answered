@@ -1,14 +1,14 @@
 - if @question.errors.any?
   = render partial: 'common/errors', locals: { resource: @question }
 
-= form_for @question do |f|
-  .form-group
+= form_for @question, html: { class: 'question-new-form' } do |f|
+  .question-new-form_input-row
     = f.label :title
-    = f.text_field :title
+    = f.text_field :title, class: 'question-new-form_input'
 
-  .form-group
+  .question-new-form_input-row
     = f.label :content
-    = f.text_area :content
+    = f.text_area :content, class: 'question-new-form_input'
 
-  .form-group
-    = f.submit 'Создать'
+  .actions
+    = f.submit 'Создать', class: 'question-new-form_submit-button'

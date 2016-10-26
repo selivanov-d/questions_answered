@@ -1,10 +1,9 @@
-.question
-  .question_title
-    = link_to question.title, question
-  .question_content= question.content
-  .question_actions.question-actions
+tr.question
+  td.question_description
+    .question_title
+      = link_to question.title, question
+
+    .question_content= truncate(question.content, length: 128)
+  td.question_actions.question-actions
     - if user_signed_in?
       = link_to 'Дать ответ', question, class: 'question-actions_give-answer'
-
-  hr
-

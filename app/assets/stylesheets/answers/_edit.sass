@@ -1,0 +1,19 @@
+.answer-edit-form
+  @include default-form
+
+  display: none
+
+  @at-root .answer.-editing &
+    display: block
+
+  &_cancel-button
+    @extend .btn, .btn-default
+
+  &_button
+    margin-right: 10px
+    @extend .btn-sm
+
+
+
+
+

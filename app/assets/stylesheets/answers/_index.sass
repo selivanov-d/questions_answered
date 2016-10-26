@@ -1,0 +1,54 @@
+.answer
+  &.-best:not(.-editing)
+    @extend .success
+
+  &_content
+    @at-root .answer.-editing &
+      display: none
+
+  &_best-label
+    @extend .label, .label-success
+    display: none
+
+    @at-root .answer.-best &
+      display: block
+
+    @at-root .answer.-best.-editing &
+      display: none
+
+  &_mark-as-best-trigger
+    @at-root .answer.-best &
+      display: none
+
+  &_description
+    margin-right: 150px
+
+    @at-root .answer.-editing &
+      margin: 0
+
+
+.answers-index-table
+  @include default-table
+
+.answer-actions
+  width: 140px
+  float: right
+
+  @at-root .answer.-editing &
+    display: none
+
+  &_item
+    @extend .btn, .btn-xs, .btn-block
+
+    &.-delete
+      @extend .btn-danger
+
+    &.-edit
+      @extend .btn-default
+
+    &.-mark-as-best
+      @extend .btn-warning
+
+  &_buttons
+    @at-root .answer.-editing &
+      display: none

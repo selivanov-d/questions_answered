@@ -1,0 +1,38 @@
+doctype html
+html
+  head
+    title Questions Answered
+    meta content=('text/html; charset=UTF-8') http-equiv='Content-Type' /
+    = stylesheet_link_tag 'application', media: 'all'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+
+  body
+    .alerts-box
+      .alerts-box_wrapper.js-alerts-box
+        - if notice.present?
+          .alert.alert-success.alert-dismissible.fade.in role="alert"
+            button.close aria-label="Close" data-dismiss="alert" type="button"
+              span aria-hidden="true"  ×
+            p= notice
+
+        - if alert.present?
+          .alert.alert-danger.alert-dismissible.fade.in role="alert"
+            button.close aria-label="Close" data-dismiss="alert" type="button"
+              span aria-hidden="true"  ×
+            p= alert
+
+    = render 'common/header'
+
+    .container
+      .content-wrapper
+        .main-page-content
+          h1= @page_title
+          = yield
+
+        .sidebar.js-sidebar
+          - if content_for? :sidebar
+            = content_for :sidebar
+
+
+  = render 'common/footer'
