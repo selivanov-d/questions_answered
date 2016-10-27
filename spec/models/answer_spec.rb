@@ -23,14 +23,12 @@ RSpec.describe Answer, type: :model do
     context 'best answer already exists' do
       let!(:best_answer) { create(:best_answer, question: question, user: user) }
 
-      # REVIEW: почему-то не смог заставить работать этот тест так, как мне нужно.
-      # Тут тестирую то, что если отмеченный ответ уже есть, отметка на другом вопросе снимает с него
-      # атрибут "Лучший". При этом в браузере всё работает так, как я и ожидаю.
-      # it 'changes `best` attribute of both answers' do
-      #   answer.mark_as_best
-      #   expect(answer.best?).to eq true
-      #   expect(best_answer.best?).to eq false
-      # end
+      it 'changes `best` attribute of both answers' do
+        answer.mark_as_best
+        best_answer.reload
+        expect(answer.best?).to eq true
+        expect(best_answer.best?).to eq false
+      end
 
       it 'does not changes `best` attribute of an answer if it already marked as best' do
         best_answer.mark_as_best

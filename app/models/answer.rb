@@ -9,10 +9,12 @@ class Answer < ActiveRecord::Base
   scope :best_first, -> { order(best: :desc) }
 
   def mark_as_best
-    current_best = Answer.best_for(question_id).first
+    Answer.transaction do
+      current_best = Answer.best_for(question_id).first
 
-    current_best.update_attributes(best: false) if current_best.present?
+      current_best.update_attributes(best: false) if current_best.present?
 
-    self.best = true
+      update_attributes(best: true)
+    end
   end
 end

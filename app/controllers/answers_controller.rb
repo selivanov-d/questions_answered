@@ -37,10 +37,10 @@ class AnswersController < ApplicationController
     if current_user.author_of?(@answer)
       @answer.mark_as_best
 
-      if @answer.save
-        render json: { status: 'success', data: 'Ответ отмечен как лучший' }, status: :ok
-      else
+      if @answer.errors.any?
         render json: { status: 'error', data: @answer.errors }, status: :ok
+      else
+        render json: { status: 'success', data: 'Ответ отмечен как лучший' }, status: :ok
       end
     else
       render json: { message: 'Отметить ответ лучшим можно у своего вопроса' }, status: :forbidden
