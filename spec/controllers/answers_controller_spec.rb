@@ -42,12 +42,14 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'questions\'s author' do
       it 'deletes an answer' do
-        expect { delete :destroy, params: { id: answer } }.to change(@user.answers, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to change(@user.answers, :count).by(-1)
       end
 
-      it 'renders question show view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'receives JSON response with 200 HTTP-header' do
+        delete :destroy, params: { id: answer }, format: :js
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to have_content('Ваш ответ удалён')
       end
     end
 
@@ -59,12 +61,139 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'does not deletes an answer' do
-        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
       end
 
-      it 'renders question show view' do
-        delete :destroy, params: { id: answer }
-        expect(response).to redirect_to question_path(question)
+      it 'receives JSON response with 403 HTTP-header' do
+        delete :destroy, params: { id: answer }, format: :js
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_content('Удалить можно только свой ответ')
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    sign_in_user
+
+    let!(:question) { create(:question, user: @user) }
+    let!(:answer) { create(:answer, user: @user, question: question) }
+
+    context 'answer\'s author' do
+      context 'with valid attribures' do
+        before do
+          patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :js
+        end
+
+        it 'assigns requested answer to @answer' do
+          expect(assigns(:answer)).to eq(answer)
+        end
+
+        it 'changes answer\'s attributes' do
+          answer.reload
+          expect(answer.content).to eq 'New answer body'
+        end
+
+        it 'receives JSON response with 200 HTTP-header' do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to have_content('success')
+          expect(response.body).to have_content('Ваш ответ успешно изменён')
+        end
+      end
+
+      context 'with invalid attributes' do
+        before do
+          patch :update, params: { id: answer, question_id: question, answer: { content: '' } }, format: :js
+        end
+
+        it 'assigns requested answer to @answer' do
+          expect(assigns(:answer)).to eq(answer)
+        end
+
+        it 'does not updates an answer' do
+          answer.reload
+          expect(answer.content).to_not eq ''
+        end
+
+        it 'receives JSON response with 200 HTTP-header' do
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to have_content('error')
+        end
+      end
+    end
+
+    context 'not answer\'s author' do
+      before do
+        user2 = create(:user)
+        sign_out(@user)
+        sign_in(user2)
+
+        patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :js
+      end
+
+      it 'assigns requested answer to @answer' do
+        expect(assigns(:answer)).to eq(answer)
+      end
+
+      it 'does not updates an answer' do
+        answer.reload
+        expect(answer.content).to_not eq 'New answer body'
+      end
+
+      it 'receives JSON response with 403 HTTP-header' do
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_content('Отредактировать можно только свой ответ')
+      end
+    end
+  end
+
+  describe 'PATCH #mark_as_best' do
+    sign_in_user
+
+    let!(:question) { create(:question, user: @user) }
+    let!(:answer) { create(:answer, user: @user, question: question) }
+
+    context 'question\'s author' do
+      before do
+        patch :mark_as_best, params: { id: answer }, format: :js
+      end
+
+      it 'assigns requested answer to @answer' do
+        expect(assigns(:answer)).to eq(answer)
+      end
+
+      it 'changes answer\'s attributes' do
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'receives JSON response with 200 HTTP-header' do
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to have_content('success')
+        expect(response.body).to have_content('Ответ отмечен как лучший')
+      end
+    end
+
+    context 'not question\'s author' do
+      before do
+        user2 = create(:user)
+        question2 = create(:question, user: user2)
+        @answer2 = create(:answer, question: question2, user: user2)
+
+        patch :mark_as_best, params: { id: @answer2 }, format: :js
+      end
+
+      it 'assigns requested answer to @answer' do
+        expect(assigns(:answer)).to eq(@answer2)
+      end
+
+      it 'does not changes answer\'s attributes' do
+        @answer2.reload
+        expect(@answer2.best).to eq false
+      end
+
+      it 'receives JSON response with 403 HTTP-header' do
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_content('Отметить ответ лучшим можно у своего вопроса')
       end
     end
   end

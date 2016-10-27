@@ -1,7 +1,24 @@
-.answer
-  p= answer.content
+tr.answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
+  td
+    .answer_actions.answer-actions
+      - if user_signed_in? && current_user.author_of?(answer)
+        = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer answer-actions_item -delete', method: 'delete', remote: true
+        = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer  answer-actions_item -edit'
+        = link_to 'Отметить как лучший', mark_as_best_answer_path(answer), class: 'js-mark-answer-as-best answer_mark-as-best-trigger answer-actions_item -mark-as-best', method: 'post', remote: true
 
-  - if user_signed_in? && current_user.author_of?(answer)
-    = link_to 'Удалить ответ', answer_path(answer), method: 'delete', data: { confirm: 'Вы уверены?' }
+    .answer_description
+      .answer_best-label Лучший ответ
 
-  hr
+      .answer_content.js-answer-content= answer.content
+
+      - if user_signed_in? && current_user.author_of?(answer)
+        = form_for answer, html: { class: 'answer-edit-form js-existing-answer-edit-form' }, remote: true do |f|
+          .answer-edit-form_input-row
+            = f.label :content
+            = f.text_area :content, class: 'answer-edit-form_input js-existing-answer-content'
+
+          .actions
+            = f.submit 'Сохранить изменения', class: 'answer-edit-form_button answer-edit-form_submit-button'
+            = button_tag 'Отменить', class: 'answer-edit-form_button answer-edit-form_cancel-button js-existing-answer-cancel'
+
+

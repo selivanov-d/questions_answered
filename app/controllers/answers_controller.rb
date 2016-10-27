@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:destroy]
+  before_action :load_answer, only: [:destroy, :update, :mark_as_best]
   before_action :load_question, only: [:create]
 
   def create
@@ -15,12 +15,36 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      notice = 'Ваш ответ удалён'
+      render json: { status: 'success', data: 'Ваш ответ удалён' }, status: :ok
     else
-      notice = 'Удалить можно только свой ответ'
+      render json: { message: 'Удалить можно только свой ответ' }, status: :forbidden
     end
+  end
 
-    redirect_to @answer.question, notice: notice
+  def update
+    if current_user.author_of?(@answer)
+      if @answer.update(answer_params)
+        render json: { status: 'success', data: 'Ваш ответ успешно изменён' }, status: :ok
+      else
+        render json: { status: 'error', data: @answer.errors }, status: :ok
+      end
+    else
+      render json: { message: 'Отредактировать можно только свой ответ' }, status: :forbidden
+    end
+  end
+
+  def mark_as_best
+    if current_user.author_of?(@answer)
+      @answer.mark_as_best
+
+      if @answer.errors.any?
+        render json: { status: 'error', data: @answer.errors }, status: :ok
+      else
+        render json: { status: 'success', data: 'Ответ отмечен как лучший' }, status: :ok
+      end
+    else
+      render json: { message: 'Отметить ответ лучшим можно у своего вопроса' }, status: :forbidden
+    end
   end
 
   private

@@ -6,12 +6,11 @@ feature 'Create question', %q{
   I want to be able ask question
 } do
 
-  given(:user) { create(:user) }
-
   context 'Authenticated user' do
-    background do
-      sign_in(user)
+    given(:user) { create(:user) }
 
+    before :each do
+      sign_in(user)
       visit new_question_path
     end
 

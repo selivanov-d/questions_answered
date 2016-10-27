@@ -1,5 +1,7 @@
-h1 Новый вопрос
+- @page_title = 'Новый вопрос'
 
-= render 'form'
+.question-new
+  = render 'form'
 
-= link_to 'К списку вопросов', questions_path
+  .question-new_actions
+    = link_to 'К списку вопросов', questions_path, class: 'question-new_back-button'

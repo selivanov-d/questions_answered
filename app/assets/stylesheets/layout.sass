@@ -1,0 +1,29 @@
+html, body
+  height: 100%
+
+.content-wrapper
+  @extend .row
+  padding-bottom: 80px
+  padding-top: 80px
+
+.main-page-content
+  @extend .col-xs-8
+
+.sidebar
+  @extend .col-xs-4
+
+body > .container
+  min-height: 100%
+  position: relative
+  z-index: 1
+
+.alerts-box
+  position: fixed
+  top: 70px
+  right: 0
+  left: 0
+  z-index: 999
+
+  &_wrapper
+    max-width: 960px
+    margin: 0 auto

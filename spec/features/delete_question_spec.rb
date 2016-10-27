@@ -9,28 +9,30 @@ feature 'Delete question', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question, user: user) }
 
-  scenario 'Authenticated user deletes his own question' do
-    sign_in(user)
+  context 'Authenticated user' do
+    before :each do
+      sign_in(user)
+    end
 
-    visit question_path(question)
-    click_on 'Удалить вопрос'
+    scenario 'deletes his own question' do
+      visit question_path(question)
+      click_on 'Удалить вопрос'
 
-    expect(current_path).to eq questions_path
-    expect(page).to have_content('Ваш вопрос удалён')
-    expect(page).to_not have_content(question.title)
-    expect(page).to_not have_content(question.content)
-  end
+      expect(current_path).to eq questions_path
+      expect(page).to have_content('Ваш вопрос удалён')
+      expect(page).to_not have_content(question.title)
+      expect(page).to_not have_content(question.content)
+    end
 
-  scenario 'Authenticated user tries to delete not his own question' do
-    sign_in(user)
+    scenario 'tries to delete not his own question' do
+      user2 = create(:user)
+      question2 = create(:question, user: user2)
 
-    user2 = create(:user)
-    question2 = create(:question, user: user2)
+      visit question_path(question2)
 
-    visit question_path(question2)
-
-    expect(current_path).to eq question_path(question2)
-    expect(page).to_not have_link('Удалить вопрос')
+      expect(current_path).to eq question_path(question2)
+      expect(page).to_not have_link('Удалить вопрос')
+    end
   end
 
   scenario 'Non-authenticated user tries to delete question' do

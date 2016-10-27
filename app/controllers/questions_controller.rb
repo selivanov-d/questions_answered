@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:show, :destroy]
+  before_action :load_question, only: [:show, :destroy, :update]
 
   def index
     @questions = Question.all
@@ -30,6 +30,18 @@ class QuestionsController < ApplicationController
       redirect_to questions_path, notice: 'Ваш вопрос удалён'
     else
       redirect_to @question, notice: 'Удалить можно только свой вопрос'
+    end
+  end
+
+  def update
+    if current_user.author_of?(@question)
+      if @question.update(question_params)
+        render json: { status: 'success', data: 'Ваш вопрос успешно изменён' }, status: :ok
+      else
+        render json: { status: 'error', data: @question.errors }, status: :ok
+      end
+    else
+      render json: { message: 'Отредактировать можно только свой вопрос' }, status: :forbidden
     end
   end
 

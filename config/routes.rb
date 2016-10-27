@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   root 'questions#index'
 
   resources :questions do
-    resources :answers, shallow: true, except: [:new, :show, :index]
+    resources :answers, shallow: true, except: [:new, :show, :index] do
+      member do
+        post 'mark_as_best'
+      end
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
