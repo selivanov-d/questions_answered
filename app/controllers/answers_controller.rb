@@ -15,22 +15,21 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      render json: { status: 'success', data: 'Ваш ответ удалён'.force_encoding('UTF-8') }, status: :ok
-      # не получилось заставить ActiveSupport::JSON.encode() с кириллицей без string.force_encoding('UTF-8')
+      render json: { status: 'success', data: 'Ваш ответ удалён' }, status: :ok
     else
-      render json: { message: 'Удалить можно только свой ответ'.force_encoding('UTF-8') }, status: :forbidden
+      render json: { message: 'Удалить можно только свой ответ' }, status: :forbidden
     end
   end
 
   def update
     if current_user.author_of?(@answer)
       if @answer.update(answer_params)
-        render json: { status: 'success', data: 'Ваш ответ успешно изменён'.force_encoding('UTF-8') }, status: :ok
+        render json: { status: 'success', data: 'Ваш ответ успешно изменён' }, status: :ok
       else
         render json: { status: 'error', data: @answer.errors }, status: :ok
       end
     else
-      render json: { message: 'Отредактировать можно только свой ответ'.force_encoding('UTF-8') }, status: :forbidden
+      render json: { message: 'Отредактировать можно только свой ответ' }, status: :forbidden
     end
   end
 
@@ -39,12 +38,12 @@ class AnswersController < ApplicationController
       @answer.mark_as_best
 
       if @answer.save
-        render json: { status: 'success', data: 'Ответ отмечен как лучший'.force_encoding('UTF-8') }, status: :ok
+        render json: { status: 'success', data: 'Ответ отмечен как лучший' }, status: :ok
       else
         render json: { status: 'error', data: @answer.errors }, status: :ok
       end
     else
-      render json: { message: 'Отметить ответ лучшим можно у своего вопроса'.force_encoding('UTF-8') }, status: :forbidden
+      render json: { message: 'Отметить ответ лучшим можно у своего вопроса' }, status: :forbidden
     end
   end
 

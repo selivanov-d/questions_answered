@@ -36,12 +36,12 @@ class QuestionsController < ApplicationController
   def update
     if current_user.author_of?(@question)
       if @question.update(question_params)
-        render json: { status: 'success', data: 'Ваш вопрос успешно изменён'.force_encoding('UTF-8') }, status: :ok
+        render json: { status: 'success', data: 'Ваш вопрос успешно изменён' }, status: :ok
       else
         render json: { status: 'error', data: @question.errors }, status: :ok
       end
     else
-      render json: { message: 'Отредактировать можно только свой вопрос'.force_encoding('UTF-8') }, status: :forbidden
+      render json: { message: 'Отредактировать можно только свой вопрос' }, status: :forbidden
     end
   end
 
