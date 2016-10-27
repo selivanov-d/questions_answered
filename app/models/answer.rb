@@ -12,9 +12,9 @@ class Answer < ActiveRecord::Base
     Answer.transaction do
       current_best = Answer.best_for(question_id).first
 
-      current_best.update_attributes(best: false) if current_best.present?
+      current_best.update_attributes!(best: false) if current_best.present?
 
-      update_attributes(best: true)
+      update_attributes!(best: true)
     end
   end
 end
