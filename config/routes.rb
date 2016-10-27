@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :questions do
     resources :answers, shallow: true, except: [:new, :show, :index] do
       member do
-        post 'mark_as_best' => 'answers#mark_as_best'
+        post 'mark_as_best'
       end
     end
   end
