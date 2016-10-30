@@ -27,6 +27,9 @@ gem 'slim-rails'
 gem 'rails-controller-testing'
 gem 'devise'
 gem 'bootstrap-sass'
+gem 'carrierwave'
+gem 'remotipart'
+gem 'cocoon'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -48,6 +51,7 @@ group :development, :test do
   gem 'launchy'
   gem 'capybara-webkit'
   gem 'database_cleaner'
+  gem 'simplecov'
 end
 
 group :development do
