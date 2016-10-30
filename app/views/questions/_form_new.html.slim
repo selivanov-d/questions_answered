@@ -1,6 +1,3 @@
-- if @question.errors.any?
-  = render partial: 'common/errors', locals: { resource: @question }
-
 = form_for @question, html: { class: 'question-new-form' } do |f|
   .question-new-form_input-row
     = f.label :title
@@ -9,6 +6,16 @@
   .question-new-form_input-row
     = f.label :content
     = f.text_area :content, class: 'question-new-form_input'
+
+  .question-new-form_input-row.question-attachments
+    = f.fields_for :attachments do |attachment|
+      = render 'questions/attachment_fields', f: attachment
+
+      .links.question-attachments_links
+        = link_to_add_association f, :attachments do
+          span.glyphicon.glyphicon-plus
+          | Добавить файл
+
 
   .actions
     = f.submit 'Создать', class: 'question-new-form_submit-button'

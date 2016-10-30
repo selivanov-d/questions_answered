@@ -18,10 +18,12 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.attachments.build
   end
 
   def show
     @answer = Answer.new
+    @answer.attachments.build
   end
 
   def destroy
@@ -34,9 +36,21 @@ class QuestionsController < ApplicationController
   end
 
   def update
+    old_all_attachments = @question.attachments.to_a
+
     if current_user.author_of?(@question)
       if @question.update(question_params)
-        render json: { status: 'success', data: 'Ваш вопрос успешно изменён' }, status: :ok
+        new_all_attachments = @question.attachments.to_a
+
+        new_attachments = new_all_attachments - old_all_attachments
+
+        newly_attached = {}
+
+        new_attachments.each do |attachment|
+          newly_attached[attachment.file.identifier] = attachment.file.url
+        end
+
+        render json: { status: 'success', data: { message: 'Ваш вопрос успешно изменён', newly_attached: newly_attached } }, status: :ok
       else
         render json: { status: 'error', data: @question.errors }, status: :ok
       end
@@ -48,7 +62,7 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :content)
+    params.require(:question).permit(:title, :content, attachments_attributes: [:file, :id, :_destroy])
   end
 
   def load_question

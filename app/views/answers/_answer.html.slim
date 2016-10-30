@@ -1,4 +1,4 @@
-tr.answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
+tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
   td
     .answer_actions.answer-actions
       - if user_signed_in? && current_user.author_of?(answer)
@@ -11,14 +11,10 @@ tr.answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
 
       .answer_content.js-answer-content= answer.content
 
+      .js-answer-attachments
+        - if answer.attachments.any?
+          ul.answer_attachments.answer-attachments.js-answer-attachments-list
+            = render partial: 'attachments/answer-attachment', collection: answer.attachments, as: :attachment
+
       - if user_signed_in? && current_user.author_of?(answer)
-        = form_for answer, html: { class: 'answer-edit-form js-existing-answer-edit-form' }, remote: true do |f|
-          .answer-edit-form_input-row
-            = f.label :content
-            = f.text_area :content, class: 'answer-edit-form_input js-existing-answer-content'
-
-          .actions
-            = f.submit 'Сохранить изменения', class: 'answer-edit-form_button answer-edit-form_submit-button'
-            = button_tag 'Отменить', class: 'answer-edit-form_button answer-edit-form_cancel-button js-existing-answer-cancel'
-
-
+        = render partial: 'answers/form-edit', locals: { answer: answer }

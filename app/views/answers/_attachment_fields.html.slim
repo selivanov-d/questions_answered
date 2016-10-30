@@ -1,0 +1,9 @@
+.nested-fields.answer-attachments_attachment.answer-attachment.new-answer-for-question-form_input-row.js-answer-attachment-field.js-new-answer-for-question-form-attachment-field
+  .row
+    .col-xs-8
+      = f.file_field :file, class: 'answer-new-form_input new-answer-for-question-form_input'
+
+    .col-xs-4.answer-attachment_links.new-answer-for-question-form_attachment-links
+      = link_to_remove_association f, class: 'answer-attachment_remove-field-link' do
+        span.answer-attachment_remove-field-icon.new-answer-for-question-form_remove-field-icon
+        | Удалить поле

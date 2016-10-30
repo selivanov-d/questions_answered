@@ -1,6 +1,0 @@
-<% if @question.answers.count == 1 %>
-  $('.answers-index').append('<h3>Ответы</h3>');
-<% end %>
-
-$('.js-answers-index-table').append('<%= j render @answer %>');
-$('#answer_content').val('');

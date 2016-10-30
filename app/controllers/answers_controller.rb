@@ -7,15 +7,19 @@ class AnswersController < ApplicationController
     @answer = @question.answers.new(answer_params)
     current_user.answers << @answer
 
-    unless @answer.save
-      head :no_content
+    if @answer.save
+      new_answer_html = render_to_string @answer
+
+      render json: { status: 'success', data: { message: 'Ваш ответ сохранён', html: new_answer_html } }, status: :ok
+    else
+      render json: { status: 'error', data: @answer.errors }, status: :ok
     end
   end
 
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy
-      render json: { status: 'success', data: 'Ваш ответ удалён' }, status: :ok
+      render json: { status: 'success', data: { message: 'Ваш ответ удалён' } }, status: :ok
     else
       render json: { message: 'Удалить можно только свой ответ' }, status: :forbidden
     end
@@ -24,7 +28,9 @@ class AnswersController < ApplicationController
   def update
     if current_user.author_of?(@answer)
       if @answer.update(answer_params)
-        render json: { status: 'success', data: 'Ваш ответ успешно изменён' }, status: :ok
+        updated_answer_html = render_to_string @answer
+
+        render json: { status: 'success', data: { message: 'Ваш ответ успешно изменён', html: updated_answer_html } }, status: :ok
       else
         render json: { status: 'error', data: @answer.errors }, status: :ok
       end
@@ -50,7 +56,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:content)
+    params.require(:answer).permit(:content, attachments_attributes: [:file, :id, :_destroy])
   end
 
   def load_answer

@@ -1,0 +1,9 @@
+.nested-fields.question-attachments_attachment.question-attachment.js-question-attachment-field
+  .row
+    .col-xs-8
+      = f.file_field :file, class: 'question-new-form_input'
+
+    .links.col-xs-4.question-attachment_links
+      = link_to_remove_association f, {} do
+        span.glyphicon.glyphicon-remove-circle
+        | Удалить файл

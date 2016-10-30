@@ -1,28 +1,25 @@
-- @page_title = "Вопрос"
+- @page_title = 'Вопрос'
 
 .question-show.question.js-question[data-question-id='#{@question.id}']
   h4.js-question-title= @question.title
 
   .js-question-content
-    p= @question.content
+    = @question.content
+
+  .js-question-attachments
+    - if @question.attachments.any?
+      .question_attachments.question-attachments
+        h5.question-attachments_header Прикреплённые файлы
+        ul.question-attachments_list.question-attachments-list.js-question-attached-files
+          = render partial: 'attachments/question-attachment', collection: @question.attachments, as: :attachment
+
 
   - if user_signed_in? && current_user.author_of?(@question)
     .question-show_actions
       = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }, class: 'question-show_button question-show_delete-button'
       = link_to 'Редактировать вопрос', questions_path, class: 'question-show_button js-edit-question question_edit-trigger question-show_edit-button'
 
-    = form_for [@question], html: { class: 'js-existing-question-edit-form question-edit-form' }, remote: true do |f|
-      .question-edit-form_input-row
-        = f.label :title
-        = f.text_field :title, class: 'question-edit-form_input js-question-title-input'
-
-      .question-edit-form_input-row
-        = f.label :content
-        = f.text_area :content, class: 'question-edit-form_input js-question-content-input'
-
-      .actions
-        = f.submit 'Сохранить', class: 'question-edit-form_button question-edit-form_submit-button'
-        = button_tag 'Отменить', class: 'question-edit-form_button question-edit-form_cancel-button js-question-edit-cancel'
+    = render 'questions/form_edit'
 
   .answers-index
     - if @question.answers.any?
@@ -32,9 +29,8 @@
       - if @question.answers.present?
         = render @question.answers.best_first
 
-
   - if user_signed_in?
-    = render 'answers/form'
+    = render 'answers/form-new'
 
   .question-show_actions
     = link_to 'К вопросам', questions_path, class: 'question-show_back-button'
