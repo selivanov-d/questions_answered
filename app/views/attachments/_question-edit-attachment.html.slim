@@ -1,0 +1,7 @@
+li.js-question-attachment.question-edit-form-attachments_item.question-edit-form-attachment[data-attachment-id=attachment.id]
+  = link_to attachment_path(attachment), method: 'delete', remote: true, class: 'question-edit-form-attachment_delete-link js-question-edit-form-delete-attachment-link', data: { confirm: 'Вы уверены?' } do
+    span.question-edit-form-attachment_delete-icon
+
+  = link_to attachment.file.url do
+    span.question-edit-form-attachment_icon
+    = attachment.file.identifier

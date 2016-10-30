@@ -36,21 +36,16 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    old_all_attachments = @question.attachments.to_a
-
     if current_user.author_of?(@question)
       if @question.update(question_params)
-        new_all_attachments = @question.attachments.to_a
+        question_form_html = render_to_string partial: 'questions/form_edit'
+        question_content_html = render_to_string partial: 'questions/question-content'
 
-        new_attachments = new_all_attachments - old_all_attachments
-
-        newly_attached = {}
-
-        new_attachments.each do |attachment|
-          newly_attached[attachment.file.identifier] = attachment.file.url
-        end
-
-        render json: { status: 'success', data: { message: 'Ваш вопрос успешно изменён', newly_attached: newly_attached } }, status: :ok
+        render json: { status: 'success', data: {
+          message: 'Ваш вопрос успешно изменён',
+          question_form_html: question_form_html,
+          question_content_html: question_content_html
+        } }, status: :ok
       else
         render json: { status: 'error', data: @question.errors }, status: :ok
       end

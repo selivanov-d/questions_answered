@@ -7,12 +7,15 @@
     = f.label :content
     = f.text_area :content, class: 'question-edit-form_input js-question-content-input'
 
+  .question-edit-form_attachments.question-edit-form-attachments
+    = render partial: 'attachments/question-edit-attachment', collection: @question.attachments, as: :attachment
+
   .question-edit-form_input-row
-    .question-edit-form_attachments.js-question-attachments.question-edit-form-attachments
+    .question-edit-form_attachments-fields.question-edit-form-attachments-fields.js-question-attachments-fields
       = f.fields_for :attachments do |attachment|
-      .links.question-edit-form-attachments_links
-        = link_to_add_association f, :attachments do
-          span.glyphicon.glyphicon-plus
+      .links.question-edit-form-attachments-fields_links
+        = link_to_add_association f, :attachments, class: 'question-edit-form-attachments-fields_add-link' do
+          span.question-edit-form-attachments-fields_add-link-icon
           | Добавить файл
 
   .actions
