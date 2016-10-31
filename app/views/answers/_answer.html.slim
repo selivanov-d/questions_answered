@@ -2,7 +2,7 @@ tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}
   td
     .answer_actions.answer-actions
       - if user_signed_in? && current_user.author_of?(answer)
-        = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer answer-actions_item -delete', method: 'delete', remote: true
+        = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer answer-actions_item -delete', method: 'delete', remote: true, data: { confirm: 'Вы уверены?' }
         = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer  answer-actions_item -edit'
         = link_to 'Отметить как лучший', mark_as_best_answer_path(answer), class: 'js-mark-answer-as-best answer_mark-as-best-trigger answer-actions_item -mark-as-best', method: 'post', remote: true
 

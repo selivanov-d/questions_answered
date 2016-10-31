@@ -16,6 +16,8 @@ function create_new_answer(event, response) {
 
             $content_input.val('');
 
+            $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+
             break;
         case 'error':
             var errors_array = get_errors_array(response.data),
@@ -46,6 +48,8 @@ function edit_answer() {
 
                 $editable_answer.replaceWith(response.data.html);
 
+                $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+
                 $fields_for_attachments.remove();
 
                 $editable_answer.removeClass('-editing');
@@ -74,8 +78,6 @@ function edit_question() {
     var $question = $(this).closest('.js-question'),
         $question_content = $('.js-question-content'),
         $question_form = $question.find('.js-existing-question-edit-form'),
-        $question_title = $question.find('.js-question-title'),
-        $question_content = $question.find('.js-question-content'),
         $question_edit_cancel_button = $question.find('.js-question-edit-cancel'),
         $question_title_input = $question.find('.js-question-title-input'),
         $question_content_input = $question.find('.js-question-content-input'),
@@ -95,6 +97,8 @@ function edit_question() {
 
                 $question_form.replaceWith(question_form_html);
                 $question_content.replaceWith(question_content_html);
+
+                $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
 
                 $question.removeClass('-editing');
 
@@ -136,6 +140,28 @@ function edit_question() {
                 break;
         }
     });
+}
+
+function remove_question_attachment(event, response) {
+    event.stopPropagation();
+
+    var $attachment = $(this).closest('.js-question-attachment'),
+        attachment_id = $attachment.data('attachment-id');
+
+    $attachment.remove();
+
+    $('.js-question-attached-files').find('.js-question-attachment[data-attachment-id=' + attachment_id + ']').remove();
+}
+
+function remove_answer_attachment(event, response) {
+    event.stopPropagation();
+
+    var $attachment = $(this).closest('.js-answer-attachment'),
+        attachment_id = $attachment.data('attachment-id');
+
+    $attachment.remove();
+
+    $('.js-answer-attachments-list').find('.js-answer-attachment[data-attachment-id=' + attachment_id + ']').remove();
 }
 
 function get_errors_array(obj) {
@@ -239,14 +265,6 @@ $(document).on('ready', function () {
         }
     });
 
-    $('.js-question-edit-form-delete-attachment-link').on('ajax:success', function (event, response) {
-        event.stopPropagation();
-
-        var $attachment = $(this).closest('.js-question-attachment'),
-            attachment_id = $attachment.data('attachment-id');
-
-        $attachment.remove();
-
-        $('.js-question-attached-files').find('.js-question-attachment[data-attachment-id=' + attachment_id +']').remove();
-    });
+    $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
+    $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
 });

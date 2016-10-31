@@ -7,7 +7,7 @@
     = f.label :content
     = f.text_area :content, class: 'question-edit-form_input js-question-content-input'
 
-  .question-edit-form_attachments.question-edit-form-attachments
+  ul.question-edit-form_attachments.question-edit-form-attachments
     = render partial: 'attachments/question-edit-attachment', collection: @question.attachments, as: :attachment
 
   .question-edit-form_input-row

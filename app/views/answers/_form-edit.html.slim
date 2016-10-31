@@ -3,7 +3,11 @@
     = f.label :content
     = f.text_area :content, class: 'answer-edit-form_input js-existing-answer-content'
 
-  .answer-edit-form_input-row.answer-edit-form-attachments
+  .js-answer-edit-form-attachments
+    ul.js-answer-edit-form-attachments-list.answer-edit-form_attachments-list.answer-edit-form-attachments-list
+      = render partial: 'attachments/answer-edit-attachment', collection: answer.attachments, as: :attachment
+
+  .answer-edit-form_input-row.answer-edit-form-attachments-fields
     = f.fields_for :attachments do |attachment|
     .links.answer-attachments_links
       = link_to_add_association f, :attachments, class: 'answer-attachments_add-field-link', partial: 'answers/attachment_fields' do
