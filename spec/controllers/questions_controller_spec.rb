@@ -10,6 +10,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to be_a_new(Question)
     end
 
+    it 'builds new attachment for @question' do
+      expect(assigns(:question).attachments.first).to be_a_new(Attachment)
+    end
+
     it 'renders new view' do
       expect(response).to render_template :new
     end
@@ -61,12 +65,19 @@ RSpec.describe QuestionsController, type: :controller do
     sign_in_user
 
     context 'with valid attributes' do
+      before :each do
+        post :create, params: { question: attributes_for(:question) }
+      end
+
+      it 'assigns last created question to @question' do
+        expect(assigns(:question)).to eq(Question.last)
+      end
+
       it 'saves new question' do
         expect { post :create, params: { question: attributes_for(:question) } }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
       end
     end
@@ -89,6 +100,11 @@ RSpec.describe QuestionsController, type: :controller do
     let!(:question) { create(:question, user: @user) }
 
     context 'question\'s author' do
+      it 'assigns requested question to @question' do
+        delete :destroy, params: { id: question }
+        expect(assigns(:question)).to eq(question)
+      end
+
       it 'deletes a question' do
         expect { delete :destroy, params: { id: question } }.to change(@user.questions, :count).by(-1)
       end
@@ -161,8 +177,13 @@ RSpec.describe QuestionsController, type: :controller do
         end
 
         it 'receives JSON response with 200 HTTP-header' do
+          error_response_json = {
+            status: 'error',
+            data: assigns(:question).errors
+          }.to_json
+
           expect(response).to have_http_status(:ok)
-          expect(response.body).to have_content('error')
+          expect(response.body).to eq error_response_json
         end
       end
     end
