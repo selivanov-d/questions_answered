@@ -1,3 +1,7 @@
+- if @question.errors.any?
+  - content_for :sidebar do
+    = render partial: 'common/errors', locals: { resource: @question }
+
 = form_for @question, html: { class: 'question-new-form' } do |f|
   .question-new-form_input-row
     = f.label :title
