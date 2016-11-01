@@ -11,14 +11,13 @@
     = f.label :content
     = f.text_area :content, class: 'question-new-form_input'
 
-  .question-new-form_input-row.question-attachments
+  .question-new-form_input-row
     = f.fields_for :attachments do |attachment|
-      = render 'questions/attachment_fields', f: attachment
 
-      .links.question-attachments_links
-        = link_to_add_association f, :attachments do
-          span.glyphicon.glyphicon-plus
-          | Добавить файл
+    .links.question-attachments_links
+      = link_to_add_association f, :attachments do
+        span.glyphicon.glyphicon-plus
+        | Добавить файл
 
 
   .actions
