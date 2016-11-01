@@ -20,10 +20,6 @@ RSpec.describe AttachmentsController, type: :controller do
         expect(assigns(:attachment)).to eq(question_attachment)
       end
 
-      it 'assigns parent question to @parent' do
-        expect(assigns(:parent)).to eq(question)
-      end
-
       it 'deletes a question', :skip_before do
         expect { delete :destroy, params: { id: question_attachment }, format: :js }.to change(question.attachments, :count).by(-1)
       end

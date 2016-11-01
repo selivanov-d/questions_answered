@@ -3,11 +3,9 @@ class AttachmentsController < ApplicationController
 
   def destroy
     @attachment = Attachment.find(params[:id])
+    parent = @attachment.attachable
 
-    parent_class = @attachment.attachable_type.constantize
-    @parent = parent_class.find(@attachment.attachable_id)
-
-    if current_user.author_of?(@parent)
+    if current_user.author_of?(parent)
       @attachment.destroy
       render json: { status: 'success', data: { message: 'Приложение удалено' } }, status: :ok
     else
