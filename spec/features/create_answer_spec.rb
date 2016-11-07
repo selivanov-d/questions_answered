@@ -21,8 +21,11 @@ feature 'Create answer', %q{
         fill_in 'Content', with: 'Test question content'
 
         click_on 'Добавить файл'
+        click_on 'Добавить файл'
+
         file_input = all('input[type="file"]')
         file_input[0].set(Rails.root + 'spec/support/files/test-file.jpg')
+        file_input[1].set(Rails.root + 'spec/support/files/image.jpg')
 
         click_on 'Сохранить ответ'
       end
@@ -32,6 +35,7 @@ feature 'Create answer', %q{
       within '.answers-index' do
         expect(page).to have_content('Test question content')
         expect(page).to have_content('test-file.jpg')
+        expect(page).to have_content('image.jpg')
       end
     end
 

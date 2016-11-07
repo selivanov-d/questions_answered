@@ -20,8 +20,11 @@ feature 'Create question', %q{
 
       within '#new_question' do
         click_on 'Добавить файл'
+        click_on 'Добавить файл'
+
         file_input = all('input[type="file"]')
         file_input[0].set(Rails.root + 'spec/support/files/test-file.jpg')
+        file_input[1].set(Rails.root + 'spec/support/files/image.jpg')
       end
 
       click_on 'Создать'
@@ -31,6 +34,7 @@ feature 'Create question', %q{
       expect(page).to have_content('Test question')
       expect(page).to have_content('Test question content')
       expect(page).to have_content('test-file.jpg')
+      expect(page).to have_content('image.jpg')
     end
 
     scenario 'creates question with invalid data', js: true do
