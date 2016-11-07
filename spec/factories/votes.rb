@@ -9,7 +9,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :positive_vote_question, class: 'Vote' do
+  factory :positive_vote_for_question, class: 'Vote' do
     user
     positive true
     association :votable, factory: :question
