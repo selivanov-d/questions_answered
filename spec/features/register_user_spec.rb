@@ -16,7 +16,7 @@ feature 'User registration', %q{
   I want to be able to register
 } do
 
-  given(:demo_user) { build(:demo_user) }
+  let(:demo_user) { build(:demo_user) }
 
   scenario 'Non-registered user tries to register' do
     fill_and_submit_register_form

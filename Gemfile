@@ -52,6 +52,7 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'simplecov'
+  gem 'poltergeist'
 end
 
 group :development do

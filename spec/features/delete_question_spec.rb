@@ -6,8 +6,8 @@ feature 'Delete question', %q{
   I want to be able to delete question
 } do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   context 'Authenticated user' do
     before :each do

@@ -7,7 +7,7 @@ feature 'Create question', %q{
 } do
 
   context 'Authenticated user' do
-    given(:user) { create(:user) }
+    let(:user) { create(:user) }
 
     before :each do
       sign_in(user)

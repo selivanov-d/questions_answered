@@ -15,8 +15,8 @@ feature 'Index questions', %q{
   I want to be able to view list of questions
 } do
 
-  given(:user) { create(:user) }
-  given(:questions) { create_list(:question, 5) }
+  let(:user) { create(:user) }
+  let(:questions) { create_list(:question, 5) }
 
   scenario 'Authenticated user views list of questions' do
     sign_in(user)

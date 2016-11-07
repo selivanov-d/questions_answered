@@ -17,8 +17,8 @@ feature 'Show question and give answer', %q{
   I want to be able to view question and form for an answer
 } do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question_with_answers) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question_with_answers) }
 
   scenario 'Authenticated user views question' do
     sign_in(user)

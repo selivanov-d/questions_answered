@@ -6,9 +6,9 @@ feature 'Edit question', %q{
   I want to be able edit question
 } do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
-  given!(:question_attachment) { create(:question_attachment, attachable: question) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let!(:question_attachment) { create(:question_attachment, attachable: question) }
 
   context 'Authenticated author' do
     before :each do

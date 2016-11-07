@@ -6,8 +6,8 @@ feature 'Edit answer', %q{
   I want to be able edit answer
 } do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   context 'Authenticated author' do
     before :each do

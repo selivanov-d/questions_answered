@@ -6,10 +6,10 @@ feature 'Create answer', %q{
   I want to be able to give new answer
 } do
 
-  given(:question) { create(:question) }
+  let(:question) { create(:question) }
 
   context 'Authenticated user' do
-    given(:user) { create(:user) }
+    let(:user) { create(:user) }
 
     before :each do
       sign_in(user)
