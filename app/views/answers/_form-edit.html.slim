@@ -1,0 +1,19 @@
+= form_for answer, html: { class: 'answer-edit-form js-existing-answer-edit-form' }, data: { type: :json }, remote: true do |f|
+  .answer-edit-form_input-row
+    = f.label :content
+    = f.text_area :content, class: 'answer-edit-form_input js-existing-answer-content'
+
+  .js-answer-edit-form-attachments
+    ul.js-answer-edit-form-attachments-list.answer-edit-form_attachments-list.answer-edit-form-attachments-list
+      = render partial: 'attachments/answer-edit-attachment', collection: answer.attachments, as: :attachment
+
+  .answer-edit-form_input-row.answer-edit-form-attachments-fields
+    = f.fields_for :attachments do |attachment|
+    .links.answer-attachments_links
+      = link_to_add_association f, :attachments, class: 'answer-attachments_add-field-link', partial: 'answers/attachment_fields' do
+        span.glyphicon.glyphicon-plus.answer-attachments_add-field-icon
+        | Добавить файл
+
+  .actions
+    = f.submit 'Сохранить изменения', class: 'answer-edit-form_button answer-edit-form_submit-button'
+    = button_tag 'Отменить', type: :button, class: 'answer-edit-form_button answer-edit-form_cancel-button js-existing-answer-cancel'

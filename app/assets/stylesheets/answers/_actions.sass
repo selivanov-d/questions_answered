@@ -1,0 +1,22 @@
+.answer-actions
+  width: 140px
+  float: right
+
+  @at-root .answer.-editing &
+    display: none
+
+  &_item
+    @extend .btn, .btn-xs, .btn-block
+
+    &.-delete
+      @extend .btn-danger
+
+    &.-edit
+      @extend .btn-default
+
+    &.-mark-as-best
+      @extend .btn-warning
+
+  &_buttons
+    @at-root .answer.-editing &
+      display: none

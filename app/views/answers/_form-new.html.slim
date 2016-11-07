@@ -1,0 +1,17 @@
+.new-answer-for-question
+  h4.new-answer-for-question_header Добавить ответ
+  = form_for [@question, @answer], remote: true, html: { class: 'js-new-answer-for-question-form new-answer-for-question_form new-answer-for-question-form' }, data: { type: :json } do |f|
+    .new-answer-for-question-form_input-row
+      = f.label :content
+      = f.text_area :content, class: 'new-answer-for-question-form_input js-new-answer-for-question-content-input'
+
+    .new-answer-for-question-form_input-row.new-answer-for-question-form-attachments
+      = f.fields_for :attachments do |attachment|
+      .links.new-answer-for-question-form_links
+        = link_to_add_association f, :attachments, class: 'new-answer-for-question-form_add-input-link',
+                partial: 'answers/attachment_fields' do
+          span.new-answer-for-question-form_add-input-link-icon
+          | Добавить файл
+
+    .actions
+      = f.submit 'Сохранить ответ', class: 'new-answer-for-question-form_submit-button'

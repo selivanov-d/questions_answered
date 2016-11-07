@@ -18,10 +18,12 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.attachments.build
   end
 
   def show
     @answer = Answer.new
+    @answer.attachments.build
   end
 
   def destroy
@@ -36,7 +38,14 @@ class QuestionsController < ApplicationController
   def update
     if current_user.author_of?(@question)
       if @question.update(question_params)
-        render json: { status: 'success', data: 'Ваш вопрос успешно изменён' }, status: :ok
+        question_form_html = render_to_string partial: 'questions/form_edit'
+        question_content_html = render_to_string partial: 'questions/question-content'
+
+        render json: { status: 'success', data: {
+          message: 'Ваш вопрос успешно изменён',
+          question_form_html: question_form_html,
+          question_content_html: question_content_html
+        } }, status: :ok
       else
         render json: { status: 'error', data: @question.errors }, status: :ok
       end
@@ -48,7 +57,7 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :content)
+    params.require(:question).permit(:title, :content, attachments_attributes: [:file, :id, :_destroy])
   end
 
   def load_question

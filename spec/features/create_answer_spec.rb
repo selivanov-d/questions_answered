@@ -6,10 +6,10 @@ feature 'Create answer', %q{
   I want to be able to give new answer
 } do
 
-  given(:question) { create(:question) }
+  let(:question) { create(:question) }
 
   context 'Authenticated user' do
-    given(:user) { create(:user) }
+    let(:user) { create(:user) }
 
     before :each do
       sign_in(user)
@@ -17,24 +17,44 @@ feature 'Create answer', %q{
     end
 
     scenario 'creates answer with valid data', js: true do
-      fill_in 'Content', with: 'Test question content'
-      click_on 'Сохранить ответ'
+      within '.js-new-answer-for-question-form' do
+        fill_in 'Content', with: 'Test question content'
+
+        click_on 'Добавить файл'
+        click_on 'Добавить файл'
+
+        file_input = all('input[type="file"]')
+        file_input[0].set(Rails.root + 'spec/support/files/test-file.jpg')
+        file_input[1].set(Rails.root + 'spec/support/files/image.jpg')
+
+        click_on 'Сохранить ответ'
+      end
 
       expect(current_path).to eq question_path(question)
 
       within '.answers-index' do
         expect(page).to have_content('Test question content')
+        expect(page).to have_content('test-file.jpg')
+        expect(page).to have_content('image.jpg')
       end
     end
 
     scenario 'creates answer with invalid data', js: true do
-      fill_in 'Content', with: 'no_text'
-      click_on 'Сохранить ответ'
+      within '.js-new-answer-for-question-form' do
+        fill_in 'Content', with: 'no_text'
+
+        click_on 'Добавить файл'
+        file_input = all('input[type="file"]')
+        file_input[0].set(Rails.root + 'spec/support/files/test-file.jpg')
+
+        click_on 'Сохранить ответ'
+      end
 
       expect(current_path).to eq question_path(question)
 
       within '.answers-index' do
         expect(page).to_not have_content('no_text')
+        expect(page).to_not have_content('test-file.jpg')
       end
     end
   end

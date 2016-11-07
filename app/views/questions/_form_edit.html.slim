@@ -1,0 +1,23 @@
+= form_for @question, html: { class: 'js-existing-question-edit-form question-edit-form' }, data: { type: :json }, remote: true do |f|
+  .question-edit-form_input-row
+    = f.label :title
+    = f.text_field :title, class: 'question-edit-form_input js-question-title-input'
+
+  .question-edit-form_input-row
+    = f.label :content
+    = f.text_area :content, class: 'question-edit-form_input js-question-content-input'
+
+  ul.question-edit-form_attachments.question-edit-form-attachments
+    = render partial: 'attachments/question-edit-attachment', collection: @question.attachments, as: :attachment
+
+  .question-edit-form_input-row
+    .question-edit-form_attachments-fields.question-edit-form-attachments-fields.js-question-attachments-fields
+      = f.fields_for :attachments do |attachment|
+      .links.question-edit-form-attachments-fields_links
+        = link_to_add_association f, :attachments, class: 'question-edit-form-attachments-fields_add-link' do
+          span.question-edit-form-attachments-fields_add-link-icon
+          | Добавить файл
+
+  .actions
+    = f.submit 'Сохранить', class: 'question-edit-form_button question-edit-form_submit-button'
+    = button_tag 'Отменить', type: :button, class: 'question-edit-form_button question-edit-form_cancel-button js-question-edit-cancel'

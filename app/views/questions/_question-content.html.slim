@@ -1,0 +1,12 @@
+.js-question-content
+  h4.js-question-title= @question.title
+
+  .js-question-content
+    = @question.content
+
+  .js-question-attachments
+    - if @question.attachments.any?
+      .question_attachments.question-attachments
+        h5.question-attachments_header Прикреплённые файлы
+        ul.question-attachments_list.question-attachments-list.js-question-attached-files
+          = render partial: 'attachments/question-attachment', collection: @question.attachments, as: :attachment

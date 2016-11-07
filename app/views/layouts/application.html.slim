@@ -31,8 +31,6 @@ html
           = yield
 
         .sidebar.js-sidebar
-          - if content_for? :sidebar
-            = content_for :sidebar
-
+          = content_for :sidebar if content_for? :sidebar
 
   = render 'common/footer'

@@ -6,8 +6,8 @@ feature 'Mark answer as best', %q{
   I want to be able to mark answer as the best
 } do
 
-  given(:user) { create(:user) }
-  given(:question) { create(:question, user: user) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   context 'Authenticated user marks answer as the best' do
     before do

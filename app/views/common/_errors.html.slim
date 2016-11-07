@@ -1,4 +1,6 @@
-- resource.errors.messages.each_pair do |k, e|
-  - e.each do |message|
-    = "[:#{k}] #{message}"
-    br
+.errors
+  h4.errors_header Следующие ошибки помешали сохранению:
+  ul.errors_list.errors-list
+    - resource.errors.messages.each_pair do |k, e|
+      - e.each do |message|
+        li= "[:#{k}] #{message}"

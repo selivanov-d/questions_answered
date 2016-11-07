@@ -6,7 +6,7 @@ feature 'User sign out', %q{
   I want to be able to sign out
 } do
 
-  given(:user) { create(:user) }
+  let(:user) { create(:user) }
 
   scenario 'Registered user signs out' do
     sign_in(user)

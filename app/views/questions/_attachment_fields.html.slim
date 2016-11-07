@@ -1,0 +1,9 @@
+.nested-fields.question-edit-form-attachments-fields_item.question-edit-form-attachments-field.js-question-attachment-field
+  .row
+    .col-xs-8
+      = f.file_field :file, class: 'question-new-form_input js-question-attachment-file-input'
+
+    .links.col-xs-4.question-attachment_links
+      = link_to_remove_association f do
+        span.question-edit-form-attachments-fields_delete-link-icon
+        | Удалить поле

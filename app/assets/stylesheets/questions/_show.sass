@@ -18,20 +18,3 @@
     margin-right: 10px
 
 
-
-.question-edit-form
-  @include default-form
-  @extend .well
-
-  display: none
-  margin-top: 30px
-
-  @at-root .question.-editing &
-    display: block
-
-  &_button
-    margin-right: 10px
-    @extend .btn, .btn-sm
-
-  &_cancel-button
-    @extend .btn-default
