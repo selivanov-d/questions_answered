@@ -213,6 +213,15 @@ function generate_alert(message, type) {
     $('.js-alerts-box').append(template);
 }
 
+function update_question_rating(event, response) {
+    switch (response.status) {
+        case 'success':
+            $('.js-question-vote-count').text(response.rating);
+
+            break;
+    }
+}
+
 $(document).on('ready', function () {
     var $answers_table = $('.js-answers-index-table');
 
@@ -267,4 +276,6 @@ $(document).on('ready', function () {
 
     $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
     $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+
+    $('.js-question-downvote, .js-question-upvote').on('ajax:success', update_question_rating);
 });

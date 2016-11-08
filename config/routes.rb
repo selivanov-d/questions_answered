@@ -2,16 +2,27 @@ Rails.application.routes.draw do
   devise_for :users
   root 'questions#index'
 
+  concern :votable do
+    member do
+      post 'upvote'
+      post 'downvote'
+    end
+  end
+
   resources :questions do
+    concerns :votable
+
     resources :answers, shallow: true, except: [:new, :show, :index] do
       member do
         post 'mark_as_best'
       end
+
+      concerns :votable
     end
   end
 
   resources :attachments, only: [:destroy]
-  resources :votes, only: [:create, :destroy]
+  resources :votes, only: [:destroy], shallow: true
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
