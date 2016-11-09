@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     member do
       post 'upvote'
       post 'downvote'
+      delete 'unvote'
     end
   end
 
@@ -22,7 +23,6 @@ Rails.application.routes.draw do
   end
 
   resources :attachments, only: [:destroy]
-  resources :votes, only: [:destroy], shallow: true
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

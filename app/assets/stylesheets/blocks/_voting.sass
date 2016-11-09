@@ -1,34 +1,40 @@
 .voting
-  width: 100px
+  width: 60px
+  border: 1px solid #e1e1e8
+  border-radius: 5px
 
   &_rating
     font-size: 20px
     text-align: center
-    border-top-left-radius: 5px
-    border-top-right-radius: 5px
-    border: 1px solid grey
-    border-bottom: 0
 
 .voting-control
   @include clearfix
-  border-bottom-left-radius: 5px
-  border-bottom-right-radius: 5px
-  border: 1px solid grey
+  border-top: 1px solid #e1e1e8
 
   &_button
     text-align: center
     font-size: 12px
-    width: 50%
+
+    &.-upvote, &.-downvote
+      width: 50%
 
     &.-upvote
       float: right
+      border-left: 1px solid #e1e1e8
 
     &.-downvote
       float: left
+
+    &.-unvote
+      display: block
+      width: 100%
+
+    &.-hidden
+      display: none
 
 
 .question_voting
   float: right
 
 .question-content
-  margin-right: 130px
+  margin-right: 70px

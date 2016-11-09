@@ -1,6 +1,5 @@
 class VotesController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_resource, only: [:create]
 
   def create
     @vote = current_user.votes.new(vote_params)
@@ -14,19 +13,5 @@ class VotesController < ApplicationController
   end
 
   def destroy
-  end
-
-  private
-
-  def vote_params
-    params.require(:vote).permit(:positive, :votable)
-  end
-
-  def load_resource
-    @resource = if params[:question_id].present?
-                  Question.find(params[:question_id])
-                elsif params[:answer_id].present?
-                  Answer.find(params[:question_id])
-                end
   end
 end
