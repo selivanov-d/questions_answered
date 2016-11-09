@@ -23,10 +23,10 @@ feature 'Voting for a question', %q{
 
           expect(page).to_not have_content('+1')
           expect(page).to_not have_content('-1')
-          expect(page).to have_content('Переголосовать')
+          expect(page).to have_content('Unvote')
         end
 
-        within '.js-votes-count' do
+        within '.js-question-vote-count' do
           expect(page).to have_content('1')
         end
       end
@@ -45,10 +45,10 @@ feature 'Voting for a question', %q{
 
           expect(page).to_not have_content('+1')
           expect(page).to_not have_content('-1')
-          expect(page).to have_content('Переголосовать')
+          expect(page).to have_content('Unvote')
         end
 
-        within '.js-votes-count' do
+        within '.js-question-vote-count' do
           expect(page).to have_content('-1')
         end
       end
@@ -64,14 +64,14 @@ feature 'Voting for a question', %q{
       scenario 'removes his vote from a question', js: true do
         within '.js-question-vote-control' do
           click_on('+1')
-          click_on('Переголосовать')
+          click_on('Unvote')
 
           expect(page).to have_content('-1')
           expect(page).to have_content('+1')
-          expect(page).to_not have_content('Переголосовать')
+          expect(page).to_not have_content('Unvote')
         end
 
-        within '.js-votes-count' do
+        within '.js-question-vote-count' do
           expect(page).to have_content('0')
         end
       end
@@ -84,20 +84,20 @@ feature 'Voting for a question', %q{
       end
 
       scenario 'tries to upvote a question', js: true do
-        within '.js-question-vote-control' do
+        within '.js-question-voting' do
           expect(page).to_not have_content('+1')
         end
       end
 
       scenario 'tries to downvote a question', js: true do
-        within '.js-question-vote-control' do
+        within '.js-question-voting' do
           expect(page).to_not have_content('-1')
         end
       end
 
       scenario 'tries to remove his vote from a question', js: true do
-        within '.js-question-vote-control' do
-          expect(page).to_not have_content('Переголосовать')
+        within '.js-question-voting' do
+          expect(page).to_not have_content('Unvote')
         end
       end
     end
@@ -109,13 +109,13 @@ feature 'Voting for a question', %q{
     end
 
     scenario 'tries to upvote a question', js: true do
-      within '.js-question-vote-control' do
+      within '.js-question-voting' do
         expect(page).to_not have_content('+1')
       end
     end
 
     scenario 'tries to downvote a question', js: true do
-      within '.js-question-vote-control' do
+      within '.js-question-voting' do
         expect(page).to_not have_content('-1')
       end
     end
