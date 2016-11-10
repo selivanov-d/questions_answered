@@ -3,13 +3,13 @@
   - if user_signed_in? && !current_user.author_of?(@question)
     .js-question-vote-control.voting_control.voting-control
       = link_to upvote_question_path, method: 'post', remote: true,
-          class: "js-question-upvote voting-control_button -upvote#{ (@question.has_votes_from? current_user) ? ' -hidden' : ''}" do
+          class: "js-question-upvote voting-control_button -upvote#{ (@question.has_vote_from? current_user) ? ' -hidden' : ''}" do
         | +1
       = link_to downvote_question_path, method: 'post', remote: true,
-          class: "js-question-downvote voting-control_button -downvote#{ (@question.has_votes_from? current_user) ? ' -hidden' : ''}" do
+          class: "js-question-downvote voting-control_button -downvote#{ (@question.has_vote_from? current_user) ? ' -hidden' : ''}" do
         | -1
       = link_to unvote_question_path, method: 'delete', remote: true,
-          class: "js-question-unvote voting-control_button -unvote #{ (@question.has_votes_from? current_user) ? '' : ' -hidden'}"
+          class: "js-question-unvote voting-control_button -unvote #{ (@question.has_vote_from? current_user) ? '' : ' -hidden'}"
         | Unvote
 
 

@@ -12,13 +12,13 @@ tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}
       - if user_signed_in? && !current_user.author_of?(answer)
         .js-answer-vote-control.voting_control.voting-control
           = link_to upvote_answer_path(answer), method: 'post', remote: true,
-                  class: "js-answer-upvote voting-control_button -upvote#{ (answer.has_votes_from? current_user) ? ' -hidden' : ''}" do
+                  class: "js-answer-upvote voting-control_button -upvote#{ (answer.has_vote_from? current_user) ? ' -hidden' : ''}" do
             | +1
           = link_to downvote_answer_path(answer), method: 'post', remote: true,
-                  class: "js-answer-downvote voting-control_button -downvote#{ (answer.has_votes_from? current_user) ? ' -hidden' : ''}" do
+                  class: "js-answer-downvote voting-control_button -downvote#{ (answer.has_vote_from? current_user) ? ' -hidden' : ''}" do
             | -1
           = link_to unvote_answer_path(answer), method: 'delete', remote: true,
-                  class: "js-answer-unvote voting-control_button -unvote #{ (answer.has_votes_from? current_user) ? '' : ' -hidden'}"
+                  class: "js-answer-unvote voting-control_button -unvote #{ (answer.has_vote_from? current_user) ? '' : ' -hidden'}"
             | Unvote
 
     .answer_description

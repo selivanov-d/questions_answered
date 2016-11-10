@@ -2,11 +2,11 @@ module Votable
   extend ActiveSupport::Concern
 
   def upvote(user)
-    user.votes << Vote.create(votable: self, positive: true)
+    user.votes.create(votable: self, value: 1)
   end
 
   def downvote(user)
-    user.votes << Vote.create(votable: self, positive: false)
+    user.votes.create(votable: self, value: -1)
   end
 
   def unvote(user)
@@ -14,11 +14,10 @@ module Votable
   end
 
   def rating
-    # TODO: refactor
-    (votes.count - votes.negative.count) - votes.negative.count
+    Vote.where(votable: self).sum(:value)
   end
 
-  def has_votes_from?(user)
-    Vote.voted_by_user(user, self).any?
+  def has_vote_from?(user)
+    Vote.by_user(user).by_votable(self).any?
   end
 end

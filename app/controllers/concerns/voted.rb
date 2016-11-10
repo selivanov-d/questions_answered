@@ -3,30 +3,23 @@ module Voted
 
   included do
     before_action :load_votable, only: [:upvote, :downvote, :unvote]
+    before_action :check_existing_vote, only: [:upvote, :downvote]
   end
 
   def upvote
-    if @votable.has_votes_from? current_user
-      render json: { status: 'error', data: 'Проголосовать можно только один раз' }, status: :ok
-    else
-      @votable.upvote(current_user)
-      render json: { status: 'success', rating: @votable.rating }, status: :ok
-    end
+    @votable.upvote(current_user)
+    response_with_json(:ok)
   end
 
   def downvote
-    if @votable.has_votes_from? current_user
-      render json: { status: 'error', data: 'Проголосовать можно только один раз' }, status: :ok
-    else
-      @votable.downvote(current_user)
-      render json: { status: 'success', rating: @votable.rating }, status: :ok
-    end
+    @votable.downvote(current_user)
+    response_with_json(:ok)
   end
 
   def unvote
-    if @votable.has_votes_from? current_user
+    if @votable.has_vote_from? current_user
       @votable.unvote(current_user)
-      render json: { status: 'success', rating: @votable.rating }, status: :ok
+      response_with_json(:ok)
     else
       render json: { status: 'error', data: 'Вы ещё не дали своего голоса за этот ресурс' }, status: :ok
     end
@@ -42,15 +35,16 @@ module Voted
     @votable = model_klass.find(params[:id])
   end
 
-  def load_vote
-    current_user.votes.find_by_votable(@votable)
+  def check_existing_vote
+    response_with_json(:error) if @votable.has_vote_from? current_user
   end
 
-  def respond(result)
-    if result[:success]
-      render json: result[:data], status: :ok
-    else
-      render json: result[:errors], status: :unprocessable_entity
+  def response_with_json(result)
+    case result
+    when :ok
+      render json: { status: 'success', rating: @votable.rating }, status: :ok
+    when :error
+      render json: { status: 'error', data: 'Проголосовать можно только один раз' }, status: :ok
     end
   end
 end
