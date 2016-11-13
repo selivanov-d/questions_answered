@@ -1,6 +1,13 @@
 module Votable
   extend ActiveSupport::Concern
 
+  included do
+    has_many :attachments, as: :attachable, dependent: :destroy
+    has_many :votes, as: :votable, dependent: :destroy
+    belongs_to :user
+    accepts_nested_attributes_for :attachments, reject_if: :all_blank, allow_destroy: true
+  end
+
   def upvote(user)
     user.votes.create(votable: self, value: 1)
   end
