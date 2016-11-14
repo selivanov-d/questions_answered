@@ -43,7 +43,7 @@ module Voted
   end
 
   def check_votable_ownership
-    if @votable.user == current_user
+    if current_user.author_of? @votable
       render json: { status: 'error', data: 'Вы не можете голосовать за свой ресурс' }, status: :forbidden
     end
   end
