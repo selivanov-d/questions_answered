@@ -3,10 +3,7 @@ require 'rails_helper'
 RSpec.shared_examples 'votable' do
   votable_klass_symbol = described_class.to_s.underscore.to_sym
 
-  it { should belong_to(:user) }
-  it { should have_many(:attachments).dependent(:destroy) }
   it { should have_many(:votes).dependent(:destroy) }
-  it { should accept_nested_attributes_for :attachments }
 
   let(:user) { create(:user) }
   let!(:votable) { create(votable_klass_symbol) }

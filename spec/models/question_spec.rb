@@ -5,6 +5,10 @@ RSpec.describe Question do
   it_should_behave_like 'votable'
 
   it { should have_many(:answers).dependent(:destroy) }
+  it { should belong_to(:user) }
+
+  it { should have_many(:attachments).dependent(:destroy) }
+  it { should accept_nested_attributes_for(:attachments).allow_destroy(true) }
 
   it { should validate_presence_of :title }
   it { should validate_presence_of :content }
