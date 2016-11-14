@@ -18,7 +18,7 @@ module Votable
   end
 
   def rating
-    Vote.where(votable: self).sum(:value)
+    votes.sum(:value)
   end
 
   def has_vote_from?(user)
