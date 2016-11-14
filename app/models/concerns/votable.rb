@@ -14,7 +14,7 @@ module Votable
   end
 
   def unvote(user)
-    user.votes.by_votable(self).destroy_all
+    votes.by_user(user).destroy_all
   end
 
   def rating
