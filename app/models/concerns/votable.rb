@@ -6,11 +6,11 @@ module Votable
   end
 
   def upvote(user)
-    user.votes.create(votable: self, value: 1)
+    votes.create(user: user, value: 1)
   end
 
   def downvote(user)
-    user.votes.create(votable: self, value: -1)
+    votes.create(user: user, value: -1)
   end
 
   def unvote(user)
