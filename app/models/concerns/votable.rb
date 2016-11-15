@@ -22,6 +22,6 @@ module Votable
   end
 
   def has_vote_from?(user)
-    Vote.by_user(user).by_votable(self).any?
+    Vote.by_user(user).by_votable(self).exists?
   end
 end
