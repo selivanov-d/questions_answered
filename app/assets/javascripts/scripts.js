@@ -214,21 +214,17 @@ function generate_alert(message, type) {
 }
 
 function process_question_voting(event, response) {
-    switch (response.status) {
-        case 'success':
-            $('.js-question-vote-count').text(response.rating);
-            $('.js-question-downvote, .js-question-upvote, .js-question-unvote').toggleClass('-hidden');
-            break;
+    if (response.status === 'success') {
+        $('.js-question-vote-count').text(response.rating);
+        $('.js-question-downvote, .js-question-upvote, .js-question-unvote').toggleClass('-hidden');
     }
 }
 
 function process_answer_voting(event, response) {
-    switch (response.status) {
-        case 'success':
-            var $answer = $(this).closest('.js-answer');
-            $('.js-answer-vote-count', $answer).text(response.rating);
-            $('.js-answer-downvote, .js-answer-upvote, .js-answer-unvote', $answer).toggleClass('-hidden');
-            break;
+    if (response.status === 'success') {
+        var $answer = $(this).closest('.js-answer');
+        $('.js-answer-vote-count', $answer).text(response.rating);
+        $('.js-answer-downvote, .js-answer-upvote, .js-answer-unvote', $answer).toggleClass('-hidden');
     }
 }
 
