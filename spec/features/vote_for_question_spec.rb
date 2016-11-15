@@ -31,14 +31,6 @@ feature 'Voting for a question', %q{
         end
       end
 
-      scenario 'tries to upvote a question twice', js: true do
-        within '.js-question-vote-control' do
-          click_on('+1')
-
-          expect(page).to_not have_content('+1')
-        end
-      end
-
       scenario 'downvotes a question', js: true do
         within '.js-question-vote-control' do
           click_on('-1')
@@ -50,14 +42,6 @@ feature 'Voting for a question', %q{
 
         within '.js-question-vote-count' do
           expect(page).to have_content('-1')
-        end
-      end
-
-      scenario 'tries to downvote a question twice', js: true do
-        within '.js-question-vote-control' do
-          click_on('-1')
-
-          expect(page).to_not have_content('-1')
         end
       end
 

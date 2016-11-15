@@ -32,14 +32,6 @@ feature 'Voting for a answer', %q{
         end
       end
 
-      scenario 'tries to upvote an answer twice', js: true do
-        within '.js-answer-vote-control' do
-          click_on('+1')
-
-          expect(page).to_not have_content('+1')
-        end
-      end
-
       scenario 'downvotes an answer', js: true do
         within '.js-answer-vote-control' do
           click_on('-1')
@@ -51,14 +43,6 @@ feature 'Voting for a answer', %q{
 
         within '.js-answer-vote-count' do
           expect(page).to have_content('-1')
-        end
-      end
-
-      scenario 'tries to downvote an answer twice', js: true do
-        within '.js-answer-vote-control' do
-          click_on('-1')
-
-          expect(page).to_not have_content('-1')
         end
       end
 
