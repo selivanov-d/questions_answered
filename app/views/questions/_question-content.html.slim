@@ -1,17 +1,4 @@
-.js-question-voting.question_voting.voting
-  .js-question-vote-count.voting_rating = @question.rating
-  - if user_signed_in? && !current_user.author_of?(@question)
-    .js-question-vote-control.voting_control.voting-control
-      = link_to upvote_question_path, method: 'post', remote: true,
-          class: "js-question-upvote voting-control_button -upvote#{ (@question.has_vote_from? current_user) ? ' -hidden' : ''}" do
-        | +1
-      = link_to downvote_question_path, method: 'post', remote: true,
-          class: "js-question-downvote voting-control_button -downvote#{ (@question.has_vote_from? current_user) ? ' -hidden' : ''}" do
-        | -1
-      = link_to unvote_question_path, method: 'delete', remote: true,
-          class: "js-question-unvote voting-control_button -unvote #{ (@question.has_vote_from? current_user) ? '' : ' -hidden'}"
-        | Unvote
-
+= render partial: 'votes/voting_block', locals: { votable: @question }
 
 .js-question-content.question-content
   h4.js-question-title= @question.title

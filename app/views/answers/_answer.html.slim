@@ -6,20 +6,7 @@ tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}
         = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer  answer-actions_item -edit'
         = link_to 'Отметить как лучший', mark_as_best_answer_path(answer), class: 'js-mark-answer-as-best answer_mark-as-best-trigger answer-actions_item -mark-as-best', method: 'post', remote: true
 
-
-    .js-answer-voting.answer_voting.voting
-      .js-answer-vote-count.voting_rating = answer.rating
-      - if user_signed_in? && !current_user.author_of?(answer)
-        .js-answer-vote-control.voting_control.voting-control
-          = link_to upvote_answer_path(answer), method: 'post', remote: true,
-                  class: "js-answer-upvote voting-control_button -upvote#{ (answer.has_vote_from? current_user) ? ' -hidden' : ''}" do
-            | +1
-          = link_to downvote_answer_path(answer), method: 'post', remote: true,
-                  class: "js-answer-downvote voting-control_button -downvote#{ (answer.has_vote_from? current_user) ? ' -hidden' : ''}" do
-            | -1
-          = link_to unvote_answer_path(answer), method: 'delete', remote: true,
-                  class: "js-answer-unvote voting-control_button -unvote #{ (answer.has_vote_from? current_user) ? '' : ' -hidden'}"
-            | Unvote
+    = render partial: 'votes/voting_block', locals: { votable: answer }
 
     .answer_description
       .answer_best-label Лучший ответ
