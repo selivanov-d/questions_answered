@@ -14,7 +14,7 @@ module Votable
   end
 
   def unvote(user)
-    votes.by_user(user).destroy_all
+    votes.where(user: user).destroy_all
   end
 
   def rating
@@ -22,6 +22,6 @@ module Votable
   end
 
   def has_vote_from?(user)
-    Vote.by_user(user).by_votable(self).exists?
+    Vote.where(user: user, votable: self).exists?
   end
 end

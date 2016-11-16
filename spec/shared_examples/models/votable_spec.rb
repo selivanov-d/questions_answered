@@ -25,7 +25,7 @@ RSpec.shared_examples 'votable' do
 
     it 'drops user votes for a votable to zero' do
       votable.unvote(user)
-      expect(Vote.by_user(user).by_votable(votable).count).to eq(0)
+      expect(Vote.where(user: user, votable: votable).count).to eq(0)
     end
   end
 
