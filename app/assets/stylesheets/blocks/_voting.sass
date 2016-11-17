@@ -1,0 +1,40 @@
+.voting
+  width: 60px
+  border: 1px solid #e1e1e8
+  border-radius: 5px
+
+  &_rating
+    font-size: 20px
+    text-align: center
+
+.voting-control
+  @include clearfix
+  border-top: 1px solid #e1e1e8
+
+  &_button
+    text-align: center
+    font-size: 12px
+
+    &.-upvote, &.-downvote
+      width: 50%
+
+    &.-upvote
+      float: right
+      border-left: 1px solid #e1e1e8
+
+    &.-downvote
+      float: left
+
+    &.-unvote
+      display: block
+      width: 100%
+
+    &.-hidden
+      display: none
+
+
+.question_voting
+  float: right
+
+.question-content
+  margin-right: 70px

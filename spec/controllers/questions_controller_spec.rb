@@ -1,6 +1,9 @@
 require 'rails_helper'
+require 'shared_examples/controllers/voted_spec'
 
 RSpec.describe QuestionsController, type: :controller do
+  it_should_behave_like 'voted'
+
   describe 'GET #new' do
     sign_in_user
 

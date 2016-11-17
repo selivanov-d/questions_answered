@@ -213,6 +213,21 @@ function generate_alert(message, type) {
     $('.js-alerts-box').append(template);
 }
 
+function process_question_voting(event, response) {
+    if (response.status === 'success') {
+        $('.js-question-vote-count').text(response.rating);
+        $('.js-question-downvote, .js-question-upvote, .js-question-unvote').toggleClass('-hidden');
+    }
+}
+
+function process_answer_voting(event, response) {
+    if (response.status === 'success') {
+        var $answer = $(this).closest('.js-answer');
+        $('.js-answer-vote-count', $answer).text(response.rating);
+        $('.js-answer-downvote, .js-answer-upvote, .js-answer-unvote', $answer).toggleClass('-hidden');
+    }
+}
+
 $(document).on('ready', function () {
     var $answers_table = $('.js-answers-index-table');
 
@@ -267,4 +282,7 @@ $(document).on('ready', function () {
 
     $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
     $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+
+    $('.js-question-downvote, .js-question-upvote, .js-question-unvote').on('ajax:success', process_question_voting);
+    $('.js-answer-downvote, .js-answer-upvote, .js-answer-unvote').on('ajax:success', process_answer_voting);
 });
