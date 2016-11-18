@@ -10,9 +10,9 @@ class AnswersController < ApplicationController
     current_user.answers << @answer
 
     if @answer.save
-      new_answer_html = render_to_string @answer
+      new_answer_json = render_to_string partial: 'answers/answer.json.jbuilder', locals: { answer: @answer }
 
-      render json: { status: 'success', data: { message: 'Ваш ответ сохранён', html: new_answer_html } }, status: :ok
+      render json: { status: 'success', data: { message: 'Ваш ответ сохранён', answer: new_answer_json } }, status: :ok
     else
       render json: { status: 'error', data: @answer.errors }, status: :ok
     end

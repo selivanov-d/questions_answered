@@ -12,6 +12,8 @@ class Answer < ActiveRecord::Base
   scope :best_for, ->(question_id) { where(best: true, question_id: question_id) }
   scope :best_first, -> { order(best: :desc) }
 
+  after_create :broadcast
+
   def mark_as_best
     Answer.transaction do
       current_best = Answer.best_for(question_id).first
@@ -20,5 +22,12 @@ class Answer < ActiveRecord::Base
 
       update_attributes!(best: true)
     end
+  end
+
+  private
+
+  def broadcast
+    new_answer_json = ApplicationController.render(partial: 'answers/answer', formats: :json, locals: { answer: self })
+    ActionCable.server.broadcast 'AnswersChannel', answer: new_answer_json
   end
 end

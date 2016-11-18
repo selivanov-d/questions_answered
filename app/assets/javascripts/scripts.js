@@ -10,8 +10,6 @@ function create_new_answer(event, response) {
         case 'success':
             generate_alert(response.data.message, 'success');
 
-            $table_with_answers.append(response.data.html);
-
             $fields_for_attachments.remove();
 
             $content_input.val('');

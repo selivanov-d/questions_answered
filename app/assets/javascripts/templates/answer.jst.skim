@@ -1,0 +1,19 @@
+tr.answer.js-answer data-answer-id='#{@id}' 
+  td
+    .answer_actions.answer-actions
+      a.js-delete-answer.answer-actions_item.-delete data-confirm=('Вы уверены?') data-method='delete' data-remote='true' href='/answers/#{@id}' rel='nofollow'  Удалить ответ
+      a.answer_edit-button.-active.js-edit-answer.answer-actions_item.-edit href='/answers/#{@id}/edit'  Редактировать ответ
+      a.js-mark-answer-as-best.answer_mark-as-best-trigger.answer-actions_item.-mark-as-best data-method='post' data-remote='true' href='/answers/#{@id}/mark_as_best' rel='nofollow'  Отметить как лучший
+    .js-answer-voting.answer_voting.voting
+      .js-answer-vote-count.voting_rating 0
+    .answer_description
+      .answer_best-label Лучший ответ
+      .answer_content.js-answer-content= @content
+      - if @attachments
+        .js-answer-attachments
+          ul.answer_attachments.answer-attachments.js-answer-attachments-list
+            - $.each @attachments, (index, attachement) =>
+              li.answer-attachments_item.answer-attachment.js-answer-attachment data-attachment-id='#{attachement.id}'
+                a href='#{attachement.url}'
+                  span.glyphicon.glyphicon-file.answer-attachment_icon
+                  | '#{attachement.filename}'
