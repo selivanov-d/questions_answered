@@ -11,14 +11,20 @@ Rails.application.routes.draw do
   end
 
   resources :questions do
-    concerns :votable
+    concerns [:votable]
+
+    member do
+      resource :comments, only: [:create]
+    end
 
     resources :answers, shallow: true, except: [:new, :show, :index] do
+      concerns [:votable]
+
       member do
         post 'mark_as_best'
-      end
 
-      concerns :votable
+        resource :comments, only: [:create]
+      end
     end
   end
 
