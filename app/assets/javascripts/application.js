@@ -15,4 +15,5 @@
 //= require jquery.remotipart
 //= require bootstrap-sprockets
 //= require cocoon
+//= require channels
 //= require_tree .
