@@ -20,3 +20,9 @@ tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}
 
       - if user_signed_in? && current_user.author_of?(answer)
         = render partial: 'answers/form-edit', locals: { answer: answer }
+
+    .comments.-for-answer.js-comments-for-answer-list[data-answer-id=answer.id]
+      = render answer.comments
+
+    - if user_signed_in?
+      = render partial: 'comments/new_comment_form', locals: { commentable: answer }

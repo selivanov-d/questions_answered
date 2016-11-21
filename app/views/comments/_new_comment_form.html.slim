@@ -4,7 +4,7 @@
     span.new-comment_link-trigger.js-new-comment-trigger
       | Добавить комментарий
 
-  = form_for [@question, @comment], remote: true, html: { class: 'js-new-comment-form new-comment_form new-comment-form' }, data: { type: :json } do |f|
+  = form_for [commentable, @comment], remote: true, html: { class: 'js-new-comment-form new-comment_form new-comment-form' }, data: { type: :json } do |f|
     .new-comment-form_input-row
       = f.text_area :content, class: 'new-comment-form_input js-new-comment-form-input'
 
