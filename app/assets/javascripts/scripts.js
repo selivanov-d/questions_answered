@@ -226,6 +226,23 @@ function process_answer_voting(event, response) {
     }
 }
 
+function answer_comment_creation_handler(event, response) {
+    switch (response.status) {
+        case 'success':
+            generate_alert(response.data.message, 'success');
+            $(this).closest('.js-new-comment').removeClass('-active');
+            this.reset();
+            break;
+        case 'error':
+            var errors_array = get_errors_array(response.data),
+                errors_list = errors_to_list(errors_array),
+                errors = generate_errors_box(errors_list);
+
+            $('.js-sidebar').append(errors);
+            break;
+    }
+}
+
 $(document).on('ready', function () {
     var $answers_table = $('.js-answers-index-table');
 
@@ -283,4 +300,10 @@ $(document).on('ready', function () {
 
     $('.js-question-downvote, .js-question-upvote, .js-question-unvote').on('ajax:success', process_question_voting);
     $('.js-answer-downvote, .js-answer-upvote, .js-answer-unvote').on('ajax:success', process_answer_voting);
+
+    $('.js-new-comment-trigger').on('click', function () {
+        $(this).closest('.js-new-comment').addClass('-active');
+    });
+
+    $('.js-new-comment-form').on('ajax:success', answer_comment_creation_handler);
 });

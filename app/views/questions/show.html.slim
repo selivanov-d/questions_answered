@@ -10,6 +10,12 @@
 
     = render 'questions/form_edit'
 
+  .comments.js-comments-for-question-list[data-question-id=@question.id]
+    = render @question.comments
+
+  - if user_signed_in?
+    = render 'comments/new_comment_form'
+
   .answers-index
     - if @question.answers.any?
       h3 Ответы

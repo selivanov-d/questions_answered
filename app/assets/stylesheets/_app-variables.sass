@@ -63,3 +63,10 @@ $font-size-h6: ceil(($font-size-base * 0.9))
 
   &.-edit-on
     @extend .form-control
+
+@mixin pseudo-link
+  border-bottom: 1px dashed
+  cursor: pointer
+
+  &:hover
+    border-bottom-color: transparent

@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
   before_action :load_question, only: [:show, :destroy, :update]
 
   include Voted
+  # include Commented
 
   def index
     @questions = Question.all
@@ -26,6 +27,10 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answer.attachments.build
+    @comment = @question.comments.build
+    gon.push({
+      question_id: @question.id
+    })
   end
 
   def destroy
