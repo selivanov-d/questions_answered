@@ -44,9 +44,17 @@ function edit_answer() {
             case 'success':
                 generate_alert(response.data.message, 'success');
 
-                $editable_answer.replaceWith(response.data.html);
+                var answer = JSON.parse(response.data.answer);
+
+                $editable_answer.replaceWith(JST["templates/answer"](answer));
 
                 $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+
+                $('.js-new-comment-trigger').on('click', function () {
+                    $(this).closest('.js-new-comment').addClass('-active');
+                });
+
+                $('.js-new-comment-form').off('ajax:success').on('ajax:success', answer_comment_creation_handler);
 
                 $fields_for_attachments.remove();
 

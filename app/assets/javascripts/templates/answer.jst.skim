@@ -1,14 +1,22 @@
-tr.answer.js-answer data-answer-id='#{@id}' 
+tr.answer.js-answer data-answer-id="#{@id}" 
   td
     .answer_actions.answer-actions
-      a.js-delete-answer.answer-actions_item.-delete data-confirm=('Вы уверены?') data-method='delete' data-remote='true' href='/answers/#{@id}' rel='nofollow'  Удалить ответ
-      a.answer_edit-button.-active.js-edit-answer.answer-actions_item.-edit href='/answers/#{@id}/edit'  Редактировать ответ
-      a.js-mark-answer-as-best.answer_mark-as-best-trigger.answer-actions_item.-mark-as-best data-method='post' data-remote='true' href='/answers/#{@id}/mark_as_best' rel='nofollow'  Отметить как лучший
+      a.js-delete-answer.answer-actions_item.-delete data-confirm=("Вы уверены?") data-method="delete" data-remote="true" href="/answers/#{@id}" rel="nofollow"  Удалить ответ
+      a.answer_edit-button.-active.js-edit-answer.answer-actions_item.-edit href="/answers/#{@id}/edit"  Редактировать ответ
+      a.js-mark-answer-as-best.answer_mark-as-best-trigger.answer-actions_item.-mark-as-best data-method="post" data-remote="true" href="/answers/#{@id}/mark_as_best" rel="nofollow"  Отметить как лучший
     .js-answer-voting.answer_voting.voting
       .js-answer-vote-count.voting_rating 0
+
+      - if gon.current_user && (gon.current_user.id != @user_id)
+        .js-answer-vote-control.voting_control.voting-control
+          a.js-answer-upvote.voting-control_button.-upvote data-method="post" data-remote="true" href="/answers/#{@id}/upvote" rel="nofollow"  +1
+          a.js-answer-downvote.voting-control_button.-downvote data-method="post" data-remote="true" href="/answers/#{@id}/downvote" rel="nofollow"  -1
+          a.js-answer-unvote.voting-control_button.-unvote.-hidden data-method="delete" data-remote="true" href="/answers/#{@id}/unvote" rel="nofollow"  Unvote
+
     .answer_description
       .answer_best-label Лучший ответ
       .answer_content.js-answer-content= @content
+
       - if @attachments
         .js-answer-attachments
           ul.answer_attachments.answer-attachments.js-answer-attachments-list
@@ -17,3 +25,47 @@ tr.answer.js-answer data-answer-id='#{@id}'
                 a href='#{attachement.url}'
                   span.glyphicon.glyphicon-file.answer-attachment_icon
                   | '#{attachement.filename}'
+
+      form.answer-edit-form.js-existing-answer-edit-form id="edit_answer_#{@id}" accept-charset="UTF-8" action="/answers/#{@id}" data-remote="true" data-type="json" enctype="multipart/form-data" method="post"
+        input name="utf8" type="hidden" value="✓" /
+        input name="_method" type="hidden" value="patch" /
+        .answer-edit-form_input-row
+          label for="answer_content" Content
+          textarea#answer_content.answer-edit-form_input.js-existing-answer-content name="answer[content]"= @content
+        .js-answer-edit-form-attachments
+          ul.js-answer-edit-form-attachments-list.answer-edit-form_attachments-list.answer-edit-form-attachments-list
+            - if @attachments
+              - $.each @attachments, (index, attachement) =>
+                li.js-answer-attachment.answer-edit-form-attachments_item.answer-edit-form-attachment data-attachment-id="#{attachement.id}"
+                  a.answer-edit-form-attachment_delete-link.js-answer-edit-form-delete-attachment-link data-confirm=("Вы уверены?") data-method="delete" data-remote="true" href="/attachments/#{attachement.id}" rel="nofollow"
+                    span.answer-edit-form-attachment_delete-icon
+                  a href="/uploads/attachment/file/#{attachement.id}/#{attachement.filename}"= attachement.filename
+
+
+        .answer-edit-form_input-row.answer-edit-form-attachments-fields
+          .links.answer-attachments_links
+            a.answer-attachments_add-field-link.add_fields data-association="attachment" data-association-insertion-template=("<div class=&quot;nested-fields answer-attachments_attachment answer-attachment new-answer-for-question-form_input-row js-answer-attachment-field js-new-answer-for-question-form-attachment-field&quot;><div class=&quot;row&quot;><div class=&quot;col-xs-8&quot;><input class=&quot;answer-new-form_input new-answer-for-question-form_input&quot; type=&quot;file&quot; name=&quot;answer[attachments_attributes][new_attachments][file]&quot; id=&quot;answer_attachments_attributes_new_attachments_file&quot; /></div><div class=&quot;col-xs-4 answer-attachment_links new-answer-for-question-form_attachment-links&quot;><input type=&quot;hidden&quot; name=&quot;answer[attachments_attributes][new_attachments][_destroy]&quot; id=&quot;answer_attachments_attributes_new_attachments__destroy&quot; value=&quot;false&quot; /><a class=&quot;answer-attachment_remove-field-link remove_fields dynamic&quot; href=&quot;#&quot;><span class=&quot;answer-attachment_remove-field-icon new-answer-for-question-form_remove-field-icon&quot;></span>Удалить поле</a></div></div></div>") data-associations="attachments" href="#"
+              span.glyphicon.glyphicon-plus.answer-attachments_add-field-icon
+              | Добавить файл
+        .actions
+          input.answer-edit-form_button.answer-edit-form_submit-button data-disable-with=("Сохранить изменения") name="commit" type="submit" value=("Сохранить изменения") /
+          button.answer-edit-form_button.answer-edit-form_cancel-button.js-existing-answer-cancel name="button" type="button"  Отменить
+
+    .comments.-for-answer.js-comments-for-answer-list data-answer-id="#{@id}"
+      - if @comments
+        - $.each @comments, (index, comment) =>
+          .comment
+            .comment_content= comment.content
+
+    
+    .new-comment.js-new-comment
+      .new-comment_link
+        span.glyphicon.glyphicon-comment.new-comment_link-icon
+        span.new-comment_link-trigger.js-new-comment-trigger Добавить комментарий
+      form#new_comment.js-new-comment-form.new-comment_form.new-comment-form accept-charset="UTF-8" action="/answers/#{@id}/comments" data-remote="true" data-type="json" method="post" 
+        input name="utf8" type="hidden" value="✓" /
+        input#comment_subject name="comment[subject]" type="hidden" value="answer" /
+        .new-comment-form_input-row
+          textarea#comment_content.new-comment-form_input.js-new-comment-form-input name="comment[content]" 
+        .actions
+          input.new-comment-form_submit-button data-disable-with=("Сохранить комментарий") name="commit" type="submit" value=("Сохранить комментарий") /

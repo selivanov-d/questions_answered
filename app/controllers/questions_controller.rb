@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  skip_before_action :authenticate_user!, only: [:index, :show]
+
   before_action :load_question, only: [:show, :destroy, :update]
 
   include Voted
