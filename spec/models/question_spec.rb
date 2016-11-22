@@ -1,8 +1,10 @@
 require 'rails_helper'
 require 'shared_examples/models/votable_spec'
+require 'shared_examples/models/commentable_spec'
 
 RSpec.describe Question do
   it_should_behave_like 'votable'
+  it_should_behave_like 'commentable'
 
   it { should have_many(:answers).dependent(:destroy) }
   it { should belong_to(:user) }
