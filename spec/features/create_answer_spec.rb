@@ -32,7 +32,7 @@ feature 'Create answer', %q{
 
       expect(current_path).to eq question_path(question)
 
-      within '.answers-index' do
+      within '.js-answers-index-table' do
         expect(page).to have_content('Test question content')
         expect(page).to have_content('test-file.jpg')
         expect(page).to have_content('image.jpg')
@@ -64,6 +64,57 @@ feature 'Create answer', %q{
       visit question_path(question)
 
       expect(page).to_not have_button('Сохранить ответ')
+    end
+  end
+
+  context 'All users get new questions in real-time' do
+    # REVIEW: можно ли как-то сделать так, чтобы блок с подготовительными данными запускался только один раз?
+    before :each do
+      author = create(:user)
+      guest = create(:user)
+      question = create(:question, user: author)
+
+      Capybara.using_session('authenticated_author_creator') do
+        sign_in(author)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('authenticated_author_reader') do
+        sign_in(author)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('authenticated_guest') do
+        sign_in(guest)
+        visit question_path(question)
+      end
+
+      Capybara.using_session('non_authenticated_guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('authenticated_author_creator') do
+        fill_in 'Content', with: 'New answer test content'
+        click_on 'Сохранить ответ'
+      end
+    end
+
+    scenario 'authenticated guest', js: true do
+      Capybara.using_session('authenticated_guest') do
+        expect(page).to have_content 'New answer test content'
+      end
+    end
+
+    scenario 'non-authenticated guest', js: true do
+      Capybara.using_session('non_authenticated_guest') do
+        expect(page).to have_content 'New answer test content'
+      end
+    end
+
+    scenario 'authenticated author as reader', js: true do
+      Capybara.using_session('authenticated_author_reader') do
+        expect(page).to have_content 'New answer test content'
+      end
     end
   end
 end
