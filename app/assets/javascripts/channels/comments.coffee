@@ -9,7 +9,7 @@ App.comments = App.cable.subscriptions.create {
 
     switch comment.subject
       when 'Question'
-        $selector = $('.js-comments-for-question-list[data-question-id="' + comment.subject_id + '"')
+        $selector = $('.js-comments-for-question-list[data-question-id="' + comment.subject_id + '"]')
       when 'Answer'
         $selector = $('.js-comments-for-answer-list[data-answer-id="' + comment.subject_id + '"]')
 
