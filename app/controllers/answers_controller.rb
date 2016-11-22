@@ -4,7 +4,6 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create]
 
   include Voted
-  include Commented
 
   def create
     @answer = @question.answers.new(answer_params)
