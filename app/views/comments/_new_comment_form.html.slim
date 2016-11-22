@@ -5,6 +5,7 @@
       | Добавить комментарий
 
   = form_for [commentable, @comment], remote: true, html: { class: 'js-new-comment-form new-comment_form new-comment-form' }, data: { type: :json } do |f|
+    = hidden_field :comment, :subject, value: commentable.class.name.downcase
     .new-comment-form_input-row
       = f.text_area :content, class: 'new-comment-form_input js-new-comment-form-input'
 
