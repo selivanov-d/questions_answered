@@ -85,4 +85,58 @@ feature 'Create question', %q{
       expect(page).to have_content 'You need to sign in or sign up before continuing.'
     end
   end
+
+  context 'All users get new questions in real-time' do
+    # REVIEW: можно ли как-то сделать так, чтобы блок с подготовительными данными запускался только один раз?
+    before :each do
+      author = create(:user)
+      guest = create(:user)
+
+      Capybara.using_session('authenticated_author_creator') do
+        sign_in(author)
+        visit new_question_path
+      end
+
+      Capybara.using_session('authenticated_author_reader') do
+        sign_in(author)
+        visit questions_path
+      end
+
+      Capybara.using_session('authenticated_guest') do
+        sign_in(guest)
+        visit questions_path
+      end
+
+      Capybara.using_session('non_authenticated_guest') do
+        visit questions_path
+      end
+
+      Capybara.using_session('authenticated_author_creator') do
+        fill_in 'Title', with: 'New question test title'
+        fill_in 'Content', with: 'New question test content'
+        click_on 'Создать'
+      end
+    end
+
+    scenario 'authenticated guest', js: true do
+      Capybara.using_session('authenticated_guest') do
+        expect(page).to have_content 'New question test title'
+        expect(page).to have_content 'New question test content'
+      end
+    end
+
+    scenario 'non-authenticated guest', js: true do
+      Capybara.using_session('non_authenticated_guest') do
+        expect(page).to have_content 'New question test title'
+        expect(page).to have_content 'New question test content'
+      end
+    end
+
+    scenario 'authenticated author as reader', js: true do
+      Capybara.using_session('authenticated_author_reader') do
+        expect(page).to have_content 'New question test title'
+        expect(page).to have_content 'New question test content'
+      end
+    end
+  end
 end

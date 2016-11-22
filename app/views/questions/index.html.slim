@@ -1,13 +1,8 @@
 - @page_title = 'Список вопросов'
 
 .questions-index
-  - if @questions.any?
-    table.questions-index-table
-      thead
-        tr
-          th[colspan=2]
-      tbody
-        = render @questions
+  table.questions-index-table.js-questions-index-table
+    = render @questions
 
   .questions-index_actions
     - if user_signed_in?
