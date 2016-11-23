@@ -33,6 +33,7 @@ gem 'remotipart'
 gem 'cocoon'
 gem 'skim'
 gem 'gon'
+gem 'responders'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
