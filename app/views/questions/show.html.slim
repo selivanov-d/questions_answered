@@ -22,7 +22,7 @@
 
     table.answers-index-table.js-answers-index-table
       - if @question.answers.present?
-        = render @question.answers.best_first
+        = render @question.answers.best_first.order(created_at: :asc)
 
   - if user_signed_in?
     = render 'answers/form-new'
