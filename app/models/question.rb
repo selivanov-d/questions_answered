@@ -1,5 +1,6 @@
 class Question < ActiveRecord::Base
   include Votable
+  include Commentable
 
   has_many :answers, dependent: :destroy
   belongs_to :user
@@ -8,4 +9,12 @@ class Question < ActiveRecord::Base
 
   validates :title, presence: true, length: { in: 10..255 }
   validates :content, presence: true, length: { minimum: 10 }
+
+  after_create :broadcast_new_question
+
+  private
+
+  def broadcast_new_question
+    ActionCable.server.broadcast 'QuestionsChannel', question: self
+  end
 end

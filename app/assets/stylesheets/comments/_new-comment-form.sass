@@ -1,0 +1,25 @@
+.new-comment
+  &_link
+    padding-left: 30px
+    padding-top: 20px
+    font-size: 12px
+    color: $link-color
+
+    .new-comment.-active &
+      display: none
+
+  &_link-trigger
+    @include pseudo-link
+
+  &_link-icon
+    padding-right: 5px
+
+.new-comment-form
+  @include default-form
+  margin-left: 30px
+  padding-top: 30px
+  display: none
+
+  .new-comment.-active &
+    display: block
+

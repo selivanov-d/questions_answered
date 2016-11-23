@@ -10,13 +10,19 @@
 
     = render 'questions/form_edit'
 
+  .comments.js-comments-for-question-list[data-question-id=@question.id]
+    = render @question.comments
+
+  - if user_signed_in?
+    = render partial: 'comments/new_comment_form', locals: { commentable: @question }
+
   .answers-index
     - if @question.answers.any?
       h3 Ответы
 
     table.answers-index-table.js-answers-index-table
       - if @question.answers.present?
-        = render @question.answers.best_first
+        = render @question.answers.best_first.order(created_at: :asc)
 
   - if user_signed_in?
     = render 'answers/form-new'

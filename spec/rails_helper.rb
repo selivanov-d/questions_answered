@@ -82,6 +82,7 @@ RSpec.configure do |config|
   end
 
   Capybara.javascript_driver = :poltergeist
+  Capybara.server = :puma
 end
 
 Shoulda::Matchers.configure do |config|

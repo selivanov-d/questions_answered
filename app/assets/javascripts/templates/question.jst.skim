@@ -1,0 +1,7 @@
+tr.question
+  td.question_description
+    .question_title
+      a href="/questions/#{@id}"= @title
+    .question_content= @content
+  td.question_actions.question-actions
+    a.question-actions_give-answer href="/questions/#{@id}"  Дать ответ

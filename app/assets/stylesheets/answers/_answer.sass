@@ -36,6 +36,16 @@
   &_voting
     float: left
 
+    @at-root .answer.-editing &
+      display: none
+
+  .comments
+    @at-root .answer.-editing .comments
+      display: none
+
+  .new-comment
+    @at-root .answer.-editing .new-comment
+      display: none
 
 
 

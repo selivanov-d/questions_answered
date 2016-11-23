@@ -33,5 +33,7 @@ module QuestionAnswered
     end
 
     config.active_record.belongs_to_required_by_default = true
+
+    config.action_cable.url = 'ws://localhost:28080'
   end
 end
