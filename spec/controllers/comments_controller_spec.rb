@@ -52,6 +52,10 @@ RSpec.describe CommentsController, type: :controller do
         end
       end
 
+      it 'assigns requested commentable to @commentable' do
+        expect(assigns(:commentable)).to eq(answer)
+      end
+
       it 'does not saves new question', skip_before: true do
         expect { post :create, params: { comment: attributes_for(:invalid_comment), answer_id: answer } }.to_not change(Comment, :count)
       end
