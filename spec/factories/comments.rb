@@ -4,5 +4,9 @@ FactoryGirl.define do
     user
     association :commentable, factory: :answer
     subject 'answer'
+
+    factory :invalid_comment, class: 'Answer' do
+      content 'no_text'
+    end
   end
 end
