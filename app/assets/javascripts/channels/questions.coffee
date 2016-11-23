@@ -1,4 +1,4 @@
-App.comments = App.cable.subscriptions.create 'QuestionsChannel',
+App.questions = App.cable.subscriptions.create 'QuestionsChannel',
   connected: ->
 
   received: (data) ->

@@ -1,4 +1,4 @@
-App.comments = App.cable.subscriptions.create {
+App.answers = App.cable.subscriptions.create {
   channel: "AnswersChannel",
   question_id: gon.question_id
 },
