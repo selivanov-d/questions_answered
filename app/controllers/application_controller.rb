@@ -5,5 +5,5 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_user!
 
-  before_action { gon.push({ current_user: current_user }) }
+  before_action { gon.push({ current_user_id: current_user.try(:id) }) }
 end
