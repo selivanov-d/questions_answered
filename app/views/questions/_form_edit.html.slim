@@ -1,4 +1,4 @@
-= form_for @question, html: { class: 'js-existing-question-edit-form question-edit-form' }, data: { type: :json }, remote: true do |f|
+= form_for @question, html: { class: 'js-existing-question-edit-form question-edit-form' }, data: { type: :json, resource: 'question', resource_id: @question.id }, remote: true do |f|
   .question-edit-form_input-row
     = f.label :title
     = f.text_field :title, class: 'question-edit-form_input js-question-title-input'
@@ -8,11 +8,12 @@
     = f.text_area :content, class: 'question-edit-form_input js-question-content-input'
 
   ul.question-edit-form_attachments.question-edit-form-attachments
-    = render partial: 'attachments/question-edit-attachment', collection: @question.attachments, as: :attachment
+    - if @question.attachments.any?
+      = render partial: 'attachments/question-edit-attachment', collection: @question.attachments, as: :attachment
 
   .question-edit-form_input-row
     .question-edit-form_attachments-fields.question-edit-form-attachments-fields.js-question-attachments-fields
-      = f.fields_for :attachments do |attachment|
+      = f.fields_for :attachments, @question.attachments.build do |attachment|
       .links.question-edit-form-attachments-fields_links
         = link_to_add_association f, :attachments, class: 'question-edit-form-attachments-fields_add-link' do
           span.question-edit-form-attachments-fields_add-link-icon

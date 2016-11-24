@@ -13,10 +13,6 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to be_a_new(Question)
     end
 
-    it 'builds new attachment for @question' do
-      expect(assigns(:question).attachments.first).to be_a_new(Attachment)
-    end
-
     it 'renders new view' do
       expect(response).to render_template :new
     end
@@ -144,7 +140,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'question\'s author' do
       context 'with valid attributes' do
         before do
-          patch :update, params: { id: question, question: { title: 'New question title', content: 'New question content' } }, format: :js
+          patch :update, params: { id: question, question: { title: 'New question title', content: 'New question content' } }, format: :json
         end
 
         it 'assigns requested question to @question' do
@@ -159,14 +155,13 @@ RSpec.describe QuestionsController, type: :controller do
 
         it 'receives JSON response with 200 HTTP-header' do
           expect(response).to have_http_status(:ok)
-          expect(response.body).to have_content('success')
-          expect(response.body).to have_content('Ваш вопрос успешно изменён')
+          expect(response.content_type).to eq('application/json')
         end
       end
 
       context 'with invalid attribures' do
         before do
-          patch :update, params: { id: question, question: { title: '', content: '' } }, format: :js
+          patch :update, params: { id: question, question: { title: '', content: '' } }, format: :json
         end
 
         it 'assigns requested question to @question' do
@@ -181,11 +176,10 @@ RSpec.describe QuestionsController, type: :controller do
 
         it 'receives JSON response with 200 HTTP-header' do
           error_response_json = {
-            status: 'error',
-            data: assigns(:question).errors
+            errors: assigns(:question).errors
           }.to_json
 
-          expect(response).to have_http_status(:ok)
+          expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to eq error_response_json
         end
       end
@@ -210,9 +204,8 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.content).to_not eq 'New question content'
       end
 
-      it 'receives JSON response with 403 HTTP-header' do
-        expect(response).to have_http_status(:forbidden)
-        expect(response.body).to have_content('Отредактировать можно только свой вопрос')
+      it 'redirects to show view' do
+        expect(response).to redirect_to question_path(assigns(:question))
       end
     end
   end

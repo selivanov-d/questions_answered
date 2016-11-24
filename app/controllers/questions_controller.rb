@@ -1,64 +1,40 @@
 class QuestionsController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
 
-  before_action :load_question, only: [:show, :destroy, :update]
-
   include Voted
 
+  before_action :load_question, only: [:show, :destroy, :update]
+  before_action :store_question_id_for_frontend, only: [:show]
+  before_action :build_answer, only: [:show]
+  before_action :build_comment, only: [:show]
+  before_action :check_authorship, only: [:destroy, :update]
+
+  respond_to :html, except: [:update]
+  respond_to :json, only: [:update]
+
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def create
-    @question = current_user.questions.new(question_params)
-
-    if @question.save
-      redirect_to @question, notice: 'Ваш вопрос успешно создан'
-    else
-      render :new
-    end
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def new
-    @question = Question.new
-    @question.attachments.build
+    respond_with(@question = Question.new)
   end
 
   def show
-    @answer = Answer.new
-    @answer.attachments.build
-    @comment = @question.comments.build
-    gon.push({
-      question_id: @question.id
-    })
+    respond_with(@question)
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      @question.destroy
-      redirect_to questions_path, notice: 'Ваш вопрос удалён'
-    else
-      redirect_to @question, notice: 'Удалить можно только свой вопрос'
-    end
+    respond_with(@question.destroy)
   end
 
   def update
-    if current_user.author_of?(@question)
-      if @question.update(question_params)
-        question_form_html = render_to_string partial: 'questions/form_edit'
-        question_content_html = render_to_string partial: 'questions/question-content'
-
-        render json: { status: 'success', data: {
-          message: 'Ваш вопрос успешно изменён',
-          question_form_html: question_form_html,
-          question_content_html: question_content_html
-        } }, status: :ok
-      else
-        render json: { status: 'error', data: @question.errors }, status: :ok
-      end
-    else
-      render json: { message: 'Отредактировать можно только свой вопрос' }, status: :forbidden
-    end
+    @question.update(question_params)
+    respond_with @question
   end
 
   private
@@ -69,5 +45,23 @@ class QuestionsController < ApplicationController
 
   def load_question
     @question = Question.find(params[:id])
+  end
+
+  def store_question_id_for_frontend
+    gon.push({
+      question_id: @question.id
+    })
+  end
+
+  def build_answer
+    @answer = Answer.new
+  end
+
+  def build_comment
+    @comment = @question.comments.build
+  end
+
+  def check_authorship
+    redirect_to @question, alert: 'Доступ запрещён!' unless current_user.author_of?(@question)
   end
 end

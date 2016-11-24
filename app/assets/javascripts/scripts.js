@@ -93,31 +93,20 @@ function edit_question() {
 
     $question.addClass('-editing');
 
-    $question_form.off('ajax:success').on('ajax:success', function (event, response) {
-        switch (response.status) {
-            case 'success':
-                generate_alert(response.data.message, 'success');
+    $question_form.off('ajax:success')
+        .on('ajax:success', function (event, response) {
+            generate_alert('Ваш вопрос успешно изменён', 'success');
 
-                var question_form_html = response.data.question_form_html,
-                    question_content_html = response.data.question_content_html;
+            $question_form.replaceWith(response.question_form_html);
+            $question_content.replaceWith(response.question_content_html);
 
-                $question_form.replaceWith(question_form_html);
-                $question_content.replaceWith(question_content_html);
+            $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
 
-                $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
-
-                $question.removeClass('-editing');
-
-                break;
-            case 'error':
-                var errors_array = get_errors_array(response.data),
-                    errors_list = errors_to_list(errors_array),
-                    errors = generate_errors_box(errors_list);
-
-                $('.js-sidebar').append(errors);
-                break;
-        }
-    });
+            $question.removeClass('-editing');
+        })
+        .on('ajax:error', function (event, response, status, error) {
+            process_errors(event, response);
+        });
 
     $question_edit_cancel_button.off('click').on('click', function () {
         $question.removeClass('-editing');
@@ -196,11 +185,27 @@ function errors_to_list(errors_array) {
     return errors_html;
 }
 
-function generate_errors_box(errors_list) {
-    return '<div class="errors">' +
+function generate_errors_box(errors_list, resource, resource_id) {
+    return '<div class="errors" data-' + resource + '-id="' + resource_id + '">' +
         '<h4 class="errors_header">Следующие ошибки помешали сохранению:</h4>' +
         errors_list +
         '</div>';
+}
+
+function process_errors(event, response) {
+    var $event_target = $(event.target),
+        resource = $event_target.data('resource'),
+        resource_id = $event_target.data('resource_id'),
+        errors_array = get_errors_array(JSON.parse(response.responseText).errors),
+        errors_list = errors_to_list(errors_array),
+        new_errors_block = generate_errors_box(errors_list, resource, resource_id),
+        $previous_errors = $('.errors[data-' + resource + '-id="' + resource_id + '"]');
+
+    $('.js-sidebar').append(new_errors_block);
+
+    if ($previous_errors) {
+        $previous_errors.remove();
+    }
 }
 
 function generate_alert(message, type) {
