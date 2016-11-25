@@ -28,7 +28,7 @@ class Answer < ActiveRecord::Base
   private
 
   def broadcast_new_answer
-    new_answer_json = ApplicationController.render(partial: 'answers/answer', formats: :json, locals: { answer: self })
+    new_answer_json = ApplicationController.render('answers/create', formats: :json, locals: { answer: self })
     ActionCable.server.broadcast "AnswersForQuestion#{question_id}Channel", answer: new_answer_json
   end
 end
