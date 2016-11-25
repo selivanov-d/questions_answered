@@ -24,7 +24,11 @@ function edit_answer() {
                 $(this).closest('.js-new-comment').addClass('-active');
             });
 
-            $('.js-new-comment-form').off('ajax:success').on('ajax:success', answer_comment_creation_handler);
+            $('.js-new-comment-form')
+                .off('ajax:success').on('ajax:success', answer_comment_creation_handler)
+                .off('ajax:error').on('ajax:error', function (event, response) {
+                process_errors(event, response);
+            });
 
             $fields_for_attachments.remove();
 
@@ -203,20 +207,9 @@ function process_answer_voting(event, response) {
 }
 
 function answer_comment_creation_handler(event, response) {
-    switch (response.status) {
-        case 'success':
-            generate_alert(response.data.message, 'success');
-            $(this).closest('.js-new-comment').removeClass('-active');
-            this.reset();
-            break;
-        case 'error':
-            var errors_array = get_errors_array(response.data),
-                errors_list = errors_to_list(errors_array),
-                errors = generate_errors_box(errors_list);
-
-            $('.js-sidebar').append(errors);
-            break;
-    }
+    generate_alert('Ваш коммент сохранён', 'success');
+    $(this).closest('.js-new-comment').removeClass('-active');
+    this.reset();
 }
 
 $(document).on('ready', function () {
@@ -283,5 +276,9 @@ $(document).on('ready', function () {
         $(this).closest('.js-new-comment').addClass('-active');
     });
 
-    $('.js-new-comment-form').on('ajax:success', answer_comment_creation_handler);
+    $('.js-new-comment-form')
+        .on('ajax:success', answer_comment_creation_handler)
+        .on('ajax:error', function (event, response) {
+            process_errors(event, response);
+        });
 });

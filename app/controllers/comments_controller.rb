@@ -1,15 +1,12 @@
 class CommentsController < ApplicationController
   before_action :load_commentable
 
+  respond_to :json
+
   def create
     @comment = @commentable.comments.new(comment_params)
     current_user.comments << @comment
-
-    if @comment.save
-      render json: { status: 'success', data: { message: 'Ваш коммент сохранён', comment: @comment } }, status: :ok
-    else
-      render json: { status: 'error', data: @comment.errors }, status: :ok
-    end
+    respond_with(@comment)
   end
 
   private
