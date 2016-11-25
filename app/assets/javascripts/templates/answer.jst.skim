@@ -1,4 +1,4 @@
-tr.answer.js-answer data-answer-id="#{@id}" 
+tr.answer.js-answer data-answer-id="#{@id}"
   td
     .answer_actions.answer-actions
       - if gon.current_user_id == @user_id
@@ -58,15 +58,21 @@ tr.answer.js-answer data-answer-id="#{@id}"
           .comment
             .comment_content= comment.content
 
-    
+
     .new-comment.js-new-comment
       .new-comment_link
         span.glyphicon.glyphicon-comment.new-comment_link-icon
         span.new-comment_link-trigger.js-new-comment-trigger Добавить комментарий
-      form#new_comment.js-new-comment-form.new-comment_form.new-comment-form accept-charset="UTF-8" action="/answers/#{@id}/comments" data-remote="true" data-type="json" method="post" 
+      form#new_comment.js-new-comment-form.new-comment_form.new-comment-form accept-charset="UTF-8" action="/answers/#{@id}/comments" data-remote="true" data-type="json" method="post"
         input name="utf8" type="hidden" value="✓" /
         input#comment_subject name="comment[subject]" type="hidden" value="answer" /
         .new-comment-form_input-row
-          textarea#comment_content.new-comment-form_input.js-new-comment-form-input name="comment[content]" 
+          textarea#comment_content.new-comment-form_input.js-new-comment-form-input name="comment[content]"
         .actions
           input.new-comment-form_submit-button data-disable-with=("Сохранить комментарий") name="commit" type="submit" value=("Сохранить комментарий") /
+
+/ REVIEW: таким костылём решил проблему присвоения класса -best обновляемому вопросу в зависимости от его свойства best. Не смог сделать это средстами skim.
+javascript:
+  if (#{@best} == true) {
+    $('.js-answer[data-answer-id=#{@id}]').addClass('-best');
+  }

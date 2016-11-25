@@ -1,6 +1,7 @@
 json.id answer.id
 json.user_id answer.user_id
 json.content answer.content
+json.best answer.best
 
 json.attachments answer.attachments do |attachment|
   json.id attachment.id
