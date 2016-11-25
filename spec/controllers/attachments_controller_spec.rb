@@ -12,7 +12,7 @@ RSpec.describe AttachmentsController, type: :controller do
     context 'question\'s author' do
       before do |example|
         unless example.metadata[:skip_before]
-          delete :destroy, params: { id: question_attachment }, format: :js
+          delete :destroy, params: { id: question_attachment }, format: :json
         end
       end
 
@@ -21,48 +21,32 @@ RSpec.describe AttachmentsController, type: :controller do
       end
 
       it 'deletes a question', :skip_before do
-        expect { delete :destroy, params: { id: question_attachment }, format: :js }.to change(question.attachments, :count).by(-1)
+        expect { delete :destroy, params: { id: question_attachment }, format: :json }.to change(question.attachments, :count).by(-1)
       end
 
-      it 'returns JSON response with 200 HTTP-status' do
-        success_response_json = {
-          status: 'success',
-          data: {
-            message: 'Приложение удалено'
-          }
-        }.to_json
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to eq success_response_json
+      it 'returns response with 204 HTTP-status' do
+        expect(response).to have_http_status(:no_content)
       end
     end
 
     context 'answer\'s author' do
       before do |example|
         unless example.metadata[:skip_before]
-          delete :destroy, params: { id: question_attachment }, format: :js
+          delete :destroy, params: { id: question_attachment }, format: :json
         end
       end
 
       it 'assigns requested attachment to @attachment' do
-        delete :destroy, params: { id: answer_attachment }
+        delete :destroy, params: { id: answer_attachment }, format: :json
         expect(assigns(:attachment)).to eq(answer_attachment)
       end
 
       it 'deletes a question', :skip_before do
-        expect { delete :destroy, params: { id: answer_attachment } }.to change(answer.attachments, :count).by(-1)
+        expect { delete :destroy, params: { id: answer_attachment }, format: :json }.to change(answer.attachments, :count).by(-1)
       end
 
-      it 'returns JSON response with 200 HTTP-status' do
-        success_response_json = {
-          status: 'success',
-          data: {
-            message: 'Приложение удалено'
-          }
-        }.to_json
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to eq success_response_json
+      it 'returns response with 204 HTTP-status' do
+        expect(response).to have_http_status(:no_content)
       end
     end
 
@@ -75,24 +59,16 @@ RSpec.describe AttachmentsController, type: :controller do
 
       before :each do |example|
         unless example.metadata[:skip_before]
-          delete :destroy, params: { id: question_attachment }, format: :js
+          delete :destroy, params: { id: question_attachment }, format: :json
         end
       end
 
       it 'does not deletes an attachment', :skip_before do
-        expect { delete :destroy, params: { id: question_attachment } }.to_not change(Attachment, :count)
+        expect { delete :destroy, params: { id: question_attachment }, format: :json }.to_not change(Attachment, :count)
       end
 
-      it 'returns JSON response with 403 HTTP-status' do
-        success_response_json = {
-          status: 'error',
-          data: {
-            message: 'Удалить можно только приложение у своего вопроса или ответа'
-          }
-        }.to_json
-
+      it 'returns response with 403 HTTP-status' do
         expect(response).to have_http_status(:forbidden)
-        expect(response.body).to eq success_response_json
       end
     end
 
@@ -105,24 +81,16 @@ RSpec.describe AttachmentsController, type: :controller do
 
       before :each do |example|
         unless example.metadata[:skip_before]
-          delete :destroy, params: { id: question_attachment }, format: :js
+          delete :destroy, params: { id: question_attachment }, format: :json
         end
       end
 
       it 'does not deletes an attachment', :skip_before do
-        expect { delete :destroy, params: { id: answer_attachment } }.to_not change(Attachment, :count)
+        expect { delete :destroy, params: { id: answer_attachment }, format: :json }.to_not change(Attachment, :count)
       end
 
-      it 'returns JSON response with 403 HTTP-status' do
-        success_response_json = {
-          status: 'error',
-          data: {
-            message: 'Удалить можно только приложение у своего вопроса или ответа'
-          }
-        }.to_json
-
+      it 'returns response with 403 HTTP-status' do
         expect(response).to have_http_status(:forbidden)
-        expect(response.body).to eq success_response_json
       end
     end
   end
