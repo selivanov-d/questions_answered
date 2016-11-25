@@ -212,6 +212,18 @@ function answer_comment_creation_handler(event, response) {
     this.reset();
 }
 
+function mark_as_best_action_handler(target) {
+    var $new_marked_answer = $(target).closest('.answer');
+
+    generate_alert('Ответ отмечен как лучший', 'success');
+
+    $new_marked_answer.addClass('-best').siblings('.answer').removeClass('-best');
+
+    $new_marked_answer.detach();
+
+    $('.js-answers-index-table').prepend($new_marked_answer);
+}
+
 $(document).on('ready', function () {
     var $answers_table = $('.js-answers-index-table');
 
@@ -252,15 +264,7 @@ $(document).on('ready', function () {
 
     $answers_table
         .on('ajax:success', '.js-mark-answer-as-best', function (event, response) {
-            var $new_marked_answer = $(this).closest('.answer');
-
-            generate_alert('Ответ отмечен как лучший', 'success');
-
-            $new_marked_answer.addClass('-best').siblings('.answer').removeClass('-best');
-
-            $new_marked_answer.detach();
-
-            $('.js-answers-index-table').prepend($new_marked_answer);
+            mark_as_best_action_handler(this);
         })
         .on('ajax:error', function (event, response) {
             process_errors(event, response);
