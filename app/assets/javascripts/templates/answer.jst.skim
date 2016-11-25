@@ -38,7 +38,7 @@ tr.answer.js-answer data-answer-id="#{@id}"
             - if @attachments
               - $.each @attachments, (index, attachement) =>
                 li.js-answer-attachment.answer-edit-form-attachments_item.answer-edit-form-attachment data-attachment-id="#{attachement.id}"
-                  a.answer-edit-form-attachment_delete-link.js-answer-edit-form-delete-attachment-link data-confirm=("Вы уверены?") data-method="delete" data-remote="true" href="/attachments/#{attachement.id}" rel="nofollow"
+                  a.answer-edit-form-attachment_delete-link.js-answer-edit-form-delete-attachment-link data-confirm=("Вы уверены?") data-method="delete" data-remote="true" data-type="json" href="/attachments/#{attachement.id}" rel="nofollow"
                     span.answer-edit-form-attachment_delete-icon
                   a href="/uploads/attachment/file/#{attachement.id}/#{attachement.filename}"= attachement.filename
 
