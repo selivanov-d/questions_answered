@@ -9,7 +9,9 @@
               <%= link_to 'Выйти', destroy_user_session_path, method: :delete %><br/>
             </li>
         <% else %>
-            <li class="main-menu_item -login"><%= link_to 'Войти', user_session_path %></li>
+            <li class="main-menu_item -login login-block">
+              <%= render partial: 'common/login_block' %>
+            </li>
         <% end %>
       </ul>
     </nav>

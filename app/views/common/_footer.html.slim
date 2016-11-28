@@ -1,3 +1,10 @@
 footer.footer
-  .footer_wrapper &copy; #{Time.new.year} Дмитрий Селиванов. Учебный проект в #{link_to('онлайн-школе Thinknetica', 'http://www.thinknetica.com/', target: '_blank')}
+  .footer_wrapper
+    | &copy; #{Time.new.year} Дмитрий Селиванов. Учебный проект в #{link_to('онлайн-школе Thinknetica', 'http://www.thinknetica.com/', target: '_blank')}
+    .footer_legal-info
+      = link_to 'Terms of Service', terms_path
+      br
+      = link_to 'Privacy Policy', policy_path
+
+
 
