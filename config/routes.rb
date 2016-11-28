@@ -30,4 +30,7 @@ Rails.application.routes.draw do
   resources :attachments, only: [:destroy]
 
   mount ActionCable.server => '/cable'
+
+  get 'terms' => 'pages#terms'
+  get 'policy' => 'pages#policy'
 end
