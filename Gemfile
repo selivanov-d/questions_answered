@@ -34,6 +34,11 @@ gem 'cocoon'
 gem 'skim'
 gem 'gon'
 gem 'responders'
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter', :github => 'arunagw/omniauth-twitter'
+gem 'font-awesome-sass', '~> 4.7.0'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
