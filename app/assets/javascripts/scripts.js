@@ -1,32 +1,3 @@
-function create_new_answer(event, response) {
-    event.preventDefault();
-
-    var $new_answer_for_question_form = $(this).closest('.js-new-answer-for-question-form'),
-        $fields_for_attachments = $new_answer_for_question_form.find('.js-question-attachment-field'),
-        $table_with_answers = $('.js-answers-index-table'),
-        $content_input = $('.js-new-answer-for-question-content-input');
-
-    switch (response.status) {
-        case 'success':
-            generate_alert(response.data.message, 'success');
-
-            $fields_for_attachments.remove();
-
-            $content_input.val('');
-
-            $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
-
-            break;
-        case 'error':
-            var errors_array = get_errors_array(response.data),
-                errors_list = errors_to_list(errors_array),
-                errors = generate_errors_box(errors_list);
-
-            $('.js-sidebar').append(errors);
-            break;
-    }
-}
-
 function edit_answer() {
     event.preventDefault();
 
@@ -39,37 +10,33 @@ function edit_answer() {
 
     $editable_answer.addClass('-editing');
 
-    $editable_answer_form.off('ajax:success').on('ajax:success', function (event, response) {
-        switch (response.status) {
-            case 'success':
-                generate_alert(response.data.message, 'success');
+    $editable_answer_form.off('ajax:success')
+        .on('ajax:success', function (event, response) {
+            generate_alert('Ваш ответ успешно изменён', 'success');
 
-                var answer = JSON.parse(response.data.answer);
+            var answer = response;
 
-                $editable_answer.replaceWith(JST["templates/answer"](answer));
+            $editable_answer.replaceWith(JST["templates/answer"](answer));
 
-                $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+            $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
 
-                $('.js-new-comment-trigger').on('click', function () {
-                    $(this).closest('.js-new-comment').addClass('-active');
-                });
+            $('.js-new-comment-trigger').on('click', function () {
+                $(this).closest('.js-new-comment').addClass('-active');
+            });
 
-                $('.js-new-comment-form').off('ajax:success').on('ajax:success', answer_comment_creation_handler);
+            $('.js-new-comment-form')
+                .off('ajax:success').on('ajax:success', answer_comment_creation_handler)
+                .off('ajax:error').on('ajax:error', function (event, response) {
+                process_errors(event, response);
+            });
 
-                $fields_for_attachments.remove();
+            $fields_for_attachments.remove();
 
-                $editable_answer.removeClass('-editing');
-
-                break;
-            case 'error':
-                var errors_array = get_errors_array(response.data),
-                    errors_list = errors_to_list(errors_array),
-                    errors = generate_errors_box(errors_list);
-
-                $('.js-sidebar').append(errors);
-                break;
-        }
-    });
+            $editable_answer.removeClass('-editing');
+        })
+        .on('ajax:error', function (event, response) {
+            process_errors(event, response);
+        });
 
     $editable_answer_cancel_button.off('click').on('click', function () {
         $editable_answer.removeClass('-editing');
@@ -93,31 +60,20 @@ function edit_question() {
 
     $question.addClass('-editing');
 
-    $question_form.off('ajax:success').on('ajax:success', function (event, response) {
-        switch (response.status) {
-            case 'success':
-                generate_alert(response.data.message, 'success');
+    $question_form.off('ajax:success')
+        .on('ajax:success', function (event, response) {
+            generate_alert('Ваш вопрос успешно изменён', 'success');
 
-                var question_form_html = response.data.question_form_html,
-                    question_content_html = response.data.question_content_html;
+            $question_form.replaceWith(response.question_form_html);
+            $question_content.replaceWith(response.question_content_html);
 
-                $question_form.replaceWith(question_form_html);
-                $question_content.replaceWith(question_content_html);
+            $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
 
-                $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
-
-                $question.removeClass('-editing');
-
-                break;
-            case 'error':
-                var errors_array = get_errors_array(response.data),
-                    errors_list = errors_to_list(errors_array),
-                    errors = generate_errors_box(errors_list);
-
-                $('.js-sidebar').append(errors);
-                break;
-        }
-    });
+            $question.removeClass('-editing');
+        })
+        .on('ajax:error', function (event, response, status, error) {
+            process_errors(event, response);
+        });
 
     $question_edit_cancel_button.off('click').on('click', function () {
         $question.removeClass('-editing');
@@ -196,11 +152,27 @@ function errors_to_list(errors_array) {
     return errors_html;
 }
 
-function generate_errors_box(errors_list) {
-    return '<div class="errors">' +
+function generate_errors_box(errors_list, resource, resource_id) {
+    return '<div class="errors" data-' + resource + '-id="' + resource_id + '">' +
         '<h4 class="errors_header">Следующие ошибки помешали сохранению:</h4>' +
         errors_list +
         '</div>';
+}
+
+function process_errors(event, response) {
+    var $event_target = $(event.target),
+        resource = $event_target.data('resource'),
+        resource_id = $event_target.data('resource_id'),
+        errors_array = get_errors_array(JSON.parse(response.responseText).errors),
+        errors_list = errors_to_list(errors_array),
+        new_errors_block = generate_errors_box(errors_list, resource, resource_id),
+        $previous_errors = $('.errors[data-' + resource + '-id="' + resource_id + '"]');
+
+    $('.js-sidebar').append(new_errors_block);
+
+    if ($previous_errors) {
+        $previous_errors.remove();
+    }
 }
 
 function generate_alert(message, type) {
@@ -235,20 +207,21 @@ function process_answer_voting(event, response) {
 }
 
 function answer_comment_creation_handler(event, response) {
-    switch (response.status) {
-        case 'success':
-            generate_alert(response.data.message, 'success');
-            $(this).closest('.js-new-comment').removeClass('-active');
-            this.reset();
-            break;
-        case 'error':
-            var errors_array = get_errors_array(response.data),
-                errors_list = errors_to_list(errors_array),
-                errors = generate_errors_box(errors_list);
+    generate_alert('Ваш коммент сохранён', 'success');
+    $(this).closest('.js-new-comment').removeClass('-active');
+    this.reset();
+}
 
-            $('.js-sidebar').append(errors);
-            break;
-    }
+function mark_as_best_action_handler(target) {
+    var $new_marked_answer = $(target).closest('.answer');
+
+    generate_alert('Ответ отмечен как лучший', 'success');
+
+    $new_marked_answer.addClass('-best').siblings('.answer').removeClass('-best');
+
+    $new_marked_answer.detach();
+
+    $('.js-answers-index-table').prepend($new_marked_answer);
 }
 
 $(document).on('ready', function () {
@@ -256,52 +229,46 @@ $(document).on('ready', function () {
 
     $('.js-edit-question').on('click', edit_question);
 
-    $answers_table.on('ajax:success', '.js-delete-answer', function (event, response) {
-        switch (response.status) {
-            case 'success':
-                var $deletable_answer = $(this).closest('.js-answer');
-                $deletable_answer.remove();
+    $answers_table
+        .on('ajax:success', '.js-delete-answer', function (event, response) {
+            var $deletable_answer = $(this).closest('.js-answer');
+            $deletable_answer.remove();
 
-                generate_alert(response.data.message, 'success');
-
-                break;
-            case 'error':
-                var errors_array = get_errors_array(response.data),
-                    errors_list = errors_to_list(errors_array),
-                    errors = generate_errors_box(errors_list);
-
-                $('.js-sidebar').append(errors);
-                break;
-        }
-    });
+            generate_alert('Ваш ответ удалён', 'success');
+        })
+        .on('ajax:error', function (event, response, status, error) {
+            process_errors(event, response);
+        });
 
     $answers_table.on('click', '.js-edit-answer', edit_answer);
 
-    $('.js-new-answer-for-question-form').on('ajax:success', create_new_answer);
+    $('.js-new-answer-for-question-form')
+        .on('ajax:success', function (event) {
+            event.preventDefault();
 
-    $answers_table.on('ajax:success', '.js-mark-answer-as-best', function (event, response) {
-        switch (response.status) {
-            case 'success':
-                var $new_marked_answer = $(this).closest('.answer');
+            var $new_answer_for_question_form = $(this).closest('.js-new-answer-for-question-form'),
+                $fields_for_attachments = $new_answer_for_question_form.find('.js-question-attachment-field'),
+                $content_input = $('.js-new-answer-for-question-content-input');
 
-                generate_alert(response.data, 'success');
+            generate_alert('Ваш ответ сохранён', 'success');
 
-                $new_marked_answer.addClass('-best').siblings('.answer').removeClass('-best');
+            $fields_for_attachments.remove();
 
-                $new_marked_answer.detach();
+            $content_input.val('');
 
-                $('.js-answers-index-table').prepend($new_marked_answer);
+            $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
+        })
+        .on('ajax:error', function (event, response) {
+            process_errors(event, response);
+        });
 
-                break;
-            case 'error':
-                var errors_array = get_errors_array(response.data),
-                    errors_list = errors_to_list(errors_array),
-                    errors = generate_errors_box(errors_list);
-
-                $('.js-sidebar').append(errors);
-                break;
-        }
-    });
+    $answers_table
+        .on('ajax:success', '.js-mark-answer-as-best', function (event, response) {
+            mark_as_best_action_handler(this);
+        })
+        .on('ajax:error', function (event, response) {
+            process_errors(event, response);
+        });
 
     $('.js-question-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_question_attachment);
     $('.js-answer-edit-form-delete-attachment-link').off('ajax:success').on('ajax:success', remove_answer_attachment);
@@ -313,5 +280,9 @@ $(document).on('ready', function () {
         $(this).closest('.js-new-comment').addClass('-active');
     });
 
-    $('.js-new-comment-form').on('ajax:success', answer_comment_creation_handler);
+    $('.js-new-comment-form')
+        .on('ajax:success', answer_comment_creation_handler)
+        .on('ajax:error', function (event, response) {
+            process_errors(event, response);
+        });
 });

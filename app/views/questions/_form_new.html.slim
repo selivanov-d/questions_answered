@@ -2,7 +2,7 @@
   - content_for :sidebar do
     = render partial: 'common/errors', locals: { resource: @question }
 
-= form_for @question, html: { class: 'question-new-form' } do |f|
+= form_for @question, html: { class: 'question-new-form' }, data: { resource: 'question', resource_id: 'new' } do |f|
   .question-new-form_input-row
     = f.label :title
     = f.text_field :title, class: 'question-new-form_input'
@@ -12,7 +12,7 @@
     = f.text_area :content, class: 'question-new-form_input'
 
   .question-new-form_input-row
-    = f.fields_for :attachments do |attachment|
+    = f.fields_for :attachments, @question.attachments.build do |attachment|
 
     .links.question-attachments_links
       = link_to_add_association f, :attachments do

@@ -1,57 +1,31 @@
 class AnswersController < ApplicationController
+  include Voted
+
   before_action :load_answer, only: [:destroy, :update, :mark_as_best]
   before_action :load_question, only: [:create]
+  before_action :check_authorship_of_answer, only: [:destroy, :update]
+  before_action :check_authorship_of_question, only: [:mark_as_best]
 
-  include Voted
+  respond_to :json
 
   def create
     @answer = @question.answers.new(answer_params)
     current_user.answers << @answer
-
-    if @answer.save
-      new_answer_json = render_to_string partial: 'answers/answer.json.jbuilder', locals: { answer: @answer }
-
-      render json: { status: 'success', data: { message: 'Ваш ответ сохранён', answer: new_answer_json } }, status: :ok
-    else
-      render json: { status: 'error', data: @answer.errors }, status: :ok
-    end
+    respond_with(@answer, locals: { answer: @answer })
   end
 
   def destroy
-    if current_user.author_of?(@answer)
-      @answer.destroy
-      render json: { status: 'success', data: { message: 'Ваш ответ удалён' } }, status: :ok
-    else
-      render json: { message: 'Удалить можно только свой ответ' }, status: :forbidden
-    end
+    respond_with(@answer.destroy)
   end
 
   def update
-    if current_user.author_of?(@answer)
-      if @answer.update(answer_params)
-        updated_answer_json = render_to_string @answer
-
-        render json: { status: 'success', data: { message: 'Ваш ответ успешно изменён', answer: updated_answer_json } }, status: :ok
-      else
-        render json: { status: 'error', data: @answer.errors }, status: :ok
-      end
-    else
-      render json: { message: 'Отредактировать можно только свой ответ' }, status: :forbidden
-    end
+    @answer.update(answer_params)
+    respond_with(@answer)
   end
 
   def mark_as_best
-    if current_user.author_of?(@answer)
-      @answer.mark_as_best
-
-      if @answer.errors.any?
-        render json: { status: 'error', data: @answer.errors }, status: :ok
-      else
-        render json: { status: 'success', data: 'Ответ отмечен как лучший' }, status: :ok
-      end
-    else
-      render json: { message: 'Отметить ответ лучшим можно у своего вопроса' }, status: :forbidden
-    end
+    @answer.mark_as_best
+    respond_with(@answer)
   end
 
   private
@@ -66,5 +40,13 @@ class AnswersController < ApplicationController
 
   def load_question
     @question = Question.find(params[:question_id])
+  end
+
+  def check_authorship_of_answer
+    head :forbidden unless current_user.author_of?(@answer)
+  end
+
+  def check_authorship_of_question
+    head :forbidden unless current_user.author_of?(@answer.question)
   end
 end

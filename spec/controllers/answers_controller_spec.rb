@@ -11,7 +11,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       before :each do
-        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js }
+        post :create, params: { answer: attributes_for(:answer), question_id: question, format: :json }
       end
 
       it 'assigns new answer to @answer' do
@@ -23,23 +23,21 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'saves new answer' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js } }.to change(question.answers, :count).by(1)
+        expect { post :create, params: { answer: attributes_for(:answer), question_id: question, format: :json } }.to change(question.answers, :count).by(1)
       end
 
       it 'saves with association to logged in user' do
-        expect { post :create, params: { answer: attributes_for(:answer), question_id: question, format: :js } }.to change(@user.answers, :count).by(1)
+        expect { post :create, params: { answer: attributes_for(:answer), question_id: question, format: :json } }.to change(@user.answers, :count).by(1)
       end
 
-      it 'receives JSON response with 200 HTTP-header' do
+      it 'receives response with 200 HTTP-header' do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to have_content('success')
-        expect(response.body).to have_content('Ваш ответ сохранён')
       end
     end
 
     context 'with invalid attributes' do
       before :each do
-        post :create, params: { answer: attributes_for(:invalid_answer), question_id: question, format: :js }
+        post :create, params: { answer: attributes_for(:invalid_answer), question_id: question, format: :json }
       end
 
       it 'assigns parent question to @question' do
@@ -47,16 +45,15 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'does not saves new answer' do
-        expect { post :create, params: { answer: attributes_for(:invalid_answer), question_id: question, format: :js } }.to_not change(Answer, :count)
+        expect { post :create, params: { answer: attributes_for(:invalid_answer), question_id: question, format: :json } }.to_not change(Answer, :count)
       end
 
       it 'receives JSON response with 200 HTTP-header' do
         error_response_json = {
-          status: 'error',
-          data: assigns(:answer).errors
+          errors: assigns(:answer).errors
         }.to_json
 
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to eq error_response_json
       end
     end
@@ -70,26 +67,18 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'questions\'s author' do
       it 'assigns requested answer to @answer' do
-        delete :destroy, params: { id: answer }, format: :js
+        delete :destroy, params: { id: answer }, format: :json
         expect(assigns(:answer)).to eq(answer)
       end
 
       it 'deletes an answer' do
-        expect { delete :destroy, params: { id: answer }, format: :js }.to change(@user.answers, :count).by(-1)
+        expect { delete :destroy, params: { id: answer }, format: :json }.to change(@user.answers, :count).by(-1)
       end
 
       it 'receives JSON response with 200 HTTP-header' do
-        delete :destroy, params: { id: answer }, format: :js
+        delete :destroy, params: { id: answer }, format: :json
 
-        success_response_json = {
-          status: 'success',
-          data: {
-            message: 'Ваш ответ удалён'
-          }
-        }.to_json
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to eq success_response_json
+        expect(response).to have_http_status(:no_content)
       end
     end
 
@@ -101,23 +90,18 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'assigns requested answer to @answer' do
-        delete :destroy, params: { id: answer }, format: :js
+        delete :destroy, params: { id: answer }, format: :json
         expect(assigns(:answer)).to eq(answer)
       end
 
       it 'does not deletes an answer' do
-        expect { delete :destroy, params: { id: answer }, format: :js }.to_not change(Answer, :count)
+        expect { delete :destroy, params: { id: answer }, format: :json }.to_not change(Answer, :count)
       end
 
       it 'receives JSON response with 403 HTTP-header' do
-        delete :destroy, params: { id: answer }, format: :js
-
-        error_response_json = {
-          message: 'Удалить можно только свой ответ'
-        }.to_json
+        delete :destroy, params: { id: answer }, format: :json
 
         expect(response).to have_http_status(:forbidden)
-        expect(response.body).to eq error_response_json
       end
     end
   end
@@ -131,7 +115,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'answer\'s author' do
       context 'with valid attribures' do
         before do
-          patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :js
+          patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :json
         end
 
         it 'assigns requested answer to @answer' do
@@ -145,14 +129,12 @@ RSpec.describe AnswersController, type: :controller do
 
         it 'receives JSON response with 200 HTTP-header' do
           expect(response).to have_http_status(:ok)
-          expect(response.body).to have_content('success')
-          expect(response.body).to have_content('Ваш ответ успешно изменён')
         end
       end
 
       context 'with invalid attributes' do
         before do
-          patch :update, params: { id: answer, question_id: question, answer: { content: '' } }, format: :js
+          patch :update, params: { id: answer, question_id: question, answer: { content: '' } }, format: :json
         end
 
         it 'assigns requested answer to @answer' do
@@ -166,11 +148,10 @@ RSpec.describe AnswersController, type: :controller do
 
         it 'receives JSON response with 200 HTTP-header' do
           error_response_json = {
-            status: 'error',
-            data: assigns(:answer).errors
+            errors: assigns(:answer).errors
           }.to_json
 
-          expect(response).to have_http_status(:ok)
+          expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to eq error_response_json
         end
       end
@@ -182,7 +163,7 @@ RSpec.describe AnswersController, type: :controller do
         sign_out(@user)
         sign_in(user2)
 
-        patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :js
+        patch :update, params: { id: answer, question_id: question, answer: { content: 'New answer body' } }, format: :json
       end
 
       it 'assigns requested answer to @answer' do
@@ -194,13 +175,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.content).to_not eq 'New answer body'
       end
 
-      it 'receives JSON response with 403 HTTP-header' do
-        error_response_json = {
-          message: 'Отредактировать можно только свой ответ'
-        }.to_json
-
+      it 'receives response with 403 HTTP-header' do
         expect(response).to have_http_status(:forbidden)
-        expect(response.body).to eq error_response_json
       end
     end
   end
@@ -213,7 +189,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'question\'s author' do
       before do
-        patch :mark_as_best, params: { id: answer }, format: :js
+        patch :mark_as_best, params: { id: answer }, format: :json
       end
 
       it 'assigns requested answer to @answer' do
@@ -226,13 +202,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'receives JSON response with 200 HTTP-header' do
-        success_response_json = {
-          status: 'success',
-          data: 'Ответ отмечен как лучший'
-        }.to_json
-
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to eq success_response_json
+        expect(response).to have_http_status(:no_content)
       end
     end
 
@@ -242,7 +212,7 @@ RSpec.describe AnswersController, type: :controller do
         question2 = create(:question, user: user2)
         @answer2 = create(:answer, question: question2, user: user2)
 
-        patch :mark_as_best, params: { id: @answer2 }, format: :js
+        patch :mark_as_best, params: { id: @answer2 }, format: :json
       end
 
       it 'assigns requested answer to @answer' do
@@ -255,12 +225,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'receives JSON response with 403 HTTP-header' do
-        errors_response_json = {
-          message: 'Отметить ответ лучшим можно у своего вопроса'
-        }.to_json
-
         expect(response).to have_http_status(:forbidden)
-        expect(response.body).to eq errors_response_json
       end
     end
   end
