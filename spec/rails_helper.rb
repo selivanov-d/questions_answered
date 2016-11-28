@@ -83,6 +83,8 @@ RSpec.configure do |config|
 
   Capybara.javascript_driver = :poltergeist
   Capybara.server = :puma
+
+  config.include(OmniauthMacros)
 end
 
 Shoulda::Matchers.configure do |config|
@@ -91,3 +93,5 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+OmniAuth.config.test_mode = true
