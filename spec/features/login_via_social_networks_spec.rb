@@ -21,7 +21,8 @@ feature 'Login via social networks', %q{
 
         visit '/'
         click_on 'Войти через Facebook'
-        expect(page).to have_content('Could not authenticate you from Facebook because "Invalid credentials"')
+        expect(current_path).to eq root_path
+        expect(page).to have_content('Authentication failed, please try again.')
         expect(page).to have_content('Войти через Facebook')
         expect(page).to_not have_content('Выйти')
       end
@@ -41,7 +42,8 @@ feature 'Login via social networks', %q{
 
         visit '/'
         click_on 'Войти через Twitter'
-        expect(page).to have_content('Could not authenticate you from Twitter because "Invalid credentials"')
+        expect(current_path).to eq root_path
+        expect(page).to have_content('Authentication failed, please try again.')
         expect(page).to have_content('Войти через Twitter')
         expect(page).to_not have_content('Выйти')
       end

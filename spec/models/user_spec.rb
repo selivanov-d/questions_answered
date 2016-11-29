@@ -4,6 +4,8 @@ RSpec.describe User do
   it { should have_many(:answers).dependent(:destroy) }
   it { should have_many(:questions).dependent(:destroy) }
   it { should have_many(:votes) }
+  it { should have_many(:comments) }
+  it { should have_many(:authorizations) }
 
   it { should validate_presence_of :email }
   it { should validate_presence_of :password }
@@ -24,7 +26,7 @@ RSpec.describe User do
 
   describe '.find_for_oauth' do
     let!(:user) { create(:user) }
-    let!(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456') }
+    let!(:auth) { OmniAuth::AuthHash.new(provider: 'facebook', uid: '123456', info: { email: 'new@user.com' }) }
 
     context 'user already has authorization' do
       it 'returns user' do
@@ -84,6 +86,22 @@ RSpec.describe User do
           expect(authorization.provider).to eq auth.provider
           expect(authorization.uid).to eq auth.uid
         end
+      end
+    end
+
+    context 'method called with invalid auth hash' do
+      let(:invalid_auth) { { invalid_auth_hash: true } }
+
+      it 'does not creates new user' do
+        expect { User.find_for_oauth(invalid_auth) }.to_not change(User, :count)
+      end
+
+      it 'does not creates new authorization' do
+        expect { User.find_for_oauth(invalid_auth) }.to_not change(Authorization, :count)
+      end
+
+      it 'returns nil' do
+        expect(User.find_for_oauth(invalid_auth)).to be_nil
       end
     end
   end
