@@ -71,6 +71,6 @@ tr.answer.js-answer data-answer-id="#{@id}"
         .actions
           input.new-comment-form_submit-button data-disable-with=("Сохранить комментарий") name="commit" type="submit" value=("Сохранить комментарий") /
 
-  - if @best == true
+  - if @best
     javascript:
       $('.js-answer[data-answer-id=#{@id}]').addClass('-best');
