@@ -3,7 +3,7 @@
 .question-show.question.js-question[data-question-id='#{@question.id}']
   = render partial: 'questions/question-content'
 
-  - if user_signed_in? && current_user.author_of?(@question)
+  - if can?(:update, @question)
     .question-show_actions
       = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }, class: 'question-show_button question-show_delete-button'
       = link_to 'Редактировать вопрос', questions_path, class: 'question-show_button js-edit-question question_edit-trigger question-show_edit-button'
@@ -13,7 +13,7 @@
   .comments.js-comments-for-question-list[data-question-id=@question.id]
     = render @question.comments
 
-  - if user_signed_in?
+  - if can?(:create, Comment)
     = render partial: 'comments/new_comment_form', locals: { commentable: @question }
 
   .answers-index
@@ -24,7 +24,7 @@
       - if @question.answers.present?
         = render @question.answers.best_first.order(created_at: :asc)
 
-  - if user_signed_in?
+  - if can?(:create, Answer)
     = render 'answers/form-new'
 
   .question-show_actions

@@ -5,5 +5,5 @@
     = render @questions
 
   .questions-index_actions
-    - if user_signed_in?
+    - if can?(:create, Question)
       = link_to 'Задать вопрос', new_question_path, class: 'questions-index_new-button'

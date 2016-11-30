@@ -1,12 +1,14 @@
 class AnswersController < ApplicationController
   include Voted
 
+  respond_to :json
+
+  authorize_resource
+
   before_action :load_answer, only: [:destroy, :update, :mark_as_best]
   before_action :load_question, only: [:create]
   before_action :check_authorship_of_answer, only: [:destroy, :update]
   before_action :check_authorship_of_question, only: [:mark_as_best]
-
-  respond_to :json
 
   def create
     @answer = @question.answers.new(answer_params)

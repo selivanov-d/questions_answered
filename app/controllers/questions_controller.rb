@@ -1,5 +1,11 @@
 class QuestionsController < ApplicationController
+  respond_to :html, except: [:update]
+  respond_to :json, only: [:update]
+
   skip_before_action :authenticate_user!, only: [:index, :show]
+
+  authorize_resource
+  skip_authorization_check only: [:index, :show]
 
   include Voted
 
@@ -8,9 +14,6 @@ class QuestionsController < ApplicationController
   before_action :build_answer, only: [:show]
   before_action :build_comment, only: [:show]
   before_action :check_authorship, only: [:destroy, :update]
-
-  respond_to :html, except: [:update]
-  respond_to :json, only: [:update]
 
   def index
     respond_with(@questions = Question.all)

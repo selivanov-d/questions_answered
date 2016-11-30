@@ -1,8 +1,10 @@
 class AttachmentsController < ApplicationController
+  respond_to :json
+
+  authorize_resource
+
   before_action :find_attachment
   before_action :check_authorship
-
-  respond_to :json
 
   def destroy
     respond_with(@attachment.destroy)
