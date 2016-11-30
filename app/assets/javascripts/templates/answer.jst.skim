@@ -71,8 +71,6 @@ tr.answer.js-answer data-answer-id="#{@id}"
         .actions
           input.new-comment-form_submit-button data-disable-with=("Сохранить комментарий") name="commit" type="submit" value=("Сохранить комментарий") /
 
-/ REVIEW: таким костылём решил проблему присвоения класса -best обновляемому вопросу в зависимости от его свойства best. Не смог сделать это средстами skim.
-javascript:
-  if (#{@best} == true) {
-    $('.js-answer[data-answer-id=#{@id}]').addClass('-best');
-  }
+  - if @best
+    javascript:
+      $('.js-answer[data-answer-id=#{@id}]').addClass('-best');
