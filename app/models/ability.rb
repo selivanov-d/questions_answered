@@ -28,18 +28,18 @@ class Ability
 
     can :create, [Question, Answer, Comment]
 
-    can [:update, :destroy], [Question, Answer], user: user
+    can [:update, :destroy], [Question, Answer], user_id: user.id
 
     can :vote, [Question, Answer] do |votable|
       !user.author_of?(votable)
     end
 
     can :mark_as_best, Answer do |answer|
-      answer.question.user_id == user.id
+      user.author_of?(answer.question)
     end
 
     can [:create, :destroy], Attachment do |attachment|
-      attachment.attachable.user_id == user.id
+      user.author_of?(attachment.attachable)
     end
   end
 end
