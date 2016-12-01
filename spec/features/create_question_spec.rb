@@ -87,7 +87,6 @@ feature 'Create question', %q{
   end
 
   context 'All users get new questions in real-time' do
-    # REVIEW: можно ли как-то сделать так, чтобы блок с подготовительными данными запускался только один раз?
     before :each do
       author = create(:user)
       guest = create(:user)

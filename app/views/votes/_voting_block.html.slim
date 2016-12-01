@@ -2,14 +2,17 @@
 
 div class="js-#{votable_klass}-voting #{votable_klass}_voting voting"
   div class="js-#{votable_klass}-vote-count voting_rating"= votable.rating
-  - if user_signed_in? && !current_user.author_of?(votable)
+
+  - if can?(:vote, votable)
     div class="js-#{votable_klass}-vote-control voting_control voting-control"
       = link_to polymorphic_path([:upvote, votable]), method: 'post', remote: true,
               class: "js-#{votable_klass}-upvote voting-control_button -upvote#{ (votable.has_vote_from? current_user) ? ' -hidden' : ''}" do
         | +1
+
       = link_to polymorphic_path([:downvote, votable]), method: 'post', remote: true,
               class: "js-#{votable_klass}-downvote voting-control_button -downvote#{ (votable.has_vote_from? current_user) ? ' -hidden' : ''}" do
         | -1
+
       = link_to polymorphic_path([:unvote, votable]), method: 'delete', remote: true,
-              class: "js-#{votable_klass}-unvote voting-control_button -unvote #{ (votable.has_vote_from? current_user) ? '' : ' -hidden'}"
+              class: "js-#{votable_klass}-unvote voting-control_button -unvote #{ (votable.has_vote_from? current_user) ? '' : ' -hidden'}" do
         | Unvote

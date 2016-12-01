@@ -5,5 +5,5 @@ tr.question
 
     .question_content= truncate(question.content, length: 128)
   td.question_actions.question-actions
-    - if user_signed_in?
+    - if can?(:create, Answer)
       = link_to 'Дать ответ', question, class: 'question-actions_give-answer'

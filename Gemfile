@@ -38,6 +38,8 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter', :github => 'arunagw/omniauth-twitter'
 gem 'font-awesome-sass', '~> 4.7.0'
+gem 'cancancan'
+gem 'sprockets', '3.6.3'
 
 
 # Use ActiveModel has_secure_password

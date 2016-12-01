@@ -1,7 +1,9 @@
 class CommentsController < ApplicationController
-  before_action :load_commentable
-
   respond_to :json
+
+  authorize_resource
+
+  before_action :load_commentable
 
   def create
     @comment = @commentable.comments.new(comment_params)

@@ -7,5 +7,9 @@ FactoryGirl.define do
     factory :demo_user do
       email 'demo_user@domain.com'
     end
+
+    factory :admin do
+      admin true
+    end
   end
 end
