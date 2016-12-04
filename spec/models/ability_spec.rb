@@ -40,6 +40,7 @@ describe Ability do
       it { should be_able_to :create, Answer }
       it { should be_able_to :create, Comment }
       it { should be_able_to :me, User }
+      it { should be_able_to :list, User }
     end
 
     context 'owner of question' do

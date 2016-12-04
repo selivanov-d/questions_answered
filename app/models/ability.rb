@@ -42,6 +42,6 @@ class Ability
       user.author_of?(attachment.attachable)
     end
 
-    can :me, User
+    can [:me, :list], User
   end
 end
