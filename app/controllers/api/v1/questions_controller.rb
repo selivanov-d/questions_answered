@@ -1,12 +1,9 @@
-class Api::V1::ProfilesController < Api::V1::BaseController
-  authorize_resource class: User
+class Api::V1::QuestionsController < Api::V1::BaseController
+  authorize_resource class: Question
 
-  def me
-    respond_with current_resource_owner
-  end
-
-  def list
-    respond_with User.where.not(id: current_resource_owner.id)
+  def index
+    @questions = Question.all
+    respond_with @questions
   end
 
   protected
