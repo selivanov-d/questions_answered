@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 
   root 'questions#index'
@@ -33,4 +34,13 @@ Rails.application.routes.draw do
 
   get 'terms' => 'pages#terms'
   get 'policy' => 'pages#policy'
+
+  namespace :api do
+    namespace :v1 do
+      resource :profiles do
+        get :me, on: :collection
+        get :list, on: :collection
+      end
+    end
+  end
 end

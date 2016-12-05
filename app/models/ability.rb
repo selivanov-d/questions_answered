@@ -41,5 +41,7 @@ class Ability
     can [:create, :destroy], Attachment do |attachment|
       user.author_of?(attachment.attachable)
     end
+
+    can [:me, :list], User
   end
 end

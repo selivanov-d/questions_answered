@@ -40,6 +40,7 @@ gem 'omniauth-twitter', :github => 'arunagw/omniauth-twitter'
 gem 'font-awesome-sass', '~> 4.7.0'
 gem 'cancancan'
 gem 'sprockets', '3.6.3'
+gem 'doorkeeper'
 
 
 # Use ActiveModel has_secure_password
@@ -64,6 +65,7 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'simplecov'
   gem 'poltergeist'
+  gem 'json_spec'
 end
 
 group :development do
