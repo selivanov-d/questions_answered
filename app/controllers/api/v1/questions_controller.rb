@@ -1,9 +1,15 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   authorize_resource class: Question
 
+  before_action :load_question, only: [:show]
+
   def index
     @questions = Question.all
     respond_with @questions
+  end
+
+  def show
+    respond_with @question, host: "#{request.protocol}#{request.host}"
   end
 
   protected
@@ -14,5 +20,9 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def current_ability
     @ability ||= Ability.new(current_resource_owner)
+  end
+
+  def load_question
+    @question = Question.find(params[:id])
   end
 end
