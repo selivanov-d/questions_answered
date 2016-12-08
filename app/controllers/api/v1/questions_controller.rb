@@ -3,6 +3,8 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   before_action :load_question, only: [:show]
 
+  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format == 'application/json' }
+
   def index
     @questions = Question.all
     respond_with @questions
@@ -10,6 +12,10 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def show
     respond_with @question, host: "#{request.protocol}#{request.host}"
+  end
+
+  def create
+    respond_with(Question.create(question_params))
   end
 
   protected
@@ -24,5 +30,9 @@ class Api::V1::QuestionsController < Api::V1::BaseController
 
   def load_question
     @question = Question.find(params[:id])
+  end
+
+  def question_params
+    params.require(:question).permit(:title, :content, :user_id)
   end
 end
