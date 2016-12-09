@@ -89,7 +89,7 @@ describe Api::V1::QuestionsController, type: :controller do
     end
   end
 
-  describe 'GET #create' do
+  describe 'POST #create' do
     context 'unauthorized' do
       it 'does not save new question' do
         expect { post :create, params: { question: attributes_for(:question), access_token: '1234', format: :json } }.to_not change(Question, :count)
