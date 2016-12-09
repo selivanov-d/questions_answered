@@ -39,18 +39,6 @@ describe Api::V1::QuestionsController, type: :controller do
           end
         end
       end
-
-      context 'answers' do
-        it 'included in questions object' do
-          expect(response.body).to have_json_size(1).at_path('questions/0/answers')
-        end
-
-        %w(id content created_at updated_at).each do |attr|
-          it "answer object contains #{attr}" do
-            expect(response.body).to be_json_eql(answer.send(attr.to_sym).to_json).at_path("questions/0/answers/0/#{attr}")
-          end
-        end
-      end
     end
   end
 
@@ -81,7 +69,7 @@ describe Api::V1::QuestionsController, type: :controller do
         expect(response.status).to eq 200
       end
 
-      %w(id title content created_at updated_at).each do |attr|
+      %w(id title content user_id created_at updated_at).each do |attr|
         it "question object contains #{attr}" do
           expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("question/#{attr}")
         end

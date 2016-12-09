@@ -11,7 +11,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def show
-    respond_with @question, host: "#{request.protocol}#{request.host}"
+    respond_with @question, host: "#{request.protocol}#{request.host}", serialized: SingleQuestionSerializer
   end
 
   def create
