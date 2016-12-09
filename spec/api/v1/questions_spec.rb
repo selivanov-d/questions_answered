@@ -111,11 +111,13 @@ describe Api::V1::QuestionsController, type: :controller do
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
       context 'with valid params' do
-        before :each do
-          post :create, params: { question: attributes_for(:question), access_token: access_token.token, format: :json }
+        before :each do |example|
+          unless example.metadata[:skip_before]
+            post :create, params: { question: attributes_for(:question), access_token: access_token.token, format: :json }
+          end
         end
 
-        it 'saves new question' do
+        it 'saves new question', skip_before: true do
           expect { post :create, params: { question: attributes_for(:question), access_token: access_token.token, format: :json } }.to change(me.questions, :count).by(1)
         end
 
@@ -132,11 +134,13 @@ describe Api::V1::QuestionsController, type: :controller do
       end
 
       context 'with invalid params' do
-        before :each do
-          post :create, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json }
+        before :each do |example|
+          unless example.metadata[:skip_before]
+            post :create, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json }
+          end
         end
 
-        it 'does not save new question' do
+        it 'does not save new question', skip_before: true do
           expect { post :create, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json } }.to_not change(Question, :count)
         end
 
@@ -145,7 +149,7 @@ describe Api::V1::QuestionsController, type: :controller do
         end
 
         %w(title content).each do |attr|
-          it "returned JSON of with validation message for #{attr}" do
+          it "returned JSON contains validation message for #{attr}" do
             expect(response.body).to have_json_path("errors/#{attr}")
           end
         end
