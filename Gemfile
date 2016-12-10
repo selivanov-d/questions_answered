@@ -41,6 +41,9 @@ gem 'font-awesome-sass', '~> 4.7.0'
 gem 'cancancan'
 gem 'sprockets', '3.6.3'
 gem 'doorkeeper'
+gem 'active_model_serializers'
+gem 'oj'
+gem 'oj_mimic_json'
 
 
 # Use ActiveModel has_secure_password

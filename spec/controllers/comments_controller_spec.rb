@@ -8,7 +8,7 @@ RSpec.describe CommentsController, type: :controller do
       let(:answer) { create(:answer) }
 
       before :each do
-        post :create, params: { comment: attributes_for(:comment), answer_id: answer }, format: :json
+        post :create, params: { comment: attributes_for(:comment_with_subject), answer_id: answer }, format: :json
       end
 
       it 'assigns new Comment to @comment' do
@@ -20,11 +20,11 @@ RSpec.describe CommentsController, type: :controller do
       end
 
       it 'saves new comment attached to user' do
-        expect { post :create, params: { comment: attributes_for(:comment), answer_id: answer }, format: :json }.to change(@user.comments, :count).by(1)
+        expect { post :create, params: { comment: attributes_for(:comment_with_subject), answer_id: answer }, format: :json }.to change(@user.comments, :count).by(1)
       end
 
       it 'saves new comment attached to commentable' do
-        expect { post :create, params: { comment: attributes_for(:comment), answer_id: answer }, format: :json }.to change(answer.comments, :count).by(1)
+        expect { post :create, params: { comment: attributes_for(:comment_with_subject), answer_id: answer }, format: :json }.to change(answer.comments, :count).by(1)
       end
 
       it 'receives response with 200 HTTP-header' do
@@ -39,7 +39,7 @@ RSpec.describe CommentsController, type: :controller do
 
       before do |example|
         unless example.metadata[:skip_before]
-          post :create, params: { comment: attributes_for(:invalid_comment), answer_id: answer }, format: :json
+          post :create, params: { comment: attributes_for(:invalid_comment_with_subject), answer_id: answer }, format: :json
         end
       end
 
@@ -48,7 +48,7 @@ RSpec.describe CommentsController, type: :controller do
       end
 
       it 'does not saves new question', skip_before: true do
-        expect { post :create, params: { comment: attributes_for(:invalid_comment), answer_id: answer }, format: :json }.to_not change(Comment, :count)
+        expect { post :create, params: { comment: attributes_for(:invalid_comment_with_subject), answer_id: answer }, format: :json }.to_not change(Comment, :count)
       end
 
       it 'receives JSON response with 200 HTTP-header' do
