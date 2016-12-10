@@ -5,6 +5,6 @@ class SingleQuestionSerializer < ActiveModel::Serializer
   has_many :attachments
 
   def attachments
-    object.attachments.map { |attachment| "#{instance_options[:host]}#{attachment.file.url}" }
+    object.attachments.map { |attachment| attachment.file.url }
   end
 end

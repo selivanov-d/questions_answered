@@ -8,6 +8,6 @@ class SingleAnswerSerializer < ActiveModel::Serializer
   end
 
   def attachments
-    object.attachments.map { |attachment| "#{instance_options[:host]}#{attachment.file.url}" }
+    object.attachments.map { |attachment| attachment.file.url }
   end
 end

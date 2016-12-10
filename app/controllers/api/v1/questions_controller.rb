@@ -1,9 +1,7 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
-  authorize_resource class: Question
+  authorize_resource
 
   before_action :load_question, only: [:show]
-
-  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format.json? }
 
   def index
     @questions = Question.all
@@ -11,13 +9,11 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def show
-    respond_with @question, host: "#{request.protocol}#{request.host}", serialized: SingleQuestionSerializer
+    respond_with @question, serialized: SingleQuestionSerializer
   end
 
   def create
-    @question = Question.create(question_params)
-    current_resource_owner.questions << @question
-    respond_with @question
+    respond_with current_resource_owner.questions.create(question_params)
   end
 
   protected

@@ -1,23 +1,19 @@
 class Api::V1::AnswersController < Api::V1::BaseController
-  authorize_resource class: Answer
+  authorize_resource
 
   before_action :load_question, only: [:index, :create]
   before_action :load_answer, only: [:show]
 
-  protect_from_forgery with: :null_session, if: Proc.new { |c| c.request.format.json? }
-
   def index
-    respond_with @question.answers, host: "#{request.protocol}#{request.host}"
+    respond_with @question.answers
   end
 
   def show
-    respond_with @answer, host: "#{request.protocol}#{request.host}", serializer: SingleAnswerSerializer
+    respond_with @answer, serializer: SingleAnswerSerializer
   end
 
   def create
-    @answer = @question.answers.create(answer_params)
-    current_resource_owner.answers << @answer
-    respond_with @answer
+    respond_with @question.answers.create(answer_params.merge(user: @current_resource_owner))
   end
 
   protected
