@@ -1,39 +1,29 @@
 require 'rails_helper'
+require 'shared_examples/controllers/api/v1/api_authenticated'
 
-describe 'Profile API' do
+describe Api::V1::ProfilesController, type: :controller do
   describe 'GET /me' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access token' do
-        get '/api/v1/profiles/me', params: { format: :json }
-        expect(response.status).to eq 401
-      end
+    let(:object) { create(:user) }
+    let(:access_token) { create(:access_token, resource_owner_id: object.id) }
+    let(:attributes_list) { %w(id email created_at updated_at admin) }
+    let(:http_method) { :get }
+    let(:controller_method) { :me }
+    let(:params) { {} }
 
-      it 'returns 401 status if access token is invalid' do
-        get '/api/v1/profiles/me', params: { access_token: '1234', format: :json }
-        expect(response.status).to eq 401
-      end
+    context 'when unauthorized' do
+      it_behaves_like 'API method requiring authentication'
     end
 
-    context 'authorized' do
-      let(:me) { create(:user) }
-      let(:access_token) { create(:access_token, resource_owner_id: me.id) }
-
+    context 'when authorized' do
       before :each do
-        get '/api/v1/profiles/me', params: { access_token: access_token.token, format: :json }
+        process controller_method, method: http_method, params: { format: :json, access_token: access_token.token }.merge(params)
       end
 
-      it 'returns 200 status' do
-        expect(response.status).to eq 200
-      end
+      it_behaves_like 'API method returning JSON'
+      it_behaves_like 'API method returning single object as JSON'
 
-      %w(id email created_at updated_at admin).each do |attr|
-        it "contains #{attr}" do
-          expect(response.body).to be_json_eql(me.send(attr.to_sym).to_json).at_path(attr)
-        end
-      end
-
-      %w(password encrypted_password).each do |attr|
-        it "does not contain #{attr}" do
+      it 'does not contains list of sensitive attributes' do
+        %w(password encrypted_password).each do |attr|
           expect(response.body).to_not have_json_path(attr)
         end
       end
@@ -41,52 +31,35 @@ describe 'Profile API' do
   end
 
   describe 'GET /list' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access token' do
-        get '/api/v1/profiles/list', params: { format: :json }
-        expect(response.status).to eq 401
-      end
+    let!(:collection) { create_list(:user, 5) }
+    let!(:me) { create(:user) }
+    let(:access_token) { create(:access_token, resource_owner_id: me.id) }
+    let(:attributes_list) { %w(id email created_at updated_at admin) }
+    let(:http_method) { :get }
+    let(:controller_method) { :list }
+    let(:params) { {} }
 
-      it 'returns 401 status if access token is invalid' do
-        get '/api/v1/profiles/list', params: { access_token: '1234', format: :json }
-        expect(response.status).to eq 401
-      end
+    context 'when unauthorized' do
+      it_behaves_like 'API method requiring authentication'
     end
 
-    context 'authorized' do
-      let!(:me) { create(:user) }
-      let!(:users) { create_list(:user, 5) }
-      let(:access_token) { create(:access_token, resource_owner_id: me.id) }
-
+    context 'when authorized' do
       before :each do
-        get '/api/v1/profiles/list', params: { access_token: access_token.token, format: :json }
+        process :list, method: :get, params: { access_token: access_token.token, format: :json }
       end
 
-      it 'returns 200 status' do
-        expect(response.status).to eq 200
-      end
-
-      it 'returns list of 5 users' do
-        expect(response.body).to have_json_size 5
-      end
+      it_behaves_like 'API method returning JSON'
+      it_behaves_like 'API method returning list of objects as JSON'
 
       it 'returned list contains every user except current user' do
-        expect(response.body).to be_json_eql(users.to_json)
-        expect(response.body).to_not include_json(me.to_json)
+        expect(response.body).to be_json_eql(collection.to_json).at_path('users')
+        expect(response.body).to_not include_json(me.to_json).at_path('users')
       end
 
-      %w(id email created_at updated_at admin).each do |attr|
-        it "each user in JSON-response contains attribute #{attr}" do
-          users.each_with_index do |user, index|
-            expect(response.body).to be_json_eql(user.send(attr.to_sym).to_json).at_path("#{index}/#{attr}")
-          end
-        end
-      end
-
-      %w(password encrypted_password).each do |attr|
-        it "each user in JSON-response does not contain attribute #{attr}" do
-          users.each_index do |index|
-            expect(response.body).to_not have_json_path("#{index}/#{attr}")
+      it 'each user does not contains list of sensitive attributes' do
+        %w(password encrypted_password).each do |attr|
+          collection.each_index do |index|
+            expect(response.body).to_not have_json_path("users/#{index}/#{attr}")
           end
         end
       end
