@@ -9,7 +9,7 @@ class Api::V1::QuestionsController < Api::V1::BaseController
   end
 
   def show
-    respond_with @question, serialized: SingleQuestionSerializer
+    respond_with @question, serializer: SingleQuestionSerializer
   end
 
   def create
