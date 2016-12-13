@@ -32,8 +32,9 @@ shared_examples_for 'API method returning list of objects as JSON' do
   end
 end
 
-shared_examples_for 'API method returning single object as JSON' do
-  let(:object_name) { object.class.name.downcase }
+shared_examples_for 'API method returning single object as JSON' do |klass|
+  let(:object) { klass.last }
+  let(:object_name) { klass.name.downcase }
 
   it 'each object contains list of attributes' do
     attributes_list.each do |attr|
@@ -68,6 +69,23 @@ shared_examples_for 'API method not saving object' do |klass|
   it 'object contains list of non valid attributes' do
     error_attributes_list.each do |attr|
       expect(response.body).to have_json_path("errors/#{attr}")
+    end
+  end
+end
+
+shared_examples_for 'API method returning attached models' do
+  let(:parent_node_name) { parent.class.name.downcase }
+  let(:children_node_name) { children[0].class.name.downcase.pluralize }
+
+  it "parent object contains list of all children" do
+    expect(response.body).to have_json_size(children.size).at_path("#{parent_node_name}/#{children_node_name}")
+  end
+
+  it "each attached child contains proper list of attributes" do
+    children_attributes.each do |attr|
+      children.each_with_index do |child, index|
+        expect(response.body).to be_json_eql(child.send(attr.to_sym).to_json).at_path("#{parent_node_name}/#{children_node_name}/#{index}/#{attr}")
+      end
     end
   end
 end
