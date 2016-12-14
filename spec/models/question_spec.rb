@@ -1,8 +1,8 @@
 require 'rails_helper'
-require 'shared_examples/models/votable_spec'
-require 'shared_examples/models/commentable_spec'
-require 'shared_examples/models/broadcastable_spec'
-require 'shared_examples/models/attachable_spec'
+require 'shared_examples/models/votable'
+require 'shared_examples/models/commentable'
+require 'shared_examples/models/broadcastable'
+require 'shared_examples/models/attachable'
 
 RSpec.describe Question do
   it_should_behave_like 'votable'

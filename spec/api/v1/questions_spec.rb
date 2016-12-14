@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'shared_examples/controllers/api/v1/api_authenticated'
+require 'shared_examples/controllers/api/v1/api_shared_examples'
 
 describe Api::V1::QuestionsController, type: :controller do
   describe 'GET #index' do

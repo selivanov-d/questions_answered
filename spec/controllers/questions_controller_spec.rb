@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'shared_examples/controllers/voted_spec'
+require 'shared_examples/controllers/voted'
 
 RSpec.describe QuestionsController, type: :controller do
   it_should_behave_like 'voted'
