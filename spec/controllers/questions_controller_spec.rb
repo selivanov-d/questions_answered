@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'shared_examples/controllers/voted'
 
-RSpec.describe QuestionsController, type: :controller do
+describe QuestionsController, type: :controller do
   it_should_behave_like 'voted'
 
   describe 'GET #new' do

@@ -4,7 +4,7 @@ require 'shared_examples/models/commentable'
 require 'shared_examples/models/broadcastable'
 require 'shared_examples/models/attachable'
 
-RSpec.describe Answer do
+describe Answer do
   it_should_behave_like 'votable'
   it_should_behave_like 'commentable'
   it_should_behave_like 'broadcastable'

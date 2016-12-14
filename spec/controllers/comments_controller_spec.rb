@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CommentsController, type: :controller do
+describe CommentsController, type: :controller do
   describe 'POST #create' do
     context 'with valid attributes' do
       sign_in_user

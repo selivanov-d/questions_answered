@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'broadcastable' do
+shared_examples_for 'broadcastable' do
   klass_name = described_class.name.downcase
   let(:object) { build(klass_name) }
 
