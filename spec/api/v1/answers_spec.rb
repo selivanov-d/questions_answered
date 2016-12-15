@@ -12,7 +12,7 @@ describe Api::V1::AnswersController, type: :controller do
     let(:params) { { question_id: question } }
 
     context 'when unauthorized' do
-      it_behaves_like 'API endpoint requiring authentication'
+      it_behaves_like 'receiving invalid auth credentials'
     end
 
     context 'when authorized' do
@@ -20,8 +20,8 @@ describe Api::V1::AnswersController, type: :controller do
         process endpoint_name, method: http_method, params: { question_id: question, access_token: access_token.token, format: :json }
       end
 
-      it_behaves_like 'API endpoint that received proper authentication credentials'
-      it_behaves_like 'API endpoint responding with list of objects as JSON' do
+      it_behaves_like 'receiving valid auth credentials'
+      it_behaves_like 'responding with list of objects' do
         let!(:collection) { answers }
         let(:attributes_list) { %w(id content question_id user_id best created_at updated_at) }
       end
@@ -40,7 +40,7 @@ describe Api::V1::AnswersController, type: :controller do
     let(:params) { { id: answer } }
 
     context 'when unauthorized' do
-      it_behaves_like 'API endpoint requiring authentication'
+      it_behaves_like 'receiving invalid auth credentials'
     end
 
     context 'when authorized' do
@@ -48,12 +48,12 @@ describe Api::V1::AnswersController, type: :controller do
         process endpoint_name, method: http_method, params: { id: answer, access_token: access_token.token, format: :json }
       end
 
-      it_behaves_like 'API endpoint that received proper authentication credentials'
-      it_behaves_like 'API endpoint responding with requested object as JSON' do
+      it_behaves_like 'receiving valid auth credentials'
+      it_behaves_like 'responding with requested object' do
         let(:object) { answer }
         let(:attributes_list) { %w(id content created_at updated_at) }
       end
-      it_behaves_like 'API endpoint responding with JSON of children models attached to parent' do
+      it_behaves_like 'responding with children' do
         let(:parent) { answer }
         let(:children_klass) { Comment }
         let(:children_attributes) { %w(id content user_id created_at updated_at) }
@@ -82,7 +82,7 @@ describe Api::V1::AnswersController, type: :controller do
     let(:params) { { question_id: question } }
 
     context 'when unauthorized' do
-      it_behaves_like 'API endpoint requiring authentication'
+      it_behaves_like 'receiving invalid auth credentials'
 
       it 'does not save new answer' do
         expect { process endpoint_name, method: http_method, params: { question_id: question, answer: attributes_for(:answer), access_token: '1234', format: :json } }.to_not change(Answer, :count)
@@ -97,7 +97,7 @@ describe Api::V1::AnswersController, type: :controller do
           end
         end
 
-        it_behaves_like 'API endpoint responding with saved object as JSON' do
+        it_behaves_like 'responding with saved object' do
           let(:object) { Answer.last }
           let(:attributes_list) { %w(id content best user_id question_id created_at updated_at) }
         end
@@ -118,7 +118,7 @@ describe Api::V1::AnswersController, type: :controller do
           end
         end
 
-        it_behaves_like 'API endpoint responding with validation errors as JSON' do
+        it_behaves_like 'responding with validation errors' do
           let(:klass) { Answer }
           let(:attributes_list) { %w(content) }
         end

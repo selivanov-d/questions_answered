@@ -11,7 +11,7 @@ describe Api::V1::ProfilesController, type: :controller do
     let(:params) { {} }
 
     context 'when unauthorized' do
-      it_behaves_like 'API endpoint requiring authentication'
+      it_behaves_like 'receiving invalid auth credentials'
     end
 
     context 'when authorized' do
@@ -19,8 +19,8 @@ describe Api::V1::ProfilesController, type: :controller do
         process endpoint_name, method: http_method, params: { format: :json, access_token: access_token.token }.merge(params)
       end
 
-      it_behaves_like 'API endpoint that received proper authentication credentials'
-      it_behaves_like 'API endpoint responding with requested object as JSON' do
+      it_behaves_like 'receiving valid auth credentials'
+      it_behaves_like 'responding with requested object' do
         let(:object) { user }
         let(:attributes_list) { %w(id email created_at updated_at admin) }
       end
@@ -43,7 +43,7 @@ describe Api::V1::ProfilesController, type: :controller do
     let(:params) { {} }
 
     context 'when unauthorized' do
-      it_behaves_like 'API endpoint requiring authentication'
+      it_behaves_like 'receiving invalid auth credentials'
     end
 
     context 'when authorized' do
@@ -51,8 +51,8 @@ describe Api::V1::ProfilesController, type: :controller do
         process endpoint_name, method: http_method, params: { access_token: access_token.token, format: :json }
       end
 
-      it_behaves_like 'API endpoint that received proper authentication credentials'
-      it_behaves_like 'API endpoint responding with list of objects as JSON' do
+      it_behaves_like 'receiving valid auth credentials'
+      it_behaves_like 'responding with list of objects' do
         let(:collection) { users }
         let(:attributes_list) { %w(id email created_at updated_at admin) }
       end

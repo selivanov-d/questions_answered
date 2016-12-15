@@ -1,4 +1,4 @@
-shared_examples_for 'API endpoint requiring authentication' do
+shared_examples_for 'receiving invalid auth credentials' do
   it 'returns 401 status code if there is no access_token' do
     process endpoint_name, method: http_method, params: { format: :json }.merge(params)
     expect(response.status).to eq 401
@@ -10,13 +10,13 @@ shared_examples_for 'API endpoint requiring authentication' do
   end
 end
 
-shared_examples_for 'API endpoint that received proper authentication credentials' do
+shared_examples_for 'receiving valid auth credentials' do
   it 'returns 200 status' do
     expect(response.status).to eq 200
   end
 end
 
-shared_examples_for 'API endpoint responding with list of objects as JSON' do
+shared_examples_for 'responding with list of objects' do
   let(:collection_name) { collection[0].class.name.downcase.pluralize }
 
   it 'returns list of all collection objects' do
@@ -32,7 +32,7 @@ shared_examples_for 'API endpoint responding with list of objects as JSON' do
   end
 end
 
-shared_examples_for 'API endpoint responding with requested object as JSON' do
+shared_examples_for 'responding with requested object' do
   let(:object_name) { object.class.name.downcase }
 
   it 'contains proper list of attributes' do
@@ -42,7 +42,7 @@ shared_examples_for 'API endpoint responding with requested object as JSON' do
   end
 end
 
-shared_examples_for 'API endpoint responding with saved object as JSON' do
+shared_examples_for 'responding with saved object' do
   let(:object_name) { object.class.name.downcase }
 
   it 'returns 201 status' do
@@ -56,7 +56,7 @@ shared_examples_for 'API endpoint responding with saved object as JSON' do
   end
 end
 
-shared_examples_for 'API endpoint responding with validation errors as JSON' do
+shared_examples_for 'responding with validation errors' do
   let(:object_name) { klass.name.downcase }
 
   it 'returns 422 status' do
@@ -70,7 +70,7 @@ shared_examples_for 'API endpoint responding with validation errors as JSON' do
   end
 end
 
-shared_examples_for 'API endpoint responding with JSON of children models attached to parent' do
+shared_examples_for 'responding with children' do
   let(:parent_node_name) { parent.class.name.downcase }
   let(:children_node_name) { children_klass.name.downcase.pluralize }
 
