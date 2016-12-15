@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'voted' do
+shared_examples_for 'voted' do
   sign_in_user
 
   votable_klass_symbol = described_class.controller_name.singularize.to_sym

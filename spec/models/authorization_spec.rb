@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Authorization do
+describe Authorization do
   it { should belong_to(:user) }
 
   it { should validate_presence_of(:provider) }

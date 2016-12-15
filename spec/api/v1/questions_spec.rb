@@ -1,145 +1,125 @@
 require 'rails_helper'
+require 'shared_examples/controllers/api/v1/api_shared_examples'
 
 describe Api::V1::QuestionsController, type: :controller do
   describe 'GET #index' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access token' do
-        get :index, params: { format: :json }
-        expect(response.status).to eq 401
-      end
+    let(:access_token) { create(:access_token) }
+    let(:http_method) { :get }
+    let(:endpoint_name) { :index }
 
-      it 'returns 401 status if access token is invalid' do
-        get :index, params: { access_token: '1234', format: :json }
-        expect(response.status).to eq 401
-      end
+    let!(:questions) { create_list(:question, 5) }
+    let(:params) { {} }
+
+    context 'when unauthorized' do
+      it_behaves_like 'receiving invalid auth credentials'
     end
 
-    context 'authorized' do
-      let(:access_token) { create(:access_token) }
-      let!(:questions) { create_list(:question, 5) }
-      let!(:question) { questions.first }
-      let!(:answer) { create(:answer, question: question) }
-
+    context 'when authorized' do
       before :each do
-        get :index, params: { access_token: access_token.token, format: :json }
+        process endpoint_name, method: http_method, params: { format: :json, access_token: access_token.token }.merge(params)
       end
 
-      it 'returns 200 status' do
-        expect(response.status).to eq 200
-      end
-
-      it 'returns list of 5 questions' do
-        expect(response.body).to have_json_size(5).at_path('questions')
-      end
-
-      %w(id title content created_at updated_at).each do |attr|
-        it "each question object contains #{attr}" do
-          questions.each_with_index do |question, index|
-            expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("questions/#{index}/#{attr}")
-          end
-        end
+      it_behaves_like 'receiving valid auth credentials'
+      it_behaves_like 'responding with list of objects' do
+        let(:collection) { questions }
+        let(:attributes_list) { %w(id title content created_at updated_at) }
       end
     end
   end
 
   describe 'GET #show' do
-    context 'unauthorized' do
-      let(:question) { create(:question) }
+    let(:access_token) { create(:access_token) }
+    let(:http_method) { :get }
+    let(:endpoint_name) { :show }
 
-      it 'returns 401 status if there is no access token' do
-        get :show, params: { id: question, format: :json }
-        expect(response.status).to eq 401
-      end
+    let!(:question) { create(:question) }
+    let!(:attachments) { create_list(:question_attachment, 2, attachable: question) }
+    let!(:comments) { create_list(:comment, 5, commentable: question) }
+    let(:params) { { id: question } }
 
-      it 'returns 401 status if access token is invalid' do
-        get :show, params: { id: question, access_token: '1234', format: :json }
-        expect(response.status).to eq 401
-      end
+    context 'when unauthorized' do
+      it_behaves_like 'receiving invalid auth credentials'
     end
 
-    context 'authorized' do
-      let(:access_token) { create(:access_token) }
-      let(:question) { create(:question) }
-
+    context 'when authorized' do
       before :each do
-        get :show, params: { id: question, access_token: access_token.token, format: :json }
+        process endpoint_name, method: http_method, params: { format: :json, access_token: access_token.token }.merge(params)
       end
 
-      it 'returns 200 status' do
-        expect(response.status).to eq 200
+      it_behaves_like 'receiving valid auth credentials'
+      it_behaves_like 'responding with requested object' do
+        let(:object) { question }
+        let(:attributes_list) { %w(id title content user_id created_at updated_at) }
+      end
+      it_behaves_like 'responding with children' do
+        let(:parent) { question }
+        let(:children_klass) { Comment }
+        let(:children_attributes) { %w(id content user_id created_at updated_at) }
       end
 
-      %w(id title content user_id created_at updated_at).each do |attr|
-        it "question object contains #{attr}" do
-          expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("question/#{attr}")
+      context 'attachments' do
+        it 'question object contains list of 2 attachments' do
+          expect(response.body).to have_json_size(2).at_path('question/attachments')
+        end
+
+        it 'each attachment contains url to a file' do
+          attachments_url = JSON.parse(response.body)['question']['attachments']
+          expect(attachments_url.all? { |attachment| /test-file\.jpg$/.match(attachment) }).to eq true
         end
       end
     end
   end
 
   describe 'POST #create' do
-    context 'unauthorized' do
+    let(:access_token) { create(:access_token) }
+    let(:http_method) { :post }
+    let(:endpoint_name) { :create }
+
+    let(:params) { { question: attributes_for(:question) } }
+
+    context 'when unauthorized' do
+      it_behaves_like 'receiving invalid auth credentials'
+
       it 'does not save new question' do
-        expect { post :create, params: { question: attributes_for(:question), access_token: '1234', format: :json } }.to_not change(Question, :count)
-      end
-
-      it 'returns 401 status if there is no access token' do
-        get :create, params: { question: attributes_for(:question), format: :json }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access token is invalid' do
-        get :create, params: { question: attributes_for(:question), access_token: '1234', format: :json }
-        expect(response.status).to eq 401
+        expect { process :create, method: :post, params: { format: :json, access_token: '1234' }.merge(params) }.to_not change(Question, :count)
       end
     end
 
-    context 'authorized' do
+    context 'when authorized' do
       let(:me) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
       context 'with valid params' do
         before :each do |example|
           unless example.metadata[:skip_before]
-            post :create, params: { question: attributes_for(:question), access_token: access_token.token, format: :json }
+            process endpoint_name, method: http_method, params: { question: attributes_for(:question), access_token: access_token.token, format: :json }
           end
         end
 
-        it 'saves new question', skip_before: true do
-          expect { post :create, params: { question: attributes_for(:question), access_token: access_token.token, format: :json } }.to change(me.questions, :count).by(1)
+        it_behaves_like 'responding with saved object' do
+          let(:object) { Question.last }
+          let(:attributes_list) { %w(id title content created_at updated_at) }
         end
 
-        it 'returns 201 status' do
-          expect(response.status).to eq 201
-        end
-
-        %w(id title content created_at updated_at).each do |attr|
-          it "returned JSON of created question object contains #{attr}" do
-            question = Question.last
-            expect(response.body).to be_json_eql(question.send(attr.to_sym).to_json).at_path("question/#{attr}")
-          end
+        it 'saves new question attached to author', skip_before: true do
+          expect { process endpoint_name, method: http_method, params: { question: attributes_for(:question), access_token: access_token.token, format: :json } }.to change(me.questions, :count).by(1)
         end
       end
 
       context 'with invalid params' do
         before :each do |example|
           unless example.metadata[:skip_before]
-            post :create, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json }
+            process endpoint_name, method: http_method, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json }
           end
+        end
+
+        it_behaves_like 'responding with validation errors' do
+          let(:klass) { Question }
+          let(:attributes_list) { %w(title content) }
         end
 
         it 'does not save new question', skip_before: true do
-          expect { post :create, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json } }.to_not change(Question, :count)
-        end
-
-        it 'returns 422 status' do
-          expect(response.status).to eq 422
-        end
-
-        %w(title content).each do |attr|
-          it "returned JSON contains validation message for #{attr}" do
-            expect(response.body).to have_json_path("errors/#{attr}")
-          end
+          expect { process endpoint_name, method: http_method, params: { question: attributes_for(:invalid_question), access_token: access_token.token, format: :json } }.to_not change(Question, :count)
         end
       end
     end

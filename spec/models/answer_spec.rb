@@ -1,16 +1,17 @@
 require 'rails_helper'
-require 'shared_examples/models/votable_spec'
-require 'shared_examples/models/commentable_spec'
+require 'shared_examples/models/votable'
+require 'shared_examples/models/commentable'
+require 'shared_examples/models/broadcastable'
+require 'shared_examples/models/attachable'
 
-RSpec.describe Answer do
+describe Answer do
   it_should_behave_like 'votable'
   it_should_behave_like 'commentable'
+  it_should_behave_like 'broadcastable'
+  it_should_behave_like 'attachable'
 
   it { should belong_to(:question) }
   it { should belong_to(:user) }
-
-  it { should have_many(:attachments).dependent(:destroy) }
-  it { should accept_nested_attributes_for(:attachments).allow_destroy(true) }
 
   it { should validate_presence_of(:content) }
   it { should validate_length_of(:content).is_at_least(10) }

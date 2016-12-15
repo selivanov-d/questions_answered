@@ -1,6 +1,9 @@
 require 'rails_helper'
+require 'shared_examples/models/broadcastable'
 
-RSpec.describe Comment, type: :model do
+describe Comment, type: :model do
+  it_should_behave_like 'broadcastable'
+
   it { should belong_to(:commentable) }
   it { should belong_to(:user) }
 

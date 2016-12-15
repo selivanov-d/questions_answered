@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'votable' do
+shared_examples_for 'votable' do
   votable_klass_symbol = described_class.to_s.underscore.to_sym
 
   it { should have_many(:votes).dependent(:destroy) }

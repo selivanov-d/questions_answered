@@ -1,7 +1,7 @@
 require 'rails_helper'
-require 'shared_examples/controllers/voted_spec'
+require 'shared_examples/controllers/voted'
 
-RSpec.describe AnswersController, type: :controller do
+describe AnswersController, type: :controller do
   it_should_behave_like 'voted'
 
   describe 'POST #create' do
