@@ -38,5 +38,7 @@ module QuestionAnswered
     config.active_record.belongs_to_required_by_default = true
 
     config.action_cable.url = 'ws://localhost:28080'
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end
