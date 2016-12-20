@@ -13,6 +13,7 @@ class Answer < ActiveRecord::Base
   scope :best_first, -> { order(best: :desc) }
 
   after_create :broadcast_new_answer
+  after_create :notify_question_author
 
   def mark_as_best
     Answer.transaction do
@@ -29,5 +30,9 @@ class Answer < ActiveRecord::Base
   def broadcast_new_answer
     new_answer_json = ApplicationController.render('answers/create', formats: :json, locals: { answer: self })
     ActionCable.server.broadcast "AnswersForQuestion#{question_id}Channel", answer: new_answer_json
+  end
+
+  def notify_question_author
+    NotificationForQuestionAuthorJob.perform_later(self)
   end
 end
