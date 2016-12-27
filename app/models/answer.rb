@@ -14,6 +14,7 @@ class Answer < ActiveRecord::Base
 
   after_create :broadcast_new_answer
   after_create :notify_question_author
+  after_create :notify_subscribers
 
   def mark_as_best
     Answer.transaction do
@@ -34,5 +35,11 @@ class Answer < ActiveRecord::Base
 
   def notify_question_author
     NotificationForQuestionAuthorJob.perform_later(self)
+  end
+
+  def notify_subscribers
+    question.subscriptions.each do |subscription|
+      NotificationForQuestionSubscribersJob.perform_later(subscription, self)
+    end
   end
 end

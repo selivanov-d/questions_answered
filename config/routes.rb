@@ -37,6 +37,8 @@ Rails.application.routes.draw do
         post 'mark_as_best'
       end
     end
+
+    resources :subscriptions, only: [:create, :destroy], shallow: true
   end
 
   resources :attachments, only: [:destroy]

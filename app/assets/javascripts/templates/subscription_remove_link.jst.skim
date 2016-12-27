@@ -1,0 +1,1 @@
+a.js-subscription-delete data-remote="true" data-method="delete" data-type="json" href="/subscriptions/#{@id}" Отписаться

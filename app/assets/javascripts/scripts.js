@@ -285,4 +285,14 @@ $(document).on('ready', function () {
         .on('ajax:error', function (event, response) {
             process_errors(event, response);
         });
+
+    var $question_subscription_control = $('.js-subscription-control');
+
+    $question_subscription_control
+        .on('ajax:success', '.js-subscription-add', function (event, response) {
+            $question_subscription_control.html(JST["templates/subscription_remove_link"](response));
+        })
+        .on('ajax:success', '.js-subscription-delete', function () {
+            $question_subscription_control.html(JST["templates/subscription_add_link"]());
+        });
 });
