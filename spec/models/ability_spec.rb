@@ -32,6 +32,9 @@ describe Ability do
     let(:attachment_to_answer) { create(:answer_attachment, attachable: answer) }
     let(:others_attachment_to_answer) { create(:answer_attachment, attachable: others_answer) }
 
+    let(:subscription) { create(:subscription, user: user) }
+    let(:others_subscription) { create(:subscription, user: other_user) }
+
     context 'general' do
       it { should be_able_to :read, :all }
       it { should_not be_able_to :manage, :all }
@@ -39,6 +42,7 @@ describe Ability do
       it { should be_able_to :create, Question }
       it { should be_able_to :create, Answer }
       it { should be_able_to :create, Comment }
+      it { should be_able_to :create, Subscription }
       it { should be_able_to :me, User }
       it { should be_able_to :list, User }
     end
@@ -74,6 +78,11 @@ describe Ability do
         it { should be_able_to(action, attachment_to_answer) }
         it { should_not be_able_to(action, others_attachment_to_answer) }
       end
+    end
+
+    context 'owner of subscription' do
+      it { should be_able_to :destroy, subscription }
+      it { should_not be_able_to :destroy, others_subscription }
     end
   end
 end
