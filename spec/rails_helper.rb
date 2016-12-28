@@ -8,8 +8,9 @@ require 'rspec/rails'
 require 'capybara/poltergeist'
 require 'cancan/matchers'
 require 'sidekiq/testing'
+require 'capybara/email/rspec'
 
-Sidekiq::Testing.fake!
+Sidekiq::Testing.inline!
 
 # Add additional requires below this line. Rails is not loaded until this point!
 

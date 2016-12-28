@@ -72,6 +72,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'poltergeist'
   gem 'json_spec'
+  gem 'capybara-email'
 end
 
 group :development do
