@@ -41,8 +41,12 @@ class User < ApplicationRecord
   end
 
   def self.send_questions_digest
-    find_each.each do |user|
-      QuestionsDailyDigest.digest(user).deliver_later
+    questions = Question.select(:id, :title, :content).where('created_at > ?', Time.now - 100.day).to_a
+
+    if questions.any?
+      find_each.each do |user|
+        QuestionsDailyDigestMailer.digest(user, questions).deliver_later
+      end
     end
   end
 end

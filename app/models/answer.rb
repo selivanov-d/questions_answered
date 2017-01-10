@@ -38,8 +38,6 @@ class Answer < ActiveRecord::Base
   end
 
   def notify_subscribers
-    question.subscriptions.each do |subscription|
-      NotificationForQuestionSubscribersJob.perform_later(subscription, self)
-    end
+    NotificationForQuestionSubscribersJob.perform_later(self)
   end
 end

@@ -1,8 +1,10 @@
 class NotificationForQuestionSubscribersJob < ApplicationJob
   queue_as :default
 
-  def perform(subscription, answer)
-    subscriber = subscription.user
-    AnswerNotification.new_answer_for_subscriber(subscriber, answer).deliver_later
+  def perform(answer)
+    answer.question.subscriptions.each do |subscription|
+      subscriber = subscription.user
+      AnswerNotificationMailer.new_answer_for_subscriber(subscriber, answer).deliver_later
+    end
   end
 end

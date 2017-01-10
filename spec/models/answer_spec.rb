@@ -15,7 +15,13 @@ describe Answer do
 
   it { should validate_presence_of(:content) }
   it { should validate_length_of(:content).is_at_least(10) }
-  it { should validate_uniqueness_of(:best).scoped_to(:question_id) }
+
+
+  describe 'validates uniqueness of best answer' do
+    subject { create(:answer) }
+
+    it { should validate_uniqueness_of(:best).scoped_to(:question_id) }
+  end
 
   describe '#mark_as_best makes an answer the best answer for a question' do
     let(:user) { create(:user) }

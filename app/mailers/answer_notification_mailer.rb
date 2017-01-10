@@ -1,4 +1,4 @@
-class AnswerNotification < BaseMailer
+class AnswerNotificationMailer < BaseMailer
   def new_answer(answer)
     @answer = answer
 
