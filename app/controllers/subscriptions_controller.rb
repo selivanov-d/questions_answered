@@ -7,8 +7,7 @@ class SubscriptionsController < ApplicationController
   before_action :load_subscription, only: [:destroy]
 
   def create
-    @subscription = @question.subscriptions.create(user: current_user)
-    respond_with @subscription
+    respond_with(@subscription = @question.subscriptions.create(user: current_user))
   end
 
   def destroy

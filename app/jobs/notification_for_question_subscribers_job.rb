@@ -1,6 +1,4 @@
 class NotificationForQuestionSubscribersJob < ApplicationJob
-  queue_as :default
-
   def perform(answer)
     answer.question.subscriptions.each do |subscription|
       subscriber = subscription.user
