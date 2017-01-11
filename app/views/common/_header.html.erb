@@ -3,6 +3,7 @@
     <nav class="main-menu">
       <ul class="main-menu_wrapper">
         <li class="main-menu_item"><%= link_to_unless_current 'Последние вопросы', questions_path %></li>
+        <li class="main-menu_item"><%= link_to_unless_current 'Поиск', searches_path %></li>
 
         <% if current_user %>
             <li class="main-menu_item -logout">

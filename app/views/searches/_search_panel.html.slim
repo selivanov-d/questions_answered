@@ -1,0 +1,10 @@
+= form_tag searches_path, method: :post
+.row
+  .col-xs-6
+    = label_tag 'search[q]', 'Найти'
+    = text_field_tag 'search[q]', ''
+
+.row
+  .col-xs-6
+    = label_tag 'search[subject]', 'в'
+    = select_tag 'search[subject]', options_for_select([['Везде', 'all'], ['В вопросах', 'questions'], ['В ответах', 'answers'], ['В комментариях', 'comments']], 'all')

@@ -47,6 +47,10 @@ gem 'oj_mimic_json'
 gem 'sidekiq'
 gem 'sinatra', require: nil
 gem 'sidetiq'
+gem 'mysql2'
+gem 'thinking-sphinx'
+gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
+gem 'draper', github: 'drapergem/draper'
 
 
 # Use ActiveModel has_secure_password

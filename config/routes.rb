@@ -59,4 +59,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resource :searches, only: [:show, :create]
 end

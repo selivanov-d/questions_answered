@@ -1,0 +1,7 @@
+= render partial: 'searches/search_panel'
+
+- if @search_results.any?
+  - @page_title = 'Результат поиска'
+  = render partial: 'searches/search_result', collection: @search_results
+- else
+  - @page_title = "Строка #{@search.q} не найдена"

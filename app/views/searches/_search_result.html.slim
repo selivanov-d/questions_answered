@@ -1,0 +1,4 @@
+.search-result
+  .search-result_question-link= link_to search_result.question.title, question_path(search_result.question)
+  .search-result_question-excerpt= search_result.question.content.truncate(255)
+  .search-result_subject-excerpt= search_result.raw_result.excerpts.content.html_safe
