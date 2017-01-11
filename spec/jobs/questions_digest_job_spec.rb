@@ -13,7 +13,7 @@ describe QuestionsDigestJob, type: :job do
       expect { job }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(users.size)
     end
 
-    it 'calls #digest method' do
+    it 'calls #digest method of mailer' do
       users.each do |user|
         expect(QuestionsDailyDigestMailer).to receive(:digest).with(user, questions).and_call_original
       end
@@ -27,7 +27,7 @@ describe QuestionsDigestJob, type: :job do
       expect { job }.to_not change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size)
     end
 
-    it 'does not call #digest method' do
+    it 'does not call #digest method of mailer' do
       expect(QuestionsDailyDigestMailer).to_not receive(:digest)
 
       job

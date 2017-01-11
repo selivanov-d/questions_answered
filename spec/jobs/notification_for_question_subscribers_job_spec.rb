@@ -9,11 +9,11 @@ describe NotificationForQuestionSubscribersJob, type: :job do
   let!(:subscriptions) { create_list(:subscription, 5, question: question) }
   let!(:answer) { create(:answer, question: question) }
 
-  it 'adds mailer job into queue' do
+  it 'enqueues mailer job' do
     expect { job }.to change(ActiveJob::Base.queue_adapter.enqueued_jobs, :size).by(question.subscriptions.size)
   end
 
-  it 'calls #new_answer_for_subscriber method' do
+  it 'calls #new_answer_for_subscriber method of mailer' do
     question.subscriptions.each do |subscription|
       expect(AnswerNotificationMailer).to receive(:new_answer_for_subscriber).with(subscription.user, answer).and_call_original
     end
