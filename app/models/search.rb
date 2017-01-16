@@ -7,6 +7,9 @@ class Search
   validates :subject, inclusion: %w(all questions answers comments)
 
   def results
+    @results = []
+    @results if self.invalid?
+
     results = subject_klass.search(q, excerpts: {
       :before_match    => '<span class="match">',
       :after_match     => '</span>'
@@ -14,7 +17,6 @@ class Search
 
     results.context[:panes] << ThinkingSphinx::Panes::ExcerptsPane
 
-    @results = []
     results.each do |result|
       @results << SearchResultDecorator.decorate(SearchResult.new(result))
     end

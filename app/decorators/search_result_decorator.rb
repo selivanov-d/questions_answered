@@ -8,7 +8,7 @@ class SearchResultDecorator < Draper::Decorator
     when 'Answer'
       model.raw_result.question
     when 'Comment'
-      case model.raw_result.commentable.class
+      case model.raw_result.commentable.class.to_s
       when 'Question'
         model.raw_result.commentable
       when 'Answer'
