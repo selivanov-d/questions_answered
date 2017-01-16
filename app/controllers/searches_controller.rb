@@ -3,16 +3,16 @@ class SearchesController < ApplicationController
   skip_authorization_check
 
   before_action :load_search, only: [:create]
+  before_action :create_search, only: [:show]
 
   def show
-
   end
 
   def create
     if @search.valid?
-      @search_results = @search.results
+      render :create
     else
-      abort
+      render :show
     end
   end
 
@@ -24,5 +24,9 @@ class SearchesController < ApplicationController
 
   def load_search
     @search = Search.new(search_params)
+  end
+
+  def create_search
+    @search = Search.new
   end
 end
