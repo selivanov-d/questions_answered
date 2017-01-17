@@ -9,6 +9,7 @@ require 'capybara/poltergeist'
 require 'cancan/matchers'
 require 'sidekiq/testing'
 require 'capybara/email/rspec'
+require 'thinking_sphinx/test'
 
 Sidekiq::Testing.inline!
 
@@ -38,6 +39,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
   config.include AcceptanceHelper, type: :feature
+  config.include SphinxHelpers, type: :feature
 
   config.render_views = true
 
@@ -71,10 +73,17 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
+
+    ThinkingSphinx::Test.init
+    ThinkingSphinx::Test.start_with_autostop
   end
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, sphinx: true) do
+    DatabaseCleaner.strategy = :deletion
   end
 
   config.before(:each, js: true) do
@@ -83,6 +92,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+    ThinkingSphinx::Test.index
   end
 
   config.after(:each) do
