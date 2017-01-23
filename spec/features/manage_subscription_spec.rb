@@ -6,8 +6,8 @@ feature 'Manage subscription', %q{
   I want to be able to create and delete subscription
 } do
 
-  let(:user) { create(:user) }
-  let(:question) { create(:question) }
+  let!(:user) { create(:user) }
+  let!(:question) { create(:question) }
 
   context 'When authenticated' do
     context 'when not subscribed' do
@@ -55,7 +55,7 @@ feature 'Manage subscription', %q{
 
         sleep 1
 
-        open_email(user.email)
+        open_email(subscription.user.email)
 
         expect(current_email).to have_content 'Test answer content'
       end
