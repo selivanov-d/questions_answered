@@ -21,7 +21,7 @@ describe QuestionsController, type: :controller do
   describe 'GET #show' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let(:answers) { create_list(:answer, 5, question: question, user: user) }
+    let!(:answers) { create_list(:answer, 5, question: question, user: user) }
 
     before { get :show, params: { id: question } }
 
@@ -45,7 +45,7 @@ describe QuestionsController, type: :controller do
   describe 'GET #index' do
     sign_in_user
 
-    let(:questions) { create_list(:question, 2) }
+    let!(:questions) { create_list(:question, 2) }
 
     before do
       get :index

@@ -1,0 +1,7 @@
+h1 Вопросы, созданные за последний день
+.mail-questions
+  - @questions.each do |question|
+    .mail-questions_item.mail-question
+      h2
+        =link_to question.title, question_url(question), target: '_blank'
+      .mail-question_content= question.content.truncate(255)

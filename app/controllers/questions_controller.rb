@@ -10,6 +10,7 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :load_question, only: [:show, :destroy, :update]
+  before_action :load_subscription, only: [:show]
   before_action :store_question_id_for_frontend, only: [:show]
   before_action :build_answer, only: [:show]
   before_action :build_comment, only: [:show]
@@ -48,6 +49,10 @@ class QuestionsController < ApplicationController
 
   def load_question
     @question = Question.find(params[:id])
+  end
+
+  def load_subscription
+    @subscription = Subscription.where(user: current_user, question: @question).first
   end
 
   def store_question_id_for_frontend

@@ -16,6 +16,14 @@
   - if can?(:create, Comment)
     = render partial: 'comments/new_comment_form', locals: { commentable: @question }
 
+  / TODO: better way to check ability to create subscriptions?
+  - if (@subscription.nil? && can?(:create, Subscription)) || can?(:destroy, @subscription)
+    .js-subscription-control
+      - if can?(:create, Subscription) && @subscription.nil?
+        = link_to 'Подписаться', question_subscriptions_path(@question), remote: true, method: 'post', data: { type: :json }, class: 'js-subscription-add'
+      - if can?(:destroy, @subscription)
+        = link_to 'Отписаться', subscription_path(@subscription), remote: true, method: 'delete', data: { type: :json }, class: 'js-subscription-delete'
+
   .answers-index
     - if @question.answers.any?
       h3 Ответы

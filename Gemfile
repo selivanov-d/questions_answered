@@ -44,6 +44,9 @@ gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
+gem 'sidekiq'
+gem 'sinatra', require: nil
+gem 'sidetiq'
 
 
 # Use ActiveModel has_secure_password
@@ -69,6 +72,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'poltergeist'
   gem 'json_spec'
+  gem 'capybara-email'
 end
 
 group :development do
@@ -80,5 +84,6 @@ group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'letter_opener'
+  gem 'letter_opener_web', '~> 1.2.0', :group => :development
 end
 

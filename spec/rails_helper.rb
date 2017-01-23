@@ -7,6 +7,11 @@ require 'spec_helper'
 require 'rspec/rails'
 require 'capybara/poltergeist'
 require 'cancan/matchers'
+require 'sidekiq/testing'
+require 'capybara/email/rspec'
+
+Sidekiq::Testing.inline!
+
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -33,6 +38,8 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
   config.include AcceptanceHelper, type: :feature
+
+  config.render_views = true
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

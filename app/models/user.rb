@@ -2,13 +2,14 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
+    :recoverable, :rememberable, :trackable, :validatable, :omniauthable, omniauth_providers: [:facebook, :twitter]
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :votes
   has_many :comments
   has_many :authorizations
+  has_many :subscriptions, dependent: :destroy
 
   def author_of?(object)
     id == object.user_id
@@ -37,5 +38,15 @@ class User < ApplicationRecord
 
   def create_authorization(auth)
     self.authorizations.create(provider: auth.provider, uid: auth.uid)
+  end
+
+  def self.send_questions_digest
+    questions = Question.select(:id, :title, :content).where('created_at > ?', Time.now - 100.day).to_a
+
+    if questions.any?
+      find_each.each do |user|
+        QuestionsDailyDigestMailer.digest(user, questions).deliver_later
+      end
+    end
   end
 end
