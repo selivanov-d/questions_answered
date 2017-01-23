@@ -19,7 +19,7 @@ class SearchesController < ApplicationController
   private
 
   def search_params
-    params.require(:search).permit(:q, :subject)
+    params.require(:search).permit(:query, :subject)
   end
 
   def load_search

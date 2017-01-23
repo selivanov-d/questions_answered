@@ -5,4 +5,4 @@
   .search-results
     = render partial: 'searches/search_result', collection: @search.results
 - else
-  - @page_title = "Строка #{@search.q} не найдена"
+  - @page_title = "Строка \"#{@search.query}\" не найдена"

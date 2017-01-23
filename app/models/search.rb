@@ -1,25 +1,18 @@
 class Search
   include ActiveModel::Model
 
-  attr_accessor :q, :subject
+  attr_accessor :query, :subject
 
-  validates :q, presence: true, length: { in: 3..255 }
+  validates :query, presence: true, length: { in: 3..255 }
   validates :subject, inclusion: %w(all questions answers comments)
 
   def results
-    @results = []
+    @results ||= []
     @results if self.invalid?
 
-    results = subject_klass.search(q, excerpts: {
-      :before_match    => '<span class="match">',
-      :after_match     => '</span>'
-    })
+    results = subject_klass.search(query)
 
-    results.context[:panes] << ThinkingSphinx::Panes::ExcerptsPane
-
-    results.each do |result|
-      @results << SearchResultDecorator.decorate(SearchResult.new(result))
-    end
+    @results = results.map { |result| SearchResult.new(result) } unless results.nil?
 
     @results
   end

@@ -7,17 +7,6 @@ GIT
       omniauth-oauth (~> 1.1)
 
 GIT
-  remote: git://github.com/drapergem/draper.git
-  revision: 45e18569d9631710f889d75d49f971fb60d5cbcd
-  specs:
-    draper (3.0.0.pre1)
-      actionpack (~> 5.0)
-      activemodel (~> 5.0)
-      activemodel-serializers-xml (~> 1.0)
-      activesupport (~> 5.0)
-      request_store (~> 1.0)
-
-GIT
   remote: git://github.com/rails/activemodel-serializers-xml.git
   revision: dd9c0acf26aab111ebc647cd8deb99ebc6946531
   specs:
@@ -403,7 +392,6 @@ DEPENDENCIES
   database_cleaner
   devise
   doorkeeper
-  draper!
   factory_girl_rails
   faker
   font-awesome-sass (~> 4.7.0)

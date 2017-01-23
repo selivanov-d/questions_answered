@@ -15,5 +15,9 @@ FactoryGirl.define do
     factory :comment_with_subject do
       subject 'answer'
     end
+
+    factory :comment_for_question do
+      association :commentable, factory: :question
+    end
   end
 end
