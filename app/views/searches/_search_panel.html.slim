@@ -5,12 +5,12 @@
 .search-panel
   = form_for @search, method: :post, html: { class: 'search-panel_form search-form' } do |f|
     .search-form_query-string
-      = f.label :q, 'Найти', class: 'search-form_query-string-label'
-      = f.text_field :q, class: 'search-form_query-string-input'
+      = f.label :query, 'Что', class: 'search-form_query-string-label'
+      = f.text_field :query, class: 'search-form_query-string-input'
 
     .search-form_subject
-      = f.label :subject, 'в', class: 'search-form_subject-label'
-      = f.select :subject, options_for_select([['Везде', 'all'], ['В вопросах', 'questions'], ['В ответах', 'answers'], ['В комментариях', 'comments']], @search.subject || 'all'), {},  class: 'search-form_subject-input'
+      = f.label :subject, 'Где', class: 'search-form_subject-label'
+      = f.select :subject, options_for_select([['Везде', 'all'], ['В вопросах', 'questions'], ['В ответах', 'answers'], ['В комментариях', 'comments']], @search.subject || 'all'), {}, class: 'search-form_subject-input'
 
     .search-form_buttons-container
       = submit_tag 'Найти', class: 'search-form_submit-button'
