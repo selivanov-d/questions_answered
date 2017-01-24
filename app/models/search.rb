@@ -8,7 +8,8 @@ class Search
 
   def results
     @results ||= []
-    @results if self.invalid?
+
+    return @results if self.invalid?
 
     results = subject_klass.search(query)
 
