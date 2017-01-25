@@ -8,7 +8,7 @@ describe Search do
   describe '#results' do
     let!(:question) { create(:question, content: 'Question text containing Bingo word.') }
     let!(:answer) { create(:answer, content: 'Answer text containing Bingo word.') }
-    let!(:comment) { create(:comment, content: 'Comment text containing Bingo word.') }
+    let!(:comment) { create(:comment_for_question, content: 'Comment text containing Bingo word.') }
 
     context 'when valid query given' do
       let(:query) { 'Bingo' }
@@ -22,7 +22,7 @@ describe Search do
 
         it 'returns results as array' do
           allow(ThinkingSphinx).to receive(:search).with(query).and_return([question, answer, comment])
-          expect(search.results.to_json).to eql([SearchResult.new(question), SearchResult.new(answer), SearchResult.new(comment)].to_json)
+          expect(search.results).to eql([question, answer.question, comment.commentable])
         end
       end
 
@@ -42,7 +42,7 @@ describe Search do
 
           it 'returns results as array' do
             allow(subject_klass).to receive(:search).with(query).and_return([send(subject_variable_name)])
-            expect(search.results.to_json).to eql([SearchResult.new(send(subject_variable_name))].to_json)
+            expect(search.results).to eql([SearchesHelpers.question_from_result(send(subject_variable_name))])
           end
         end
       end

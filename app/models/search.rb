@@ -1,5 +1,6 @@
 class Search
   include ActiveModel::Model
+  include SearchesHelpers
 
   attr_accessor :query, :subject
 
@@ -13,9 +14,7 @@ class Search
 
     results = subject_klass.search(query)
 
-    @results = results.map { |result| SearchResult.new(result) } unless results.nil?
-
-    @results
+    @results = format_results(results) unless results.nil?
   end
 
   private
@@ -24,5 +23,10 @@ class Search
     return ThinkingSphinx if subject == 'all'
 
     subject.singularize.capitalize.constantize
+  end
+
+  def format_results(results)
+    results.map! { |result| question_from_result(result) }
+    results.uniq
   end
 end
