@@ -47,7 +47,9 @@ gem 'oj_mimic_json'
 gem 'sidekiq'
 gem 'sinatra', require: nil
 gem 'sidetiq'
-
+gem 'mysql2'
+gem 'thinking-sphinx'
+gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

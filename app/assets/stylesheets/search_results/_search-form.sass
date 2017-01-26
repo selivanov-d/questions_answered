@@ -1,0 +1,39 @@
+.search-form
+  @extend .row
+
+.search-form_query-string, .search-form_subject
+  @extend .form-group
+
+.search-form_query-string
+  @extend .col-xs-8
+
+.search-form_subject
+  @extend .col-xs-4
+
+.search-form_query-string-label, .search-form_subject-label
+  float: left
+  line-height: 34px
+
+
+.search-form_query-string-label
+  width: 50px
+
+.search-form_subject-label
+  width: 40px
+
+.search-form_query-string-input, .search-form_subject-input
+  @extend .form-control
+
+.search-form_query-string-input
+  margin-left: 50px
+  width: calc(100% - 50px)
+
+.search-form_subject-input
+  margin-left: 40px
+  width: calc(100% - 40px)
+
+.search-form_buttons-container
+  @extend .col-xs-12
+
+.search-form_submit-button
+  @extend .btn, .btn-primary
