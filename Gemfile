@@ -52,6 +52,7 @@ gem 'thinking-sphinx'
 gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
 gem 'dotenv'
 gem 'dotenv-deployment', require: 'dotenv/deployment'
+gem 'therubyracer'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
