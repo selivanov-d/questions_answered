@@ -50,6 +50,8 @@ gem 'sidetiq'
 gem 'mysql2'
 gem 'thinking-sphinx'
 gem 'activemodel-serializers-xml', github: 'rails/activemodel-serializers-xml'
+gem 'dotenv'
+gem 'dotenv-deployment', require: 'dotenv/deployment'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -87,5 +89,9 @@ group :development do
   gem 'binding_of_caller'
   gem 'letter_opener'
   gem 'letter_opener_web', '~> 1.2.0', :group => :development
+  gem 'capistrano', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rbenv', require: false
 end
 
