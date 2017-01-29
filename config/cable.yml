@@ -1,8 +1,12 @@
+default: &default
+  adapter: redis
+  url: redis://127.0.0.1:6379
+
 development:
-  adapter: async
- 
+  <<: *default
+
 test:
-  adapter: async
- 
+  <<: *default
+
 production:
-  adapter: async
+  <<: *default
