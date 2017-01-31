@@ -1,2 +1,8 @@
+development:
+  morphology: stem_en, stem_ru
+
+production:
+  morphology: stem_en, stem_ru
+
 test:
   mysql41: 9307
