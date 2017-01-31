@@ -1,4 +1,5 @@
 require 'rails_helper'
+include SearchesHelpers
 
 describe Search do
   it { should validate_presence_of(:query) }
