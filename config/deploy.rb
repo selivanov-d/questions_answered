@@ -3,7 +3,7 @@ lock '3.7.2'
 
 set :application, 'questions_answered'
 set :repo_url, 'git@github.com:selivanov-d/questions_answered.git'
-set :branch, 'lesson-20'
+set :branch, 'lesson-21'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -34,7 +34,7 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      execute :touch, release_path.join('tmp/restart.txt')
+      invoke 'unicorn:restart'
     end
   end
 
