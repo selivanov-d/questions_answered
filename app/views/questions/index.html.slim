@@ -1,9 +1,10 @@
 - @page_title = 'Список вопросов'
 
-.questions-index
-  table.questions-index-table.js-questions-index-table
-    = render @questions
+- cache [permissions_as_hash_for(current_user), @questions] do
+  .questions-index
+    table.questions-index-table.js-questions-index-table
+      = render @questions, cached: true
 
-  .questions-index_actions
-    - if can?(:create, Question)
-      = link_to 'Задать вопрос', new_question_path, class: 'questions-index_new-button'
+    .questions-index_actions
+      - if can?(:create, Question)
+        = link_to 'Задать вопрос', new_question_path, class: 'questions-index_new-button'

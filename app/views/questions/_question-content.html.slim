@@ -1,14 +1,15 @@
-.js-question-content.question-content
-  = render partial: 'votes/voting_block', locals: { votable: @question }
+- cache [permissions_as_hash_for(current_user), 'question-content', @question] do
+  .js-question-content.question-content
+    = render partial: 'votes/voting_block', locals: { votable: @question }
 
-  h4.js-question-title= @question.title
+    h4.js-question-title= @question.title
 
-  .js-question-content
-    = @question.content
+    .js-question-content
+      = @question.content
 
-  .js-question-attachments
-    - if @question.attachments.any?
-      .question_attachments.question-attachments
-        h5.question-attachments_header Прикреплённые файлы
-        ul.question-attachments_list.question-attachments-list.js-question-attached-files
-          = render partial: 'attachments/question-attachment', collection: @question.attachments, as: :attachment
+    .js-question-attachments
+      - if @question.attachments.any?
+        .question_attachments.question-attachments
+          h5.question-attachments_header Прикреплённые файлы
+          ul.question-attachments_list.question-attachments-list.js-question-attached-files
+            = render partial: 'attachments/question-attachment', collection: @question.attachments, as: :attachment, cached: true

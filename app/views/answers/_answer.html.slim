@@ -1,30 +1,31 @@
-tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
-  td
-    .answer_actions.answer-actions
-      - if can?(:destroy, answer)
-        = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer answer-actions_item -delete', method: 'delete', remote: true, data: { confirm: 'Вы уверены?', type: 'json' }
-      - if can?(:update, answer)
-        = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer  answer-actions_item -edit'
-      - if can?(:mark_as_best, answer)
-        = link_to 'Отметить как лучший', mark_as_best_answer_path(answer), class: 'js-mark-answer-as-best answer_mark-as-best-trigger answer-actions_item -mark-as-best', method: 'post', remote: true, data: { type: 'json' }
+- cache_if current_user.nil?, answer do
+  tr.answer.js-answer class=('-best' if answer.best?) data-answer-id="#{answer.id}"
+    td
+      .answer_actions.answer-actions
+        - if can?(:destroy, answer)
+          = link_to 'Удалить ответ', answer_path(answer), class: 'js-delete-answer answer-actions_item -delete', method: 'delete', remote: true, data: { confirm: 'Вы уверены?', type: 'json' }
+        - if can?(:update, answer)
+          = link_to 'Редактировать ответ', edit_answer_path(answer), class: 'answer_edit-button -active js-edit-answer  answer-actions_item -edit'
+        - if can?(:mark_as_best, answer)
+          = link_to 'Отметить как лучший', mark_as_best_answer_path(answer), class: 'js-mark-answer-as-best answer_mark-as-best-trigger answer-actions_item -mark-as-best', method: 'post', remote: true, data: { type: 'json' }
 
-    = render partial: 'votes/voting_block', locals: { votable: answer }
+      = render partial: 'votes/voting_block', locals: { votable: answer }
 
-    .answer_description
-      .answer_best-label Лучший ответ
+      .answer_description
+        .answer_best-label Лучший ответ
 
-      .answer_content.js-answer-content= answer.content
+        .answer_content.js-answer-content= answer.content
 
-      .js-answer-attachments
-        - if answer.attachments.any?
-          ul.answer_attachments.answer-attachments.js-answer-attachments-list
-            = render partial: 'attachments/answer-attachment', collection: answer.attachments, as: :attachment
+        .js-answer-attachments
+          - if answer.attachments.any?
+            ul.answer_attachments.answer-attachments.js-answer-attachments-list
+              = render partial: 'attachments/answer-attachment', collection: answer.attachments, as: :attachment, cached: true
 
-      - if can?(:update, answer)
-        = render partial: 'answers/form-edit', locals: { answer: answer }
+        - if can?(:update, answer)
+          = render partial: 'answers/form-edit', locals: { answer: answer }
 
-    .comments.-for-answer.js-comments-for-answer-list[data-answer-id=answer.id]
-      = render answer.comments
+      .comments.-for-answer.js-comments-for-answer-list[data-answer-id=answer.id]
+        = render answer.comments, cached: true
 
-    - if can?(:create, Comment)
-      = render partial: 'comments/new_comment_form', locals: { commentable: answer }
+      - if can?(:create, Comment)
+        = render partial: 'comments/new_comment_form', locals: { commentable: answer }

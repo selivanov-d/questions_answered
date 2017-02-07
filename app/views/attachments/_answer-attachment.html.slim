@@ -1,4 +1,5 @@
-li.answer-attachments_item.answer-attachment.js-answer-attachment[data-attachment-id=attachment.id]
-  = link_to attachment.file.url do
-    span.glyphicon.glyphicon-file.answer-attachment_icon
-    = attachment.file.identifier
+- cache attachment do
+  li.answer-attachments_item.answer-attachment.js-answer-attachment[data-attachment-id=attachment.id]
+    = link_to attachment.file.url do
+      span.glyphicon.glyphicon-file.answer-attachment_icon
+      = attachment.file.identifier
