@@ -55,6 +55,8 @@ gem 'dotenv-deployment', require: 'dotenv/deployment'
 gem 'therubyracer'
 gem 'whenever'
 gem 'unicorn'
+gem 'redis-rails'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
