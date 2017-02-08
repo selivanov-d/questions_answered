@@ -1,4 +1,4 @@
-- cache [permissions_as_hash_for(current_user), 'question-content', @question] do
+- cache [current_permissions_as_hash, 'question-content', @question] do
   .js-question-content.question-content
     = render partial: 'votes/voting_block', locals: { votable: @question }
 

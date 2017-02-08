@@ -1,6 +1,6 @@
 - @page_title = 'Список вопросов'
 
-- cache [permissions_as_hash_for(current_user), @questions] do
+- cache [current_permissions_as_hash, @questions] do
   .questions-index
     table.questions-index-table.js-questions-index-table
       = render @questions, cached: true
