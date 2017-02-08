@@ -1,9 +1,10 @@
-tr.question
-  td.question_description
-    .question_title
-      = link_to question.title, question
+- cache [current_permissions_as_hash, question] do
+  tr.question
+    td.question_description
+      .question_title
+        = link_to question.title, question
 
-    .question_content= truncate(question.content, length: 128)
-  td.question_actions.question-actions
-    - if can?(:create, Answer)
-      = link_to 'Дать ответ', question, class: 'question-actions_give-answer'
+      .question_content= truncate(question.content, length: 128)
+    td.question_actions.question-actions
+      - if can?(:create, Answer)
+        = link_to 'Дать ответ', question, class: 'question-actions_give-answer'

@@ -1,5 +1,6 @@
-- if attachment.persisted?
-  li.js-question-attachment.question-attachments_item.question-attachment[data-attachment-id=attachment.id]
-    = link_to attachment.file.url do
-      span.question-attachment_icon
-      = attachment.file.identifier
+- cache attachment do
+  - if attachment.persisted?
+    li.js-question-attachment.question-attachments_item.question-attachment[data-attachment-id=attachment.id]
+      = link_to attachment.file.url do
+        span.question-attachment_icon
+        = attachment.file.identifier

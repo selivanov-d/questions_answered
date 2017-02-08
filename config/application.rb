@@ -40,5 +40,7 @@ module QuestionAnswered
     config.action_cable.url = 'ws://localhost:28080'
 
     config.active_job.queue_adapter = :sidekiq
+
+    config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', { expires_in: 90.minutes }
   end
 end

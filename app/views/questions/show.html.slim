@@ -1,39 +1,39 @@
 - @page_title = 'Вопрос'
 
-.question-show.question.js-question[data-question-id='#{@question.id}']
-  = render partial: 'questions/question-content'
+- cache_if current_user.nil?, @question do
+  .question-show.question.js-question[data-question-id='#{@question.id}']
+    = render partial: 'questions/question-content'
 
-  - if can?(:update, @question)
+    - if can?(:update, @question)
+      .question-show_actions
+        = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }, class: 'question-show_button question-show_delete-button'
+        = link_to 'Редактировать вопрос', questions_path, class: 'question-show_button js-edit-question question_edit-trigger question-show_edit-button'
+
+      = render 'questions/form_edit'
+
+    .comments.js-comments-for-question-list[data-question-id=@question.id]
+      = render @question.comments, cached: true
+
+    - if can?(:create, Comment)
+      = render partial: 'comments/new_comment_form', locals: { commentable: @question }
+
+    - if (@subscription.nil? && can?(:create, Subscription)) || can?(:destroy, @subscription)
+      .js-subscription-control
+        - if can?(:create, Subscription) && @subscription.nil?
+          = link_to 'Подписаться', question_subscriptions_path(@question), remote: true, method: 'post', data: { type: :json }, class: 'js-subscription-add'
+        - if can?(:destroy, @subscription)
+          = link_to 'Отписаться', subscription_path(@subscription), remote: true, method: 'delete', data: { type: :json }, class: 'js-subscription-delete'
+
+    .answers-index
+      - if @question.answers.any?
+        h3 Ответы
+
+      table.answers-index-table.js-answers-index-table
+        - if @question.answers.present?
+          = render @question.answers.best_first.order(created_at: :asc)
+
+    - if can?(:create, Answer)
+      = render 'answers/form-new'
+
     .question-show_actions
-      = link_to 'Удалить вопрос', @question, method: 'delete', data: { confirm: 'Вы уверены?' }, class: 'question-show_button question-show_delete-button'
-      = link_to 'Редактировать вопрос', questions_path, class: 'question-show_button js-edit-question question_edit-trigger question-show_edit-button'
-
-    = render 'questions/form_edit'
-
-  .comments.js-comments-for-question-list[data-question-id=@question.id]
-    = render @question.comments
-
-  - if can?(:create, Comment)
-    = render partial: 'comments/new_comment_form', locals: { commentable: @question }
-
-  / TODO: better way to check ability to create subscriptions?
-  - if (@subscription.nil? && can?(:create, Subscription)) || can?(:destroy, @subscription)
-    .js-subscription-control
-      - if can?(:create, Subscription) && @subscription.nil?
-        = link_to 'Подписаться', question_subscriptions_path(@question), remote: true, method: 'post', data: { type: :json }, class: 'js-subscription-add'
-      - if can?(:destroy, @subscription)
-        = link_to 'Отписаться', subscription_path(@subscription), remote: true, method: 'delete', data: { type: :json }, class: 'js-subscription-delete'
-
-  .answers-index
-    - if @question.answers.any?
-      h3 Ответы
-
-    table.answers-index-table.js-answers-index-table
-      - if @question.answers.present?
-        = render @question.answers.best_first.order(created_at: :asc)
-
-  - if can?(:create, Answer)
-    = render 'answers/form-new'
-
-  .question-show_actions
-    = link_to 'К вопросам', questions_path, class: 'question-show_back-button'
+      = link_to 'К вопросам', questions_path, class: 'question-show_back-button'

@@ -3,7 +3,7 @@ class Answer < ActiveRecord::Base
   include Commentable
   include Attachable
 
-  belongs_to :question
+  belongs_to :question, touch: true
   belongs_to :user
 
   validates :content, presence: true, length: { minimum: 10 }
